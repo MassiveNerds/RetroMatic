@@ -10,7 +10,7 @@
           <span class="badge">{{note.votes}}</span>
           {{note.message}}
         </button>
-        <button type="button" class="list-group-item" [class.list-group-item-success]="bucket.type === 'success'"
+        <button type="button" title="Add entry to {{bucket.name}}" aria-label="Add entry" class="list-group-item list-group-item-new" [class.list-group-item-success]="bucket.type === 'success'"
           [class.list-group-item-danger]="bucket.type === 'danger'" [class.list-group-item-info]="bucket.type === 'info'" (click)="openModal(addtemplate, bucket)">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>
