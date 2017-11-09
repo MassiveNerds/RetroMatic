@@ -29,8 +29,8 @@ import {
 export class CountdownTimerComponent implements OnInit {
 
   private  _timer;
-  private  _minutes = 0;
-  private  _seconds = 15;
+  private  _minutes = 60;
+  private  _seconds = 0;
   public countdownTimerString: String;
   public isTimerStarted = false;
   public isTimerEnded = false;
