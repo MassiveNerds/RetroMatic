@@ -29,6 +29,7 @@ export class RetroBoardComponent implements OnInit {
   };
   activeBucket: any;
   activeNote: any;
+  activeVote: boolean;
   constructor(private db: AngularFireDatabase, private modalService: BsModalService, private route: ActivatedRoute, private router: Router, public afAuth: AngularFireAuth) {
     this.user = afAuth.authState;
     this.user.subscribe(result => this.uid = result.uid);
@@ -74,8 +75,16 @@ export class RetroBoardComponent implements OnInit {
       .then(() => this.modalRef.hide());
   }
 
-  vote() {
+  upVote() {
     this.activeNote.votes++;
+    this.activeVote = true;
+    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({ votes: this.activeNote.votes })
+      .then(() => this.modalRef.hide());
+  }
+
+  undoVote() {
+    this.activeNote.votes--;
+    this.activeVote = false;
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({ votes: this.activeNote.votes })
       .then(() => this.modalRef.hide());
   }
