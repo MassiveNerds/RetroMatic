@@ -29,6 +29,7 @@ export class RetroBoardComponent implements OnInit {
   };
   activeBucket: any;
   activeNote: any;
+  activeVote: boolean;
   jsonString: string;
   jsonData: Object;
   stuffContainer;
@@ -150,8 +151,16 @@ export class RetroBoardComponent implements OnInit {
     this.clearExports();
   }
 
-  vote() {
+  upVote() {
     this.activeNote.votes++;
+    this.activeVote = true;
+    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
+      .then(() => this.modalRef.hide());
+  }
+
+  undoVote() {
+    this.activeNote.votes--;
+    this.activeVote = false;
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
       .then(() => this.modalRef.hide());
     this.clearExports();
