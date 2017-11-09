@@ -1,0 +1,7 @@
+<div class="timer-container">
+  <div [@visibilityChanged]="!isTimerEnded" class="timer-text">{{countdownTimerString}}</div>
+  <div class="row">
+    <div class="col-md-12 text-center"></div>
+    <button [@visibilityFullChanged]="!isTimerStarted" type="button" class="btn btn-primary center-block timer-button" (click)="startTimerPressed()">Start Timer</button>
+  </div>
+</div>
