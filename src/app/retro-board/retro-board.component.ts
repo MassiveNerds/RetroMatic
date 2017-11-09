@@ -31,6 +31,8 @@ export class RetroBoardComponent implements OnInit {
   activeNote: any;
   jsonString: string;
   jsonData: Object;
+  stuffContainer;
+  htmlContainer;
 
   constructor(private db: AngularFireDatabase,
               private modalService: BsModalService,
@@ -59,40 +61,55 @@ export class RetroBoardComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.config);
   }
 
-  exportToJSON() {
+  export() {
+    this.clearExports();
     this.jsonString = JSON.stringify(this.jsonData);
-    const newEle = document.createElement('pre');
-    newEle.innerHTML = this.jsonString;
-    const stuffContainer = document.getElementById('json-container');
-    while (stuffContainer.firstChild) {
-      stuffContainer.removeChild(stuffContainer.firstChild);
-    }
-    stuffContainer.insertBefore(newEle, null);
-  }
-
-  exportToHTML() {
-    let exportedHTML = '<pre><code class="html">';
+    const newEle1 = document.createElement('div');
+    newEle1.innerHTML = `<div>JSON</div><pre>${this.jsonString}</pre>`;
+    this.stuffContainer.insertBefore(newEle1, null);
+    let exportedHTML = '<div>HTML</div><pre><code class="html">';
+    exportedHTML += `&lt;style&gt;
+  .export-section{display:block;float:left;width:200px;}
+  .export-section h2{font-size:24px;display:block;float:left;width:100%;}
+  .export-section .export-note{display:block;float:left;width:100%;}
+  .export-section .message{display:block;float:left;width:50%;}
+  .export-section .votes{display:block;float:left;width:50%;}
+&lt;/style&gt;
+`;
     Object.keys(this.jsonData).map(item => {
+      exportedHTML += `&lt;div class='export-section'&gt;
+  `;
       Object.keys(this.jsonData[item]).map((note, i) => {
-        if (i === 0) {
-          exportedHTML += `<h2>${this.jsonData[item][note].bucketName}</h2>`;
-        }
-        exportedHTML += `<div class='wrapper'>`;
-          exportedHTML += `<div class='message'>${this.jsonData[item][note].message}</div>`;
-          exportedHTML += `<div class='votes'>${this.jsonData[item][note].votes}</div>`;
-        exportedHTML += `</div>`;
+          if (i === 0) {
+            exportedHTML += `&lt;h2&gt;${this.jsonData[item][note].bucketName}&lt;/h2&gt;
+  `;
+          }
+        exportedHTML += `&lt;div class='export-note'&gt;
+    `;
+          exportedHTML += `&lt;div class='message'&gt;${this.jsonData[item][note].message}&lt;/div&gt;
+    `;
+          exportedHTML += `&lt;div class='votes'&gt;${this.jsonData[item][note].votes}&lt;/div&gt;
+  `;
+        exportedHTML += `&lt;/div&gt;
+  `;
       });
+      exportedHTML += `&lt;/div&gt;
+`;
     });
     exportedHTML += '</code></pre>';
 
-    const newEle = document.createElement('div');
-    newEle.innerHTML = exportedHTML;
-    const htmlContainer = document.getElementById('html-container');
+    const newEle2 = document.createElement('div');
+    newEle2.innerHTML = exportedHTML;
+    this.htmlContainer.insertBefore(newEle2, null);
+  }
 
-    while (htmlContainer.firstChild) {
-      htmlContainer.removeChild(htmlContainer.firstChild);
+  clearExports() {
+    while (this.htmlContainer.firstChild) {
+      this.htmlContainer.removeChild(this.htmlContainer.firstChild);
     }
-    htmlContainer.insertBefore(newEle, null);
+    while (this.stuffContainer.firstChild) {
+      this.stuffContainer.removeChild(this.stuffContainer.firstChild);
+    }
   }
 
   ngOnInit() {
@@ -123,26 +140,32 @@ export class RetroBoardComponent implements OnInit {
           });
       });
     });
+    this.stuffContainer = document.getElementById('json-container');
+    this.htmlContainer = document.getElementById('html-container');
   }
 
   addNote(message: string) {
     this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: 0})
       .then(() => this.modalRef.hide());
+    this.clearExports();
   }
 
   updateNote(message: string) {
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({message: message})
       .then(() => this.modalRef.hide());
+    this.clearExports();
   }
 
   vote() {
     this.activeNote.votes++;
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
       .then(() => this.modalRef.hide());
+    this.clearExports();
   }
 
   deleteNote() {
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).remove()
       .then(() => this.modalRef.hide());
+    this.clearExports();
   }
 }

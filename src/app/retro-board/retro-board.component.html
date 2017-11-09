@@ -18,9 +18,7 @@
     </div>
   </div>
   <div class="export">
-    <h2>Export</h2>
-    <button class="btn btn-primary" id="exportLink" (click)="exportToJSON()">JSON</button><div id="json-container"></div>
-    <button class="btn btn-primary" id="exportHtml" (click)="exportToHTML()">HTML</button><div id="html-container"></div>
+    <button class="btn btn-primary" id="exportLink" (click)="export()">Export</button><div id="json-container"></div><div id="html-container"></div>
   </div>
 </div>
 <ng-template #addtemplate>
