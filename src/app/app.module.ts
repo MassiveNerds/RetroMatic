@@ -15,6 +15,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { AuthGuard } from './auth.guard';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const appRoutes: Routes = [
   {
@@ -46,10 +48,12 @@ const appRoutes: Routes = [
     RetroBoardComponent,
     LoginComponent,
     PageNotFoundComponent,
-    UserDetailComponent
+    UserDetailComponent,
+    CountdownTimerComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
