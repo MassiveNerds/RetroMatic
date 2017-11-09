@@ -43,4 +43,4 @@ yarn-error.log
 Thumbs.db
 
 # firebase environment variables
-/src/evironments/*.ts
+/src/environments/*.ts
