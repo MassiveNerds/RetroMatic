@@ -50,7 +50,8 @@
       <button class="btn btn-primary" (click)="updateNote(editmessage.value)">Update</button>
       <button class="btn btn-danger" (click)="deleteNote()">Delete</button>
       <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
-      <button class="btn btn-default pull-right" (click)="vote()">Vote up</button>
+      <button *ngIf="activeVote == undefined || activeVote == false" class="btn btn-default pull-right" (click)="upVote()">Vote up</button>
+      <button *ngIf="activeVote == true" class="btn btn-default pull-right" (click)="undoVote()">Undo your vote.</button>
     </div>
   </div>
 </ng-template>
