@@ -2,3 +2,9 @@
     margin-bottom: 15px;
     border-radius: 10px;
 }
+
+.list-group-item-new {
+  border: 2px dashed #aaa;
+  opacity: 0.5;
+  text-align: center;
+}
