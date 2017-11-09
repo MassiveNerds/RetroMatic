@@ -164,6 +164,7 @@ export class RetroBoardComponent implements OnInit {
     this.activeVote = true;
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
       .then(() => this.modalRef.hide());
+    this.clearExports();
   }
 
   undoVote() {
