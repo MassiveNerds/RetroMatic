@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-offset-4 col-md-4">
+      <div class="list-group">
+        <button type="button" class="list-group-item" *ngFor="let retroboard of retroboards | async" [routerLink]="['/retroboard/', retroboard.$key]">
+          {{ retroboard.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(retroboards | async)?.length==0" class="row">
+    <div class="col-md-12">
+      <h2 class="text-center">You have no retrospectives</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-offset-4 col-md-4">
+      <button type="button" class="btn-primary btn-block" (click)="createRetroboard()">Create New Retrospective</button>
+    </div>
+  </div>
+</div>

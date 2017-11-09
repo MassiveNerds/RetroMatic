@@ -1,0 +1,24 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button *ngIf="(user | async)?.uid" type="button" class="navbar-toggle collapsed" (click)="toggleState()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+      <a [routerLink]="['/home']" class="navbar-brand">{{title}}</a>
+    </div>
+    <div class="collapse navbar-collapse" [ngClass]="{ 'in': isIn }">
+      <ul *ngIf="(user | async)?.uid" class="nav navbar-nav navbar-right">
+        <li>
+          <p class="navbar-text">{{loginDisplay}}</p>
+        </li>
+        <li>
+          <a href="#" (click)="logout()">Log out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

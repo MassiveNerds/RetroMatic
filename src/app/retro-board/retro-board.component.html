@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4" *ngFor="let bucket of buckets | async">
+      <h4>
+        <span>{{ bucket.name }}</span>
+        <button type="button" class="btn btn-xs pull-right" (click)="openModal(addtemplate, bucket)" [class.btn-success]="bucket.type === 'success'"
+          [class.btn-danger]="bucket.type === 'danger'" [class.btn-info]="bucket.type === 'info'">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+      </h4>
+      <div class="list-group">
+        <button type="button" class="list-group-item" *ngFor="let note of bucket.notes | async" [class.list-group-item-success]="bucket.type === 'success'"
+          [class.list-group-item-danger]="bucket.type === 'danger'" [class.list-group-item-info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
+          <span class="badge">{{note.votes}}</span>
+          {{note.message}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #addtemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add entry to <strong>{{activeBucket.name}}</strong></h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <textarea #addmessage class="form-control" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" (click)="addNote(addmessage.value)">Add</button>
+      <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #edittemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Update entry to <strong>{{activeBucket.name}}</strong></h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <textarea #editmessage class="form-control" rows="3">{{activeNote.message}}</textarea>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" (click)="updateNote(editmessage.value)">Update</button>
+      <button class="btn btn-danger" (click)="deleteNote()">Delete</button>
+      <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
+      <button class="btn btn-default pull-right" (click)="vote()">Vote up</button>
+    </div>
+  </div>
+</ng-template>
