@@ -68,35 +68,29 @@ export class RetroBoardComponent implements OnInit {
     newEle1.innerHTML = `<div>JSON</div><pre>${this.jsonString}</pre>`;
     this.stuffContainer.insertBefore(newEle1, null);
     let exportedHTML = '<div>HTML</div><pre><code class="html">';
-    exportedHTML += `&lt;style&gt;
-  .export-section{display:block;float:left;width:200px;}
-  .export-section h2{font-size:24px;display:block;float:left;width:100%;}
-  .export-section .export-note{display:block;float:left;width:100%;}
-  .export-section .message{display:block;float:left;width:50%;}
-  .export-section .votes{display:block;float:left;width:50%;}
-&lt;/style&gt;
+    exportedHTML += `&lt;table class='confluenceTable'&gt;
+  &lt;colgroup&gt;&lt;col&gt;&lt;col&gt;&lt;col&gt;&lt;/colgroup&gt;
 `;
     Object.keys(this.jsonData).map(item => {
-      exportedHTML += `&lt;div class='export-section'&gt;
-  `;
       Object.keys(this.jsonData[item]).map((note, i) => {
+      exportedHTML += `&lt;tr&gt;
+  `;
           if (i === 0) {
-            exportedHTML += `&lt;h2&gt;${this.jsonData[item][note].bucketName}&lt;/h2&gt;
+            exportedHTML += `&lt;td class='confluenceTh'&gt;${this.jsonData[item][note].bucketName}&lt;/td&gt;
+  `;
+          }else{
+            exportedHTML += `&lt;td&gt;&lt;/td&gt;
   `;
           }
-        exportedHTML += `&lt;div class='export-note'&gt;
-    `;
-          exportedHTML += `&lt;div class='message'&gt;${this.jsonData[item][note].message}&lt;/div&gt;
-    `;
-          exportedHTML += `&lt;div class='votes'&gt;${this.jsonData[item][note].votes}&lt;/div&gt;
+          exportedHTML += `&lt;td class='confluenceTd'&gt;${this.jsonData[item][note].message}&lt;/td&gt;
   `;
-        exportedHTML += `&lt;/div&gt;
+          exportedHTML += `&lt;td class='confluenceTd'&gt;${this.jsonData[item][note].votes}&lt;/td&gt;
   `;
-      });
-      exportedHTML += `&lt;/div&gt;
+      exportedHTML += `&lt;/tr&gt;
 `;
+      });
     });
-    exportedHTML += '</code></pre>';
+    exportedHTML += `&lt;/table&gt;</code></pre>`;
 
     const newEle2 = document.createElement('div');
     newEle2.innerHTML = exportedHTML;
