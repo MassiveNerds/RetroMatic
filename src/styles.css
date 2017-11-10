@@ -10,3 +10,8 @@ html body{
 #json-container > div:before{
   content:"JSON (click inside box to select the text)";
 }
+
+.html-pre{
+  height:200px;
+  overflow:scroll;
+}
