@@ -2,3 +2,8 @@
     margin-bottom: 15px;
     border-radius: 10px;
 }
+.count {
+  display: inline;
+  float: right;
+  padding: 0 3px;
+}
