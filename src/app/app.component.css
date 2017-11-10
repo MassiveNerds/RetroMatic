@@ -1,5 +1,5 @@
 nav p {
-  padding: 0px 15px;
+  padding: 0 15px;
   color: white;
 }
 
@@ -7,9 +7,11 @@ nav a {
   color: white;
 }
 
-nav a:hover {
-  color: #eee;
-  text-shadow: 0 0 15px rgba(200, 200, 200, 0.5);
+nav a:hover,
+nav a:focus,
+nav a:active {
+  color: #d5d5d5;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
 .navbar {
