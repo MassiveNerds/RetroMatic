@@ -25,7 +25,7 @@ export class UserDetailComponent implements OnInit {
   createRetroboard() {
     this.retroboards.push({ name: moment().format('dddd, MMMM Do YYYY') }).then(result => {
       const newId = result.key;
-      let buckets: FirebaseListObservable<any[]> = this.db.list(`/buckets/${newId}`);
+      const buckets: FirebaseListObservable<any[]> = this.db.list(`/buckets/${newId}`);
       buckets.push({ name: 'What went well?', type: 'success' });
       buckets.push({ name: 'What can be improved?', type: 'danger' });
       buckets.push({ name: 'Action items', type: 'info' });
