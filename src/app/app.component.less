@@ -1,7 +1,7 @@
 @import '../variables.less';
 
 nav {
-  p{
+  p {
     padding: 0 15px;
     color: @text-light;
   }
@@ -21,4 +21,24 @@ nav {
   background: @blue-dark;
   border: none;
   border-radius: 0;
+  .navbar-brand {
+    font-family: @accent-font !important;
+    font-size: 24px;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  .navbar {
+    .navbar-brand {
+      font-size: 40px;
+    }
+  }
+}
+
+@media only screen and (min-width: 850px) {
+  .navbar {
+    .navbar-brand {
+      font-size: 60px;
+    }
+  }
 }
