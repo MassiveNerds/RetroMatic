@@ -11,7 +11,7 @@ import { CollapseModule } from 'ngx-bootstrap';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-  title = 'Agile Retrospective';
+  title = 'RetroMatic';
   user: Observable<firebase.User>;
   isIn = false;
   theme = 'light';
