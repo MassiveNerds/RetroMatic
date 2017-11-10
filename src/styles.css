@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+
+html body{
+  background: #05abe0;
+}
+#html-container > div:before{
+  content:"Confluence HTML (click inside box to select the text)";
+}
+
+#json-container > div:before{
+  content:"JSON (click inside box to select the text)";
+}
+
+.html-pre{
+  height:200px;
+  overflow:scroll;
+}

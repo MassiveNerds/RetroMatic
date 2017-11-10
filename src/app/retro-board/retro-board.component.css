@@ -8,3 +8,14 @@
   opacity: 0.5;
   text-align: center;
 }
+
+.export{
+  position:relative;
+  z-index:1;
+}
+.export > div{
+  display:none;
+}
+.export.open > div{
+  display:block;
+}
