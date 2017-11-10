@@ -44,21 +44,24 @@
     right: 11px;
     top: calc(~'50% - 11px');
     &:nth-of-type(1) {
+      padding-right: 69px;
       position: relative;
       width: 100%;
       top: initial;
       right: initial;
     }
-    &.good{
+    &.good {
       background: @green-med;
       border: @green-dark;
     }
-    &.bad{
+    &.bad {
       background: @red-med;
       border: @red-dark;
     }
   }
   strong {
-    padding-right: 30px;
+    top: calc(~'50% - 10px');
+    position: absolute;
+    right: 40px;
   }
 }
