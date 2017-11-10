@@ -47,10 +47,12 @@ export class RetroBoardComponent implements OnInit {
   }
 
   compareFn = (a, b) => {
-    if (a.votes < b.votes) {
+    const aVotes = a.totalVotes || -1;
+    const bVotes = b.totalVotes || -1;
+    if (aVotes < bVotes) {
       return 1;
     }
-    if (a.votes > b.votes) {
+    if (aVotes > bVotes) {
       return -1;
     }
     return 0;
