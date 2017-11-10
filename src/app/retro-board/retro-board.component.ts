@@ -13,7 +13,7 @@ import 'rxjs/add/operator/switchMap';
 @Component({
   selector: 'app-retro-board',
   templateUrl: './retro-board.component.html',
-  styleUrls: ['./retro-board.component.css']
+  styleUrls: ['./retro-board.component.less']
 })
 export class RetroBoardComponent implements OnInit {
   user: Observable<firebase.User>;
@@ -35,6 +35,7 @@ export class RetroBoardComponent implements OnInit {
   jsonContainer;
   htmlContainer;
   exportOpen = false;
+  timeNow = new Date().toLocaleDateString();
 
   constructor(private db: AngularFireDatabase,
               private modalService: BsModalService,
@@ -71,7 +72,20 @@ export class RetroBoardComponent implements OnInit {
     newEle1.innerHTML = `<pre class="json-pre">${this.jsonString}</pre>`;
     this.jsonContainer.insertBefore(newEle1, null);
     let exportedHTML = '<pre class="html-pre"><code class="html">';
-    exportedHTML += `&lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
+    exportedHTML += `&lt;table class='confluenceTable'&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th class='confluenceTh' &gt;Date&lt;/th&gt;
+      &lt;td class='confluenceTd' &gt;&lt;time datetime='${this.timeNow}'&gt;${this.timeNow}&lt;/time&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th class='confluenceTh' &gt;Participants&lt;/th&gt;
+      &lt;td class='confluenceTd' &gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
     Object.keys(this.jsonData).map(item => {
       Object.keys(this.jsonData[item]).map((note, i) => {
         let css = '';
@@ -116,7 +130,13 @@ export class RetroBoardComponent implements OnInit {
     exportedHTML += `
 &lt;/div&gt;`;
     exportedHTML += `
-&lt;hr&gt;`;
+&lt;hr&gt;
+&lt;h2&gt;Tasks&lt;/h2&gt;
+&lt;ul class="inline-task-list"&gt;
+  &lt;li data-inline-task-id=""&gt;
+    &lt;span&gt;Type your task here, using "@" to assign to a user and "//" to select a due date&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;`;
     exportedHTML += `</code></pre>`;
     const newEle2 = document.createElement('div');
     newEle2.innerHTML = exportedHTML;
