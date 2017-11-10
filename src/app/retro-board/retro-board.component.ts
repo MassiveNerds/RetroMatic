@@ -90,18 +90,18 @@ export class RetroBoardComponent implements OnInit {
       Object.keys(this.jsonData[item]).map((note, i) => {
         let css = '';
         switch (this.jsonData[item][note].type) {
-            case 'success':
-              css = 'background-color:#f3f9f4;border-color:#91c89c;';
-              break;
-            case 'danger':
-              css = 'background-color:#fff8f7;border-color:#d04437;';
-              break;
-            case 'info':
-              css = 'background-color:#f7f7ff;border-color:#7f8bff;';
-              break;
-            default:
-              css = '';
-          }
+          case 'success':
+            css = 'background-color:#f3f9f4;border-color:#91c89c;';
+            break;
+          case 'danger':
+            css = 'background-color:#fff8f7;border-color:#d04437;';
+            break;
+          case 'info':
+            css = 'background-color:#f7f7ff;border-color:#7f8bff;';
+            break;
+          default:
+            css = '';
+        }
         if (i === 0) {
           exportedHTML += `
   &lt;div class='cell normal' style='${css}' data-type='normal'&gt;
@@ -109,7 +109,7 @@ export class RetroBoardComponent implements OnInit {
       &lt;table class='confluenceTable'&gt;
         &lt;colgroup&gt;&lt;col&gt;&lt;col&gt;&lt;col&gt;&lt;/colgroup&gt;`;
         }
-          exportedHTML += `
+        exportedHTML += `
         &lt;tr&gt;`;
         if (i === 0) {
           exportedHTML += `
@@ -200,7 +200,7 @@ export class RetroBoardComponent implements OnInit {
   }
 
   addNote(message: string) {
-    this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: 0})
+    this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: {}})
       .then(() => this.modalRef.hide());
     this.clearExports();
   }
@@ -212,17 +212,25 @@ export class RetroBoardComponent implements OnInit {
   }
 
   upVote() {
-    this.activeNote.votes++;
-    this.activeVote = true;
-    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
+    if (this.activeNote.votes) {
+      this.activeNote.votes[this.uid] = true;
+    } else {
+      this.activeNote.votes = {};
+      this.activeNote.votes[this.uid] = true;
+    }
+    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
+
+    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`)
+      .update({votes: this.activeNote.votes, totalVotes: this.activeNote.totalVotes})
       .then(() => this.modalRef.hide());
     this.clearExports();
   }
 
-  undoVote() {
-    this.activeNote.votes--;
-    this.activeVote = false;
-    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
+  downVote() {
+    delete this.activeNote.votes[this.uid];
+    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
+    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`)
+      .update({votes: this.activeNote.votes, totalVotes: this.activeNote.totalVotes})
       .then(() => this.modalRef.hide());
     this.clearExports();
   }
