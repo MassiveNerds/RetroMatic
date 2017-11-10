@@ -2,8 +2,26 @@
     margin-bottom: 15px;
     border-radius: 10px;
 }
+
 .count {
   display: inline;
   float: right;
   padding: 0 3px;
+
+.list-group-item-new {
+  border: 2px dashed #aaa;
+  opacity: 0.5;
+  text-align: center;
+}
+
+.export{
+  position:relative;
+  z-index:1;
+}
+.export > div{
+  display:none;
+}
+
+.export.open > div{
+  display:block;
 }

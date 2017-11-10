@@ -1,12 +1,9 @@
+<app-countdown-timer></app-countdown-timer>
 <div class="container">
   <div class="row">
     <div class="col-md-4" *ngFor="let bucket of buckets | async">
       <h4>
         <span>{{ bucket.name }}</span>
-        <button type="button" class="btn btn-xs pull-right" (click)="openModal(addtemplate, bucket)" [class.btn-success]="bucket.type === 'success'"
-          [class.btn-danger]="bucket.type === 'danger'" [class.btn-info]="bucket.type === 'info'">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        </button>
       </h4>
       <div class="list-group">
         <button type="button" class="list-group-item" *ngFor="let note of bucket.notes | async" [class.list-group-item-success]="bucket.type === 'success'"
@@ -15,13 +12,17 @@
           {{note.message}}
           <strong class="count">{{note.totalVotes}}</strong>
         </button>
+        <button type="button" title="Add entry to {{bucket.name}}" aria-label="Add entry" class="list-group-item list-group-item-new" [class.list-group-item-success]="bucket.type === 'success'"
+          [class.list-group-item-danger]="bucket.type === 'danger'" [class.list-group-item-info]="bucket.type === 'info'" (click)="openModal(addtemplate, bucket)">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
   </div>
-  <div class="export">
-    <h2>Export</h2>
-    <button class="btn btn-primary" id="exportLink" (click)="exportToJSON()">JSON</button><div id="json-container"></div>
-    <button class="btn btn-primary" id="exportHtml" (click)="exportToHTML()">HTML</button><div id="html-container"></div>
+  <div class="export" [ngClass]="{'open':exportOpen}">
+    <button class="btn btn-primary" id="exportLink" (click)="exportData()">Export</button>
+    <div id="json-container" (click)="selectText('json-container')"></div>
+    <div id="html-container" (click)="selectText('html-container')"></div>
   </div>
 </div>
 <ng-template #addtemplate>
