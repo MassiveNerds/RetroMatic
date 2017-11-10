@@ -1,7 +1,20 @@
 nav p {
-    padding: 0px 15px;
+  padding: 0px 15px;
+  color: white;
 }
 
-.navbar{
+nav a {
+  color: white;
+}
+
+nav a:hover {
+  color: #eee;
+  text-shadow: 0 0 15px rgba(200, 200, 200, 0.5);
+}
+
+.navbar {
   z-index: 10;
+  background: #337ab7;
+  border: none;
+  border-radius: 0;
 }
