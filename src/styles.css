@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+#html-container > div:before{
+  content:"Confluence HTML (click inside box to select the text)";
+}
+
+#json-container > div:before{
+  content:"JSON (click inside box to select the text)";
+}
