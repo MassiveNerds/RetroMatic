@@ -7,6 +7,7 @@
   display: inline;
   float: right;
   padding: 0 3px;
+}
 
 .list-group-item-new {
   border: 2px dashed #aaa;
@@ -18,6 +19,7 @@
   position:relative;
   z-index:1;
 }
+
 .export > div{
   display:none;
 }
