@@ -1,10 +1,12 @@
+@import '../../variables.less';
+
 .list-group-item {
     margin-bottom: 15px;
     border-radius: 10px;
 }
 
 .list-group-item-new {
-  border: 2px dashed #aaa;
+  border: 2px dashed @border-color;
   opacity: 0.5;
   text-align: center;
 }
@@ -13,10 +15,13 @@
   position:relative;
   z-index:1;
 }
-.export > div{
-  display:none;
-}
-
-.export.open > div{
-  display:block;
+.export{
+  > div{
+    display:none;
+  }
+  &.open{
+    > div{
+      display:block;
+    }
+  }
 }

@@ -13,7 +13,7 @@ import 'rxjs/add/operator/switchMap';
 @Component({
   selector: 'app-retro-board',
   templateUrl: './retro-board.component.html',
-  styleUrls: ['./retro-board.component.css']
+  styleUrls: ['./retro-board.component.less']
 })
 export class RetroBoardComponent implements OnInit {
   user: Observable<firebase.User>;
@@ -131,7 +131,7 @@ export class RetroBoardComponent implements OnInit {
 &lt;/div&gt;`;
     exportedHTML += `
 &lt;hr&gt;
-&lt;h2&gt;Start&lt;/h2&gt;
+&lt;h2&gt;Tasks&lt;/h2&gt;
 &lt;ul class="inline-task-list"&gt;
   &lt;li data-inline-task-id=""&gt;
     &lt;span&gt;Type your task here, using "@" to assign to a user and "//" to select a due date&lt;/span&gt;

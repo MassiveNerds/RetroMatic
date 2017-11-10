@@ -12,7 +12,7 @@ import {
 @Component({
   selector: 'app-countdown-timer',
   templateUrl: './countdown-timer.component.html',
-  styleUrls: ['./countdown-timer.component.css'],
+  styleUrls: ['./countdown-timer.component.less'],
   animations: [
     trigger('visibilityChanged', [
       state('true' , style({ opacity: .15 })),
