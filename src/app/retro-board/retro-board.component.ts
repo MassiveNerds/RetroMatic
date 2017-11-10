@@ -34,6 +34,7 @@ export class RetroBoardComponent implements OnInit {
   jsonData: Object;
   jsonContainer;
   htmlContainer;
+  exportOpen = false;
 
   constructor(private db: AngularFireDatabase,
               private modalService: BsModalService,
@@ -64,6 +65,7 @@ export class RetroBoardComponent implements OnInit {
 
   exportData() {
     this.clearExports();
+    this.exportOpen = !this.exportOpen;
     this.jsonString = JSON.stringify(this.jsonData);
     const newEle1 = document.createElement('div');
     newEle1.innerHTML = `<pre class="json-pre">${this.jsonString}</pre>`;
