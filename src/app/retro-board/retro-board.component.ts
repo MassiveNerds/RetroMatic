@@ -189,7 +189,7 @@ export class RetroBoardComponent implements OnInit {
                 'type': bucket.type,
                 'bucketName': bucket.name,
                 'message': note.message,
-                'votes': note.totalVotes
+                'votes': note.totalVotes || 0
               };
             });
           });
