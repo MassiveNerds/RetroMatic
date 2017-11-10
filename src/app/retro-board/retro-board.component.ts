@@ -73,22 +73,38 @@ export class RetroBoardComponent implements OnInit {
     let exportedHTML = '<pre class="html-pre"><code class="html">';
     exportedHTML += `&lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
     Object.keys(this.jsonData).map(item => {
-      exportedHTML += `
-  &lt;div class='cell normal' data-type='normal'&gt;
+      Object.keys(this.jsonData[item]).map((note, i) => {
+        let css = '';
+        switch (this.jsonData[item][note].type) {
+            case 'success':
+              css = 'background-color:#f3f9f4;border-color:#91c89c;';
+              break;
+            case 'danger':
+              css = 'background-color:#fff8f7;border-color:#d04437;';
+              break;
+            case 'info':
+              css = 'background-color:#f7f7ff;border-color:#7f8bff;';
+              break;
+            default:
+              css = '';
+          }
+        if (i === 0) {
+          exportedHTML += `
+  &lt;div class='cell normal' style='${css}' data-type='normal'&gt;
     &lt;div class='innerCell' contenteditable='true'&gt;
       &lt;table class='confluenceTable'&gt;
         &lt;colgroup&gt;&lt;col&gt;&lt;col&gt;&lt;col&gt;&lt;/colgroup&gt;`;
-      Object.keys(this.jsonData[item]).map((note, i) => {
-        exportedHTML += `
+        }
+          exportedHTML += `
         &lt;tr&gt;`;
-          if (i === 0) {
-            exportedHTML += `
+        if (i === 0) {
+          exportedHTML += `
           &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${this.jsonData[item][note].bucketName}&lt;/p&gt;`;
-          }
-          exportedHTML += `
-          &lt;td style='width:20px;' class='confluenceTd'&gt;${this.jsonData[item][note].votes}&lt;/td&gt;`;
-          exportedHTML += `
-          &lt;td class='confluenceTd'&gt;${this.jsonData[item][note].message}&lt;/td&gt;`;
+        }
+        exportedHTML += `
+          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${this.jsonData[item][note].votes}&lt;/td&gt;`;
+        exportedHTML += `
+          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${this.jsonData[item][note].message}&lt;/td&gt;`;
         exportedHTML += `
         &lt;/tr&gt;`;
       });
@@ -150,6 +166,7 @@ export class RetroBoardComponent implements OnInit {
                 this.jsonData[bucket.$key] = {};
               }
               this.jsonData[bucket.$key][note.$key] = {
+                'type': bucket.type,
                 'bucketName': bucket.name,
                 'message': note.message,
                 'votes': note.votes
@@ -158,6 +175,7 @@ export class RetroBoardComponent implements OnInit {
           });
       });
     });
+    console.log(this.jsonData);
     this.jsonContainer = document.getElementById('json-container');
     this.htmlContainer = document.getElementById('html-container');
   }
