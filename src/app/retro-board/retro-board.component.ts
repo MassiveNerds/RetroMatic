@@ -211,7 +211,11 @@ export class RetroBoardComponent implements OnInit {
     this.clearExports();
   }
 
-  upVote() {
+  upVote( bucket: any, note?: any) {
+    this.activeBucket = bucket;
+    if (note) {
+      this.activeNote = note;
+    }
     if (this.activeNote.votes) {
       this.activeNote.votes[this.uid] = true;
     } else {
@@ -222,16 +226,20 @@ export class RetroBoardComponent implements OnInit {
 
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`)
       .update({votes: this.activeNote.votes, totalVotes: this.activeNote.totalVotes})
-      .then(() => this.modalRef.hide());
+      .then(() => this.modalRef ? this.modalRef.hide() : '');
     this.clearExports();
   }
 
-  downVote() {
+  downVote( bucket: any, note?: any) {
+    this.activeBucket = bucket;
+    if (note) {
+      this.activeNote = note;
+    }
     delete this.activeNote.votes[this.uid];
     this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
     this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`)
       .update({votes: this.activeNote.votes, totalVotes: this.activeNote.totalVotes})
-      .then(() => this.modalRef.hide());
+      .then(() => this.modalRef ? this.modalRef.hide() : '');
     this.clearExports();
   }
 

@@ -1,8 +1,8 @@
 @import '../../variables.less';
 
 .list-group-item {
-    margin-bottom: 15px;
-    border-radius: 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
 }
 
 .count {
@@ -16,21 +16,49 @@
   opacity: 0.5;
   text-align: center;
 }
-.list-group button{
-  font-family:@font;
+
+.list-group button {
+  font-family: @font;
 }
 
-.export{
-  position:relative;
-  z-index:1;
+.export {
+  position: relative;
+  z-index: 1;
 }
-.export{
-  > div{
-    display:none;
+
+.export {
+  > div {
+    display: none;
   }
-  &.open{
-    > div{
-      display:block;
+  &.open {
+    > div {
+      display: block;
     }
+  }
+}
+
+.btn-groups {
+  position: relative;
+  button {
+    position: absolute;
+    right: 11px;
+    top: calc(~'50% - 11px');
+    &:nth-of-type(1) {
+      position: relative;
+      width: 100%;
+      top: initial;
+      right: initial;
+    }
+    &.good{
+      background: @green-med;
+      border: @green-dark;
+    }
+    &.bad{
+      background: @red-med;
+      border: @red-dark;
+    }
+  }
+  strong {
+    padding-right: 30px;
   }
 }
