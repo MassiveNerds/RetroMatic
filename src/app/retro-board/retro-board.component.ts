@@ -13,7 +13,7 @@ import 'rxjs/add/operator/switchMap';
 @Component({
   selector: 'app-retro-board',
   templateUrl: './retro-board.component.html',
-  styleUrls: ['./retro-board.component.css']
+  styleUrls: ['./retro-board.component.less']
 })
 export class RetroBoardComponent implements OnInit {
   user: Observable<firebase.User>;
@@ -35,6 +35,7 @@ export class RetroBoardComponent implements OnInit {
   jsonContainer;
   htmlContainer;
   exportOpen = false;
+  timeNow = new Date().toLocaleDateString();
 
   constructor(private db: AngularFireDatabase,
               private modalService: BsModalService,
@@ -71,24 +72,53 @@ export class RetroBoardComponent implements OnInit {
     newEle1.innerHTML = `<pre class="json-pre">${this.jsonString}</pre>`;
     this.jsonContainer.insertBefore(newEle1, null);
     let exportedHTML = '<pre class="html-pre"><code class="html">';
-    exportedHTML += `&lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
+    exportedHTML += `&lt;table class='confluenceTable'&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th class='confluenceTh' &gt;Date&lt;/th&gt;
+      &lt;td class='confluenceTd' &gt;&lt;time datetime='${this.timeNow}'&gt;${this.timeNow}&lt;/time&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th class='confluenceTh' &gt;Participants&lt;/th&gt;
+      &lt;td class='confluenceTd' &gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
     Object.keys(this.jsonData).map(item => {
-      exportedHTML += `
-  &lt;div class='cell normal' data-type='normal'&gt;
+      Object.keys(this.jsonData[item]).map((note, i) => {
+        let css = '';
+        switch (this.jsonData[item][note].type) {
+          case 'success':
+            css = 'background-color:#f3f9f4;border-color:#91c89c;';
+            break;
+          case 'danger':
+            css = 'background-color:#fff8f7;border-color:#d04437;';
+            break;
+          case 'info':
+            css = 'background-color:#f7f7ff;border-color:#7f8bff;';
+            break;
+          default:
+            css = '';
+        }
+        if (i === 0) {
+          exportedHTML += `
+  &lt;div class='cell normal' style='${css}' data-type='normal'&gt;
     &lt;div class='innerCell' contenteditable='true'&gt;
       &lt;table class='confluenceTable'&gt;
         &lt;colgroup&gt;&lt;col&gt;&lt;col&gt;&lt;col&gt;&lt;/colgroup&gt;`;
-      Object.keys(this.jsonData[item]).map((note, i) => {
+        }
         exportedHTML += `
         &lt;tr&gt;`;
-          if (i === 0) {
-            exportedHTML += `
+        if (i === 0) {
+          exportedHTML += `
           &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${this.jsonData[item][note].bucketName}&lt;/p&gt;`;
-          }
-          exportedHTML += `
-          &lt;td style='width:20px;' class='confluenceTd'&gt;${this.jsonData[item][note].votes}&lt;/td&gt;`;
-          exportedHTML += `
-          &lt;td class='confluenceTd'&gt;${this.jsonData[item][note].message}&lt;/td&gt;`;
+        }
+        exportedHTML += `
+          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${this.jsonData[item][note].votes}&lt;/td&gt;`;
+        exportedHTML += `
+          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${this.jsonData[item][note].message}&lt;/td&gt;`;
         exportedHTML += `
         &lt;/tr&gt;`;
       });
@@ -100,7 +130,13 @@ export class RetroBoardComponent implements OnInit {
     exportedHTML += `
 &lt;/div&gt;`;
     exportedHTML += `
-&lt;hr&gt;`;
+&lt;hr&gt;
+&lt;h2&gt;Tasks&lt;/h2&gt;
+&lt;ul class="inline-task-list"&gt;
+  &lt;li data-inline-task-id=""&gt;
+    &lt;span&gt;Type your task here, using "@" to assign to a user and "//" to select a due date&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;`;
     exportedHTML += `</code></pre>`;
     const newEle2 = document.createElement('div');
     newEle2.innerHTML = exportedHTML;
@@ -150,9 +186,10 @@ export class RetroBoardComponent implements OnInit {
                 this.jsonData[bucket.$key] = {};
               }
               this.jsonData[bucket.$key][note.$key] = {
+                'type': bucket.type,
                 'bucketName': bucket.name,
                 'message': note.message,
-                'votes': note.votes
+                'votes': note.totalVotes || 0
               };
             });
           });
@@ -163,7 +200,7 @@ export class RetroBoardComponent implements OnInit {
   }
 
   addNote(message: string) {
-    this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: 0})
+    this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: {}})
       .then(() => this.modalRef.hide());
     this.clearExports();
   }
@@ -174,19 +211,35 @@ export class RetroBoardComponent implements OnInit {
     this.clearExports();
   }
 
-  upVote() {
-    this.activeNote.votes++;
-    this.activeVote = true;
-    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
-      .then(() => this.modalRef.hide());
+  upVote( bucket: any, note?: any) {
+    this.activeBucket = bucket;
+    if (note) {
+      this.activeNote = note;
+    }
+    if (this.activeNote.votes) {
+      this.activeNote.votes[this.uid] = true;
+    } else {
+      this.activeNote.votes = {};
+      this.activeNote.votes[this.uid] = true;
+    }
+    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
+
+    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`)
+      .update({votes: this.activeNote.votes, totalVotes: this.activeNote.totalVotes})
+      .then(() => this.modalRef ? this.modalRef.hide() : '');
     this.clearExports();
   }
 
-  undoVote() {
-    this.activeNote.votes--;
-    this.activeVote = false;
-    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`).update({votes: this.activeNote.votes})
-      .then(() => this.modalRef.hide());
+  downVote( bucket: any, note?: any) {
+    this.activeBucket = bucket;
+    if (note) {
+      this.activeNote = note;
+    }
+    delete this.activeNote.votes[this.uid];
+    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
+    this.db.object(`/notes/${this.activeBucket.$key}/${this.activeNote.$key}`)
+      .update({votes: this.activeNote.votes, totalVotes: this.activeNote.totalVotes})
+      .then(() => this.modalRef ? this.modalRef.hide() : '');
     this.clearExports();
   }
 

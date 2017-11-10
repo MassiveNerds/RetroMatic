@@ -8,11 +8,13 @@ import { CollapseModule } from 'ngx-bootstrap';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
   title = 'Agile Retrospective';
   user: Observable<firebase.User>;
+  isIn = false;
+  theme = 'light';
   constructor(public afAuth: AngularFireAuth) {
     this.user = afAuth.authState;
   }
@@ -22,16 +24,15 @@ export class AppComponent implements OnInit {
     this.user
       .subscribe(user => {
         if (user) {
-          let displayName = (user.isAnonymous) ? 'anonymous user' : `${user.email}`;
+          const displayName = (user.isAnonymous) ? 'anonymous user' : `${user.email}`;
           this.loginDisplay = `Signed in as ${displayName}`;
         }
       });
   }
 
-  isIn = false;
   toggleState() {
-    let bool = this.isIn;
-    this.isIn = bool === false ? true : false;
+    const bool = this.isIn;
+    this.isIn = bool === false;
   }
 
   logout() {
