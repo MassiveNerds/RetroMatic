@@ -127,7 +127,7 @@ export class RetroBoardComponent implements OnInit {
   }
 
   addNote(message: string) {
-    this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: 0})
+    this.db.list(`/notes/${this.activeBucket.$key}`).push({message: message, votes: {}})
       .then(() => this.modalRef.hide());
   }
 
