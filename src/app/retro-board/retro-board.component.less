@@ -1,3 +1,5 @@
+@import '../../variables.less';
+
 .list-group-item {
     margin-bottom: 15px;
     border-radius: 10px;
@@ -10,20 +12,27 @@
 }
 
 .list-group-item-new {
-  border: 2px dashed #aaa;
+  border: 2px dashed @border-color;
+  font-size:25px;
+  line-height: 25px;
   opacity: 0.5;
   text-align: center;
+}
+.list-group button{
+  font-family:@font;
 }
 
 .export{
   position:relative;
   z-index:1;
 }
-
-.export > div{
-  display:none;
-}
-
-.export.open > div{
-  display:block;
+.export{
+  > div{
+    display:none;
+  }
+  &.open{
+    > div{
+      display:block;
+    }
+  }
 }

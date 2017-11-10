@@ -15,7 +15,24 @@
   </div>
   <div class="row">
     <div class="col-md-offset-4 col-md-4">
-      <button type="button" class="btn-primary btn-block" (click)="createRetroboard()">Create New Retrospective</button>
+      <button type="button" class="btn-primary btn-block" (click)="openModal(addbox, bucket)">Create New Retrospective</button>
     </div>
   </div>
 </div>
+<ng-template #addbox>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Name your retrospective  <strong>{{addbox.name}}</strong></h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <textarea #addmessage class="form-control" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" (click)="createRetroboard(addmessage.value)">Add</button>
+      <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
+    </div>
+  </div>
+</ng-template>
