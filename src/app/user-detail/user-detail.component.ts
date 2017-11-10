@@ -9,7 +9,7 @@ import * as firebase from 'firebase/app';
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.css']
+  styleUrls: ['./user-detail.component.less']
 })
 export class UserDetailComponent implements OnInit {
   user: Observable<firebase.User>;

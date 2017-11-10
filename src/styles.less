@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import './variables.less';
 
 html body{
   background: #05abe0;
@@ -14,4 +15,11 @@ html body{
 .html-pre{
   height:200px;
   overflow:scroll;
+}
+h1,h2,h3,h4,h5,h6,p,a,span{
+  font-family: @font!important;
+}
+h4{
+  color:@text-light!important;
+  text-shadow: @text-light-hover-border;
 }
