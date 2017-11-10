@@ -175,7 +175,6 @@ export class RetroBoardComponent implements OnInit {
           });
       });
     });
-    console.log(this.jsonData);
     this.jsonContainer = document.getElementById('json-container');
     this.htmlContainer = document.getElementById('html-container');
   }
