@@ -40,7 +40,7 @@ export class CountdownTimerComponent implements OnInit, OnChanges {
 
   @Input() shouldStartTimer: boolean;
   private _timer;
-  private _minutes = 16;
+  private _minutes = 60;
   private _seconds = 0;
   private _totalSeconds = (this._minutes * 60) + this._seconds;
   private _runningOutOfTime = 15 * 60;
