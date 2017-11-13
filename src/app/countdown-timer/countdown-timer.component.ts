@@ -40,8 +40,8 @@ export class CountdownTimerComponent implements OnInit, OnChanges {
 
   @Input() shouldStartTimer: boolean;
   private  _timer;
-  private  _minutes = 0;
-  private  _seconds = 60;
+  private  _minutes = 60;
+  private  _seconds = 0;
   private _runningOutOfTime = 20;
   private _outOfTime = 5;
   public countdownTimerString: String;
