@@ -54,7 +54,7 @@ export class RetroBoardComponent implements OnInit {
   }
 
   reflow() {
-    
+
   }
 
   openModal(template: TemplateRef<any>, bucket: any, note?: any) {
@@ -106,8 +106,10 @@ export class RetroBoardComponent implements OnInit {
       .then(() => this.modalRef.hide());
   }
 
-  upVote( bucket: any, note?: any) {
-    this.activeBucket = bucket;
+  upVote( bucket?: any, note?: any) {
+    if (bucket) {
+      this.activeBucket = bucket;
+    }
     if (note) {
       this.activeNote = note;
     }
@@ -125,7 +127,9 @@ export class RetroBoardComponent implements OnInit {
   }
 
   downVote( bucket: any, note?: any) {
-    this.activeBucket = bucket;
+    if (bucket) {
+      this.activeBucket = bucket;
+    }
     if (note) {
       this.activeNote = note;
     }
