@@ -66,18 +66,18 @@ export class ExportingComponent implements OnInit {
   }
 
   dateUserTableString(time) {
-  	return `	&lt;table class='confluenceTable'&gt;
-	  &lt;tbody&gt;
-	    &lt;tr&gt;
-	      &lt;th class='confluenceTh' &gt;Date&lt;/th&gt;
-	      &lt;td class='confluenceTd' &gt;&lt;time datetime='${time}'&gt;${time}&lt;/time&gt;&lt;/td&gt;
-	    &lt;/tr&gt;
-	    &lt;tr&gt;
-	      &lt;th class='confluenceTh' &gt;Participants&lt;/th&gt;
-	      &lt;td class='confluenceTd' &gt;&lt;/td&gt;
-	    &lt;/tr&gt;
-	  &lt;/tbody&gt;
-	&lt;/table&gt;`;
+  	return `&lt;table class='confluenceTable'&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th class='confluenceTh' &gt;Date&lt;/th&gt;
+      &lt;td class='confluenceTd' &gt;&lt;time datetime='${time}'&gt;${time}&lt;/time&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th class='confluenceTh' &gt;Participants&lt;/th&gt;
+      &lt;td class='confluenceTd' &gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;`;
   }
 
   dataString(data, fxn) {
@@ -137,12 +137,12 @@ export class ExportingComponent implements OnInit {
 
   addlTasksString() {
   	return `
-	&lt;hr&gt;
-	&lt;h2&gt;Tasks&lt;/h2&gt;
-	&lt;ul class="inline-task-list"&gt;
-	  &lt;li data-inline-task-id=""&gt;
-	    &lt;span&gt;Type your task here, using "@" to assign to a user and "//" to select a due date&lt;/span&gt;
-	  &lt;/li&gt;
-	&lt;/ul&gt;`
+&lt;hr&gt;
+&lt;h2&gt;Tasks&lt;/h2&gt;
+&lt;ul class="inline-task-list"&gt;
+  &lt;li data-inline-task-id=""&gt;
+    &lt;span&gt;Type your task here, using "@" to assign to a user and "//" to select a due date&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;`
   }
 }
