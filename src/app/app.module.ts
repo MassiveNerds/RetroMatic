@@ -17,6 +17,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ExportingComponent } from './exporting/exporting.component';
 
 const appRoutes: Routes = [
   {
@@ -49,7 +50,8 @@ const appRoutes: Routes = [
     LoginComponent,
     PageNotFoundComponent,
     UserDetailComponent,
-    CountdownTimerComponent
+    CountdownTimerComponent,
+    ExportingComponent
   ],
   imports: [
     BrowserModule,
