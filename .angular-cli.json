@@ -22,9 +22,7 @@
         "styles.less",
         "../node_modules/bootstrap/dist/css/bootstrap.min.css"
       ],
-      "scripts": [
-        "../node_modules/highlight.js/lib/highlight.js"
-      ],
+      "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
