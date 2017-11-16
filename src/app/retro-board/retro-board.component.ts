@@ -18,7 +18,7 @@ import 'rxjs/add/operator/switchMap';
 export class RetroBoardComponent implements OnInit {
   user: Observable<firebase.User>;
   uid: string;
-  retroboard: Observable<any>;
+  retroboard: any;
   buckets: Observable<any[]>;
   modalRef: BsModalRef;
   config = {
@@ -53,10 +53,6 @@ export class RetroBoardComponent implements OnInit {
     return 0;
   }
 
-  reflow() {
-
-  }
-
   openModal(template: TemplateRef<any>, bucket: any, note?: any) {
     this.activeBucket = bucket;
     if (note) {
@@ -66,6 +62,12 @@ export class RetroBoardComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    let id = this.route.snapshot.paramMap.get('id');
+    this.db.object(`/retroboards/${this.uid}/${id}`)
+      .subscribe(retroboard => this.retroboard = retroboard);
+     
+
     this.buckets = this.route.paramMap
       .switchMap((params: ParamMap) => this.db.list(`/buckets/${params.get('id')}`))
       .map((buckets) => {
