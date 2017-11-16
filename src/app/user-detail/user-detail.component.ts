@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import {Router} from '@angular/router';
 import * as firebase from 'firebase/app';
 import * as moment from 'moment';
 
@@ -24,7 +25,7 @@ export class UserDetailComponent implements OnInit {
     ignoreBackdropClick: false
   };
 
-  constructor(private db: AngularFireDatabase, public afAuth: AngularFireAuth, private modalService: BsModalService, ) {
+  constructor(private db: AngularFireDatabase, public afAuth: AngularFireAuth, private modalService: BsModalService, private router: Router) {
     this.user = afAuth.authState;
     this.user.subscribe(result => this.uid = result.uid);
   }
@@ -44,6 +45,10 @@ export class UserDetailComponent implements OnInit {
       buckets.push({ name: (bucket1 && bucket1.length > 0) ? bucket1 : 'What went well?', type: 'success' });
       buckets.push({ name: (bucket2 && bucket2.length > 0) ? bucket2 : 'What can be improved?', type: 'danger' });
       buckets.push({ name: (bucket3 && bucket3.length > 0) ? bucket3 : 'Action items', type: 'info' });
-    }).then(() => this.modalRef.hide());
+      return newId;
+    }).then((id) => {
+      this.modalRef.hide();
+      this.router.navigate(['/retroboard/', id]);
+    });
   }
 }
