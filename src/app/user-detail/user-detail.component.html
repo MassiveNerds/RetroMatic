@@ -15,23 +15,40 @@
   </div>
   <div class="row">
     <div class="col-md-offset-4 col-md-4">
-      <button type="button" class="btn-primary btn-block" (click)="openModal(addbox, bucket)">Create New Retrospective</button>
+      <button type="button" class="btn-primary btn-block" (click)="openModal(addtemplate)">Create New Retrospective</button>
     </div>
   </div>
 </div>
-<ng-template #addbox>
+<ng-template #addtemplate>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Name your retrospective  <strong>{{addbox.name}}</strong></h4>
+    <h4 class="modal-title pull-left">Create a new retrospective</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <div class="form-group">
-      <textarea #addmessage class="form-control" rows="3"></textarea>
+      <label for="name">Retrospective name:</label>
+      <input #name type="text" class="form-control" placeholder="Name" required="true">
     </div>
     <div class="form-group">
-      <button class="btn btn-primary" (click)="createRetroboard(addmessage.value)">Add</button>
+      <label for="bucket1">Customize buckets (Optional):</label>
+      <input #bucket1 type="text" class="form-control" placeholder="What went well?">
+    </div>
+    <div class="form-group">
+      <input #bucket2 type="text" class="form-control" placeholder="What can be improved?">
+    </div>
+    <div class="form-group">
+      <input #bucket3 type="text" class="form-control" placeholder="Action items">
+    </div>
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input #hasTimer type="checkbox" value="hasTimer">Include timer</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" (click)="createRetroboard(name.value, bucket1.value, bucket2.value, bucket3.value, hasTimer.checked)">Add</button>
       <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
     </div>
   </div>
