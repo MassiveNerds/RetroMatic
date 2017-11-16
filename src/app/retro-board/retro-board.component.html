@@ -1,4 +1,4 @@
-<app-countdown-timer></app-countdown-timer>
+<app-countdown-timer *ngIf="retroboard?.hasTimer"></app-countdown-timer>
 <div class="container">
   <div class="row">
     <div class="col-md-12">
@@ -17,7 +17,7 @@
           <button type="button" class="list-group-item" [class.list-group-item-success]="bucket.type === 'success'" [class.list-group-item-danger]="bucket.type === 'danger'"
             [class.list-group-item-info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
             {{note.message}}
-            <strong class="count">{{note.totalVotes}}</strong>
+            <strong class="count">{{note.totalVotes != 0 ? note.totalVotes : ''}}</strong>
           </button>
           <button *ngIf="note.votes && note.votes[uid]" type="button" class="btn btn-xs btn-danger pull-right" (click)="downVote(bucket, note)">
             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
