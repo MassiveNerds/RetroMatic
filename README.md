@@ -1,6 +1,6 @@
-# RetroMatic
-
 ![RetroMatic](src/assets/Images/rmbg.jpg)
+
+# RetroMatic
 
 RetroMatic is a web appplication used to conduct **retrospectives**.  A retrospective is a meeting that's held at the end of an iteration in **Agile** software development. During the retrospective, the team reflects on what happened in the iteration and identifies actions for improvement going forward.
 
@@ -29,7 +29,21 @@ $ cd agile-retrospective
 
 # Install dependencies
 $ npm install
+```
+Update firebase config values in `environment.ts`. These values can be found here: Firebase Console > Overview > Add Firebase to your web app.
+```javascript
+    firebase: {
+        apiKey: '',
+        authDomain: '',
+        databaseURL: '',
+        projectId: '',
+        storageBucket: '',
+        messagingSenderId: ''
+    }
+```
 
+
+```bash
 # Run the app
 $ ng serve
 ```
