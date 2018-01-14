@@ -28,6 +28,7 @@
     "moment": "^2.20.1",
     "ngx-bootstrap": "^1.9.3",
     "rxjs": "^5.5.6",
+    "stacktrace-js": "^2.0.0",
     "zone.js": "^0.8.20"
   },
   "devDependencies": {
