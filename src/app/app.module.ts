@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { UIErrorHandler } from './error-handler';
+import { UIErrorHandler, ModalContentComponent } from './error-handler';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -52,7 +52,8 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     UserDetailComponent,
     CountdownTimerComponent,
-    ExportingComponent
+    ExportingComponent,
+    ModalContentComponent
   ],
   imports: [
     BrowserModule,
@@ -68,6 +69,9 @@ const appRoutes: Routes = [
       { enableTracing: false } // <-- debugging purposes only
     ),
     ModalModule.forRoot()
+  ],
+  entryComponents: [
+    ModalContentComponent
   ],
   providers: [
     AuthGuard,
