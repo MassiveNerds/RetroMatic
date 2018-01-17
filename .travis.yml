@@ -18,7 +18,8 @@ script:
   - npm run-script build
 
 after_success:
-  - firebase deploy --token $FIREBASE_TOKEN
+  - echo $FIREBASE_PROJECT_ID
+  - firebase deploy --token $FIREBASE_TOKEN --non-interactive
 
 notifications:
   email:
