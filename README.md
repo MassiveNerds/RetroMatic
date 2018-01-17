@@ -32,7 +32,8 @@ $ cd agile-retrospective
 # Install dependencies
 $ npm install
 ```
-Update firebase config values in `environment.ts`. These values can be found here: Firebase Console > Overview > Add Firebase to your web app.
+Update firebase config values in `firebase.ts`.  This config file will be ignored from GIT. Copy `firebase.example.ts` and rename it to `firebase.ts`. These values can be found here: Firebase Console > Overview > Add Firebase to your web app.
+
 ```javascript
     firebase: {
         apiKey: '',
