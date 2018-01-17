@@ -13,10 +13,16 @@ These instructions will get you a copy of the project up and running on your loc
 * Install Angular CLI.  This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.2.
 
 ```bash
+# Install Angular CLI
 $ npm install -g @angular/cli
 ```
 
-* Create a [Firebase](https://firebase.google.com/) project.  In Firebase console, enable Email/Password, Google, and Anonymous sign-in under the sign-in method tab of the Auth section.
+* Create a [Firebase](https://firebase.google.com/) project and install the Firebase CLI.  In Firebase console, enable Email/Password, Google, and Anonymous sign-in under the sign-in method tab of the Auth section.
+
+```bash
+# Install Firebase CLI
+$ npm install -g firebase-tools
+```
 
 ### Installing
 

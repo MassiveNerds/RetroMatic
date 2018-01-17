@@ -4,8 +4,9 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
+    "config": "ts-node ./set-env.ts",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run config -- --environment=prod && ng build -prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -24,6 +25,7 @@
     "angularfire2": "^4.0.0-rc0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.3",
+    "dotenv": "^4.0.0",
     "firebase": "^3.9.0",
     "moment": "^2.20.1",
     "ngx-bootstrap": "^1.9.3",
@@ -48,7 +50,7 @@
     "karma-jasmine": "^1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.1.2",
-    "ts-node": "~3.2.0",
+    "ts-node": "^3.2.2",
     "tslint": "~5.3.2",
     "typescript": "~2.3.3"
   }
