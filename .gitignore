@@ -40,5 +40,7 @@ yarn-error.log
 
 # System Files
 firebase.ts
+environment.prod.ts
 .DS_Store
 Thumbs.db
+.env
