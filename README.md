@@ -16,7 +16,7 @@ These instructions will get you a copy of the project up and running on your loc
 $ npm install -g @angular/cli
 ```
 
-* Create a [Firebase](https://firebase.google.com/) project.  In Firebase console, enable Email/Password and Anonymous sign-in under the sign-in method tab of the Auth section.
+* Create a [Firebase](https://firebase.google.com/) project.  In Firebase console, enable Email/Password, Google, and Anonymous sign-in under the sign-in method tab of the Auth section.
 
 ### Installing
 
