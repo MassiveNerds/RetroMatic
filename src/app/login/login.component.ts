@@ -32,6 +32,12 @@ export class LoginComponent implements OnInit {
       .catch(err => this.error = err);
   }
 
+  loginWithGoogle(provider) {
+    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then(() => this.router.navigateByUrl(this.returnUrl))
+      .catch(err => this.error = err);
+  }
+
   loginAsGuest() {
     this.afAuth.auth.signInAnonymously()
       .then(() => this.router.navigateByUrl(this.returnUrl))
