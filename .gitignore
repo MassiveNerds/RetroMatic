@@ -39,5 +39,6 @@ yarn-error.log
 /e2e/*.map
 
 # System Files
+environment.ts
 .DS_Store
 Thumbs.db
