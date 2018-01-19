@@ -1,8 +1,9 @@
-![RetroMatic](src/assets/Images/rmbg.jpg)
-
 # RetroMatic
 
 [![Build Status](https://travis-ci.org/wordythebyrd/agile-retrospective.svg?branch=master)](https://travis-ci.org/wordythebyrd/agile-retrospective)
+[![Latest Version](https://img.shields.io/github/tag/wordythebyrd/agile-retrospective.svg)](https://github.com/wordythebyrd/agile-retrospective)
+
+![RetroMatic](src/assets/Images/rmbg.jpg)
 
 RetroMatic is a web appplication used to conduct **retrospectives**.  A retrospective is a meeting that's held at the end of an iteration in **Agile** software development. During the retrospective, the team reflects on what happened in the iteration and identifies actions for improvement going forward.
 
