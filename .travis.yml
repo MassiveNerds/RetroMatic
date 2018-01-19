@@ -9,6 +9,9 @@ branches:
     - master
 
 before_script:
+  - git config --global user.email "builds@travis-ci.com"
+  - git config --global user.name "Travis CI"
+  - git checkout master
   - npm install -g firebase-tools
   - npm install -g @angular/cli
   - npm install -g ts-node
@@ -16,9 +19,15 @@ before_script:
 
 script:
   - npm run-script build
+  - npm version patch -m "[CHORE] Bump Version %s"
 
-after_success:
-  - firebase deploy --token $FIREBASE_TOKEN --non-interactive
+before_deploy:
+  - git push https://$GITHUB_TOKEN@github.com/wordythebyrd/agile-retrospective master
+  - git push https://$GITHUB_TOKEN@github.com/wordythebyrd/agile-retrospective --tags
+
+deploy:
+  provider: firebase
+  token: $FIREBASE_TOKEN
 
 notifications:
   email:
