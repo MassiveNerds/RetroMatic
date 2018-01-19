@@ -19,7 +19,7 @@ before_script:
 
 script:
   - npm run-script build
-  - npm version patch -m "[CHORE] Bump Version %s"
+  - npm version patch -m "[CHORE] Bump Version %s [skip ci]"
 
 before_deploy:
   - git push https://$GITHUB_TOKEN@github.com/wordythebyrd/agile-retrospective master
