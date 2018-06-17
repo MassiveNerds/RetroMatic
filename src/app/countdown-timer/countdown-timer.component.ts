@@ -1,3 +1,5 @@
+
+import {timer as observableTimer} from 'rxjs';
 import {Component, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {
@@ -79,7 +81,7 @@ export class CountdownTimerComponent implements OnInit, OnChanges {
   }
 
   startTimer() {
-    this._timer = Observable.timer(2000, 1000);
+    this._timer = observableTimer(2000, 1000);
     this._timer.subscribe((tick) => {
       this._seconds--;
       this._totalSeconds--;
