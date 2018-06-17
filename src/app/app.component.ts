@@ -1,9 +1,8 @@
-import { LoginComponent } from './login/login.component';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subscription } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-import { CollapseModule } from 'ngx-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -13,15 +12,16 @@ import { CollapseModule } from 'ngx-bootstrap';
 export class AppComponent implements OnInit {
   title = 'RetroMatic';
   user: Observable<firebase.User>;
+  userChanges: Subscription;
   isIn = false;
   theme = 'light';
-  constructor(public afAuth: AngularFireAuth) {
+  constructor(public afAuth: AngularFireAuth, private router: Router) {
     this.user = afAuth.authState;
   }
 
   loginDisplay = '';
   ngOnInit() {
-    this.user
+    this.userChanges= this.user
       .subscribe(user => {
         if (user) {
           const displayName = (user.isAnonymous) ? 'anonymous user' : `${user.email}`;
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
+    this.userChanges.unsubscribe();
     this.afAuth.auth.signOut();
   }
 }
