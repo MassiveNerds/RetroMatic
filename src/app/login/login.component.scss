@@ -1,0 +1,30 @@
+@import '../../sass/variables';
+
+.login-page {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  background-image: $login-background;
+  background-size: 100% auto;
+}
+
+mat-card {
+  width: 400px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: $error;
+}
+
+@media only screen and (max-width: 600px) {
+  mat-card {
+    width:auto;
+  }
+}

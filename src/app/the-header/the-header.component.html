@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+  <span class="title">RetroMatic</span>
+  <button mat-flat-button [routerLink]="['/home']">
+    Home
+  </button>
+  <span class="spacer"></span>
+  <span *ngIf="(user | async)?.uid">
+    <span class="display mat-body-1">{{ loginDisplay }}</span>
+    <button mat-flat-button (click)="logout()">
+      Log out
+    </button>
+  </span>
+</mat-toolbar>

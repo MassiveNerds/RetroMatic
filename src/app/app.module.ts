@@ -8,40 +8,47 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
-import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { RetroBoardComponent } from './retro-board/retro-board.component';
 import { LoginComponent } from './login/login.component';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthGuard } from './auth.guard';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { UserDetailComponent } from './user-detail/user-detail.component';
-import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ExportingComponent } from './exporting/exporting.component';
+import { TheHeaderComponent } from './the-header/the-header.component';
+
+import { MatInputModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 const appRoutes: Routes = [
   {
     path: 'retroboard/:id',
     canActivate: [AuthGuard],
-    component: RetroBoardComponent
+    component: RetroBoardComponent,
   },
   {
     path: 'home',
     canActivate: [AuthGuard],
-    component: UserDetailComponent
+    component: UserDetailComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: '',
     redirectTo: '/home',
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
@@ -51,9 +58,9 @@ const appRoutes: Routes = [
     LoginComponent,
     PageNotFoundComponent,
     UserDetailComponent,
-    CountdownTimerComponent,
     ExportingComponent,
-    ModalContentComponent
+    ModalContentComponent,
+    TheHeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,24 +69,28 @@ const appRoutes: Routes = [
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     FormsModule,
-    ButtonsModule.forRoot(),
-    AlertModule.forRoot(),
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: false } // <-- debugging purposes only
+      { enableTracing: false }, // <-- debugging purposes only
     ),
-    ModalModule.forRoot()
+    MatToolbarModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatDialogModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
   ],
-  entryComponents: [
-    ModalContentComponent
-  ],
+  entryComponents: [ModalContentComponent],
   providers: [
     AuthGuard,
     {
       provide: ErrorHandler,
-      useClass: UIErrorHandler
-    }
+      useClass: UIErrorHandler,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

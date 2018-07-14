@@ -3,7 +3,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 @Component({
   selector: 'exporting',
   templateUrl: './exporting.component.html',
-  styleUrls: ['./exporting.component.less'],
+  styleUrls: ['./exporting.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class ExportingComponent implements OnInit {
@@ -33,7 +33,7 @@ export class ExportingComponent implements OnInit {
 
   exportData() {
     this.clearExports();
-    
+
     let exportedHTML = `<pre class="html-pre"><code class="html">`;
     exportedHTML += this.dateUserTableString(this.timeNow);
     exportedHTML += this.dataString(this.jsonData, this.noteString);
@@ -42,7 +42,7 @@ export class ExportingComponent implements OnInit {
     const newEle2 = document.createElement('div');
     newEle2.innerHTML = exportedHTML;
     this.htmlContainer.insertBefore(newEle2, null);
-    
+
     this.jsonString = JSON.stringify(this.jsonData);
     const newEle1 = document.createElement('div');
     newEle1.innerHTML = `<pre class="json-pre">${this.jsonString}</pre>`;
@@ -125,7 +125,7 @@ export class ExportingComponent implements OnInit {
 	        returnString += `
 	          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${data[item][note].votes}&lt;/td&gt;
 	          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${data[item][note].message}&lt;/td&gt;
-	        &lt;/tr&gt;`;  	
+	        &lt;/tr&gt;`;
 	        if (i === Object.keys(data[item]).length - 1){
 	      returnString += `
 	      &lt;/table&gt;

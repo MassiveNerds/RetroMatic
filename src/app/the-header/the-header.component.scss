@@ -1,0 +1,20 @@
+@import '../../sass/variables';
+
+.spacer {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+.title {
+  font-family:$accent-font;
+}
+@media only screen and (min-width: 601px) {
+  .title {
+    font-size: 40px;
+  }
+}
+@media only screen and (min-width: 850px) {
+  .title {
+    font-size: 60px;
+  }
+}
