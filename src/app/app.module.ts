@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { UIErrorHandler, ModalContentComponent } from './error-handler';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -26,6 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 const appRoutes: Routes = [
   {
@@ -65,6 +67,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
@@ -82,6 +85,7 @@ const appRoutes: Routes = [
     MatListModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatMenuModule,
   ],
   entryComponents: [ModalContentComponent],
   providers: [
