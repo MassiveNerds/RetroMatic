@@ -1,23 +1,33 @@
-<div class="login-page">
-  <mat-card>
+<div class="login-page" ngClass.lt-md="mobile-background" fxLayout="column" fxLayoutAlign="center center">
+  <mat-card class="mat-elevation-z6" ngStyle.lt-md="width: auto;">
     <mat-card-content>
       <p *ngIf="error" class="error mat-body-1">
         <strong>Oh snap!</strong> {{error.message}}
       </p>
       <mat-form-field>
-        <input #email type="email" matInput placeholder="Email address" required>
+        <input #email type="email" matInput placeholder="Email address">
       </mat-form-field>
       <mat-form-field>
-        <input #password type="password" matInput placeholder="Password" required>
+        <input #password type="password" matInput placeholder="Password">
       </mat-form-field>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-flat-button (click)="login(email.value, password.value)" color="primary">Sign in</button>
-      <button mat-button (click)="register(email.value, password.value)">Register</button>
-      <button mat-mini-fab (click)="loginWithGoogle()" aria-label="Sign in with Google ">
-        <i class="fab fa-google fa-lg"></i>
-      </button>
-      <button mat-button (click)="loginAsGuest()">Continue as guest</button>
+    <mat-card-actions fxLayout="column">
+      <div fxLayout="row">
+        <button mat-raised-button fxFlex=66 color="primary" (click)="login(email.value, password.value)">Sign in</button>
+        <button mat-button fxFlex=33 color="accent" (click)="register(email.value, password.value)">Register</button>
+      </div>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Advanced
+          </mat-panel-title>
+          <mat-panel-description>
+            Other sign-in methods
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <button fxFlex=100 mat-button (click)="loginWithGoogle()" aria-label="Sign in with Google ">Sign in with Google</button>
+        <button fxFlex=100 mat-button (click)="loginAsGuest()">Continue as guest</button>
+      </mat-expansion-panel>
     </mat-card-actions>
   </mat-card>
 </div>
