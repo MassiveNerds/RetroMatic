@@ -1,4 +1,7 @@
-<div class="app-container">
+<div fxLayout="column" class="app-container">
   <app-the-header></app-the-header>
-  <router-outlet></router-outlet>
+  <router-outlet
+    class="header-offset"
+    ngClass.lt-md="mobile-header-offset">
+  </router-outlet>
 </div>

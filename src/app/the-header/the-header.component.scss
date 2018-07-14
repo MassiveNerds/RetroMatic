@@ -1,5 +1,8 @@
 @import '../../sass/variables';
-
+mat-toolbar {
+    position: fixed;
+    z-index: 2;
+}
 .title {
   font-family:$accent-font;
   font-size: 60px;

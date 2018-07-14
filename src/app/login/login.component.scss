@@ -1,13 +1,13 @@
 @import '../../sass/variables';
-
 .login-page {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
   height: 100vh;
   background-image: $login-background;
   background-size: 100% auto;
+}
+
+.mobile-background {
+  background-position: center;
+  background-size: auto 100%;
 }
 
 mat-card {
@@ -21,10 +21,4 @@ mat-card-content {
 
 .error {
   color: $error;
-}
-
-@media only screen and (max-width: 600px) {
-  mat-card {
-    width:auto;
-  }
 }
