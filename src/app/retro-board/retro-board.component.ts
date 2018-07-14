@@ -1,8 +1,6 @@
 import { map, switchMap } from 'rxjs/operators';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -11,14 +9,13 @@ import * as firebase from 'firebase/app';
 @Component({
   selector: 'app-retro-board',
   templateUrl: './retro-board.component.html',
-  styleUrls: ['./retro-board.component.less'],
+  styleUrls: ['./retro-board.component.scss'],
 })
 export class RetroBoardComponent implements OnInit {
   user: Observable<firebase.User>;
   uid: string;
   retroboard: any;
   buckets: Observable<any[]>;
-  modalRef: BsModalRef;
   config = {
     animated: true,
     keyboard: true,
@@ -32,7 +29,6 @@ export class RetroBoardComponent implements OnInit {
 
   constructor(
     private db: AngularFireDatabase,
-    private modalService: BsModalService,
     private route: ActivatedRoute,
     private router: Router,
     public afAuth: AngularFireAuth,
@@ -51,18 +47,18 @@ export class RetroBoardComponent implements OnInit {
       return -1;
     }
     return 0;
-  };
+  }
 
   openModal(template: TemplateRef<any>, bucket: any, note?: any) {
     this.activeBucket = bucket;
     if (note) {
       this.activeNote = note;
     }
-    this.modalRef = this.modalService.show(template, this.config);
+    // this.modalRef = this.modalService.show(template, this.config);
   }
 
   ngOnInit() {
-    let id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
 
     this.db
       .object(`/retroboards/${this.uid}/${id}`)
@@ -129,15 +125,15 @@ export class RetroBoardComponent implements OnInit {
   addNote(message: string) {
     this.db
       .list(`/notes/${this.activeBucket.key}`)
-      .push({ message: message, votes: {} })
-      .then(() => this.modalRef.hide());
+      .push({ message: message, votes: {} });
+    // .then(() => this.modalRef.hide());
   }
 
   updateNote(message: string) {
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
-      .update({ message: message })
-      .then(() => this.modalRef.hide());
+      .update({ message: message });
+    // .then(() => this.modalRef.hide());
   }
 
   upVote(bucket?: any, note?: any) {
@@ -160,8 +156,8 @@ export class RetroBoardComponent implements OnInit {
       .update({
         votes: this.activeNote.votes,
         totalVotes: this.activeNote.totalVotes,
-      })
-      .then(() => (this.modalRef ? this.modalRef.hide() : ''));
+      });
+    // .then(() => (this.modalRef ? this.modalRef.hide() : ''));
   }
 
   downVote(bucket: any, note?: any) {
@@ -178,14 +174,14 @@ export class RetroBoardComponent implements OnInit {
       .update({
         votes: this.activeNote.votes,
         totalVotes: this.activeNote.totalVotes,
-      })
-      .then(() => (this.modalRef ? this.modalRef.hide() : ''));
+      });
+    // .then(() => (this.modalRef ? this.modalRef.hide() : ''));
   }
 
   deleteNote() {
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
-      .remove()
-      .then(() => this.modalRef.hide());
+      .remove();
+    // .then(() => this.modalRef.hide());
   }
 }

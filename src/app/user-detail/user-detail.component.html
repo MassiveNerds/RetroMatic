@@ -1,55 +1,57 @@
 <div class="container">
-  <div class="row">
-    <div class="col-md-offset-4 col-md-4">
-      <div class="list-group">
-        <button type="button" class="list-group-item" *ngFor="let retroboard of $retroboards | async" [routerLink]="['/retroboard/', retroboard.key]">
-          {{ retroboard.name }}
-        </button>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="($retroboards | async)?.length==0" class="row">
-    <div class="col-md-12">
-      <h2 class="text-center">You have no retrospectives</h2>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-offset-4 col-md-4">
-      <button type="button" class="btn-primary btn-block" (click)="openModal(addtemplate)">Create New Retrospective</button>
-    </div>
-  </div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>My Retrospectives</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="container">
+      <ng-container *ngIf="($retroboards | async) as retroboards; else loadingRetros">
+        <mat-list *ngIf="retroboards.length; else noRetros">
+          <mat-list-item *ngFor="let retroboard of retroboards; last as last">
+            <button mat-button [routerLink]="['/retroboard/', retroboard.key]">{{ retroboard.name }}</button>
+            <mat-divider *ngIf="!last"></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+    </mat-card-content>
+    <mat-card-actions>
+      <button class="fill" mat-raised-button color="primary" (click)="openModal(addtemplate)">Create New Retrospective</button>
+    </mat-card-actions>
+  </mat-card>
 </div>
+
+<ng-template #loadingRetros>
+  <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #noRetros>
+  <mat-list>
+    <mat-list-item>You have no retrospectives</mat-list-item>
+  </mat-list>
+</ng-template>
+
 <ng-template #addtemplate>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Create a new retrospective</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <label for="name">Retrospective name:</label>
-      <input #name type="text" class="form-control" placeholder="Name" required="true">
-    </div>
-    <div class="form-group">
-      <label for="bucket1">Customize buckets (Optional):</label>
-      <input #bucket1 type="text" class="form-control" placeholder="What went well?">
-    </div>
-    <div class="form-group">
-      <input #bucket2 type="text" class="form-control" placeholder="What can be improved?">
-    </div>
-    <div class="form-group">
-      <input #bucket3 type="text" class="form-control" placeholder="Action items">
-    </div>
-    <div class="form-group">
-      <div class="checkbox">
-        <label>
-          <input #hasTimer type="checkbox" value="hasTimer">Include timer</label>
-      </div>
-    </div>
-    <div class="form-group">
-      <button class="btn btn-primary" (click)="createRetroboard(name.value, bucket1.value, bucket2.value, bucket3.value, hasTimer.checked)">Add</button>
-      <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
-    </div>
-  </div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Create a new retrospective</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="container">
+      <mat-form-field color="accent" [hideRequiredMarker]="true">
+        <input matInput #name placeholder="Retrospective name" required>
+      </mat-form-field>
+      <label for="bucket1">Customize buckets (Optional)</label>
+      <mat-form-field color="accent">
+        <input matInput #bucket1 placeholder="What went well?">
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput #bucket2 placeholder="What can be improved?">
+      </mat-form-field>
+      <mat-form-field color="accent">
+        <input matInput #bucket3 placeholder="Action items">
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="accent" (click)="createRetroboard(name.value, bucket1.value, bucket2.value, bucket3.value)">Add</button>
+      <button mat-button (click)="dialogRef.close()">Cancel</button>
+    </mat-card-actions>
+  </mat-card>
 </ng-template>

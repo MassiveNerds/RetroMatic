@@ -1,79 +1,77 @@
-<app-countdown-timer *ngIf="retroboard?.hasTimer"></app-countdown-timer>
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>
-        <span>{{ retroboard?.name }}</span>
-      </h3>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4" *ngFor="let bucket of buckets | async">
+<div class="page-container">
+  <span class="mat-title">{{ retroboard?.name }}</span>
+  <div class="buckets-container">
+    <div class="bucket-container" *ngFor="let bucket of buckets | async">
       <h4>
         <span>{{ bucket.name }}</span>
       </h4>
-      <div class="list-group">
-        <div class="note-wrapper" *ngFor="let note of bucket.notes | async">
-          <button type="button" class="list-group-item" [class.list-group-item-success]="bucket.type === 'success'" [class.list-group-item-danger]="bucket.type === 'danger'"
-            [class.list-group-item-info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
+      <mat-list class="list-container">
+        <mat-list-item class="note-wrapper" *ngFor="let note of bucket.notes | async">
+          <button mat-button class="list-group-item" [class.success]="bucket.type === 'success'" [class.danger]="bucket.type === 'danger'"
+            [class.info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
             {{note.message}}
             <strong class="count">{{note.totalVotes != 0 ? note.totalVotes : ''}}</strong>
           </button>
-          <button *ngIf="note.votes && note.votes[uid]" type="button" class="btn btn-xs btn-danger pull-right" (click)="downVote(bucket, note)">
-            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+          <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[uid]" type="button" (click)="downVote(bucket, note)">
+            <mat-icon aria-hidden="true">remove_circle</mat-icon>
           </button>
-          <button *ngIf="!note.votes || (note.votes && !note.votes[uid])" type="button" class="btn btn-xs btn-success pull-right" (click)="upVote(bucket, note)">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[uid])" type="button" (click)="upVote(bucket, note)">
+            <mat-icon aria-hidden="true">add_circlebox</mat-icon>
           </button>
-        </div>
-        <button type="button" title="Add entry to {{bucket.name}}" aria-label="Add entry" class="list-group-item list-group-item-new"
-          [class.list-group-item-success]="bucket.type === 'success'" [class.list-group-item-danger]="bucket.type === 'danger'"
-          [class.list-group-item-info]="bucket.type === 'info'" (click)="openModal(addtemplate, bucket)">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        </button>
-      </div>
+        </mat-list-item>
+        <mat-list-item class="note-wrapper">
+          <button mat-button title=" Add entry to {{bucket.name}} " aria-label="Add entry " class="list-group-item list-group-item-new "
+            [class.success]="bucket.type==='success' " [class.danger]="bucket.type==='danger' " [class.info]="bucket.type==='info' "
+            (click)="openModal(addtemplate, bucket) ">
+            <mat-icon aria-hidden="true ">add</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
     </div>
   </div>
-  <exporting [jsonData]="jsonData"></exporting>
+  <exporting [jsonData]="jsonData "></exporting>
 </div>
+
 <ng-template #addtemplate>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Add entry to
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left ">Add entry to
       <strong>{{activeBucket.name}}</strong>
     </h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalRef.hide() ">
+      <span aria-hidden="true ">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <textarea #addmessage class="form-control" rows="3"></textarea>
+  <div class="modal-body ">
+    <div class="form-group ">
+      <textarea #addmessage class="form-control " rows="3 "></textarea>
     </div>
-    <div class="form-group">
-      <button class="btn btn-primary" (click)="addNote(addmessage.value)">Add</button>
-      <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
+    <div class="form-group ">
+      <button class="btn btn-primary " (click)="addNote(addmessage.value) ">Add</button>
+      <button class="btn btn-default " (click)="modalRef.hide() ">Cancel</button>
     </div>
   </div>
 </ng-template>
+
 <ng-template #edittemplate>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Update entry to
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left ">Update entry to
       <strong>{{activeBucket.name}}</strong>
     </h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalRef.hide() ">
+      <span aria-hidden="true ">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <textarea #editmessage class="form-control" rows="3">{{activeNote.message}}</textarea>
+  <div class="modal-body ">
+    <div class="form-group ">
+      <textarea #editmessage class="form-control " rows="3 ">{{activeNote.message}}</textarea>
     </div>
-    <div class="form-group">
-      <button class="btn btn-primary" (click)="updateNote(editmessage.value)">Update</button>
-      <button class="btn btn-danger" (click)="deleteNote()">Delete</button>
-      <button class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
-      <button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[uid])" class="btn btn-default pull-right" (click)="upVote()">Vote up</button>
-      <button *ngIf="activeNote.votes && activeNote.votes[uid]" class="btn btn-default pull-right" (click)="downVote()">Down vote</button>
+    <div class="form-group ">
+      <button class="btn btn-primary " (click)="updateNote(editmessage.value) ">Update</button>
+      <button class="btn btn-danger " (click)="deleteNote() ">Delete</button>
+      <button class="btn btn-default " (click)="modalRef.hide() ">Cancel</button>
+      <button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[uid]) " class="btn btn-default pull-right
+          " (click)="upVote() ">Vote up</button>
+      <button *ngIf="activeNote.votes && activeNote.votes[uid] " class="btn btn-default pull-right " (click)="downVote() ">Down vote</button>
     </div>
   </div>
 </ng-template>
