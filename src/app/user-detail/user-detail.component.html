@@ -1,20 +1,20 @@
-<div class="container">
+<div class="user-detail-container mat-typography" fxLayout="row" fxLayoutAlign="center">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>My Retrospectives</mat-card-title>
+      <mat-card-title><h1>My Retrospectives</h1></mat-card-title>
     </mat-card-header>
-    <mat-card-content class="container">
+    <mat-card-content>
       <ng-container *ngIf="($retroboards | async) as retroboards; else loadingRetros">
-        <mat-list *ngIf="retroboards.length; else noRetros">
-          <mat-list-item *ngFor="let retroboard of retroboards; last as last">
-            <button mat-button [routerLink]="['/retroboard/', retroboard.key]">{{ retroboard.name }}</button>
+        <mat-list fxLayout="column" *ngIf="retroboards.length; else noRetros">
+          <mat-list-item fxFlex="1 1 auto" *ngFor="let retroboard of retroboards; last as last">
+            <button fxFlex mat-button [routerLink]="['/retroboard/', retroboard.key]">{{ retroboard.name }}</button>
             <mat-divider *ngIf="!last"></mat-divider>
           </mat-list-item>
         </mat-list>
       </ng-container>
     </mat-card-content>
     <mat-card-actions>
-      <button class="fill" mat-raised-button color="primary" (click)="openModal(addtemplate)">Create New Retrospective</button>
+      <button fxFlex mat-raised-button color="primary" (click)="openModal(addtemplate)">Create New Retrospective</button>
     </mat-card-actions>
   </mat-card>
 </div>
