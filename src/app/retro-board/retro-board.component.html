@@ -1,35 +1,40 @@
-<div class="page-container">
-  <span class="mat-title">{{ retroboard?.name }}</span>
-  <div class="buckets-container">
-    <div class="bucket-container" *ngFor="let bucket of buckets | async">
-      <h4>
-        <span>{{ bucket.name }}</span>
-      </h4>
-      <mat-list class="list-container">
-        <mat-list-item class="note-wrapper" *ngFor="let note of bucket.notes | async">
-          <button mat-button class="list-group-item" [class.success]="bucket.type === 'success'" [class.danger]="bucket.type === 'danger'"
-            [class.info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
-            {{note.message}}
-            <strong class="count">{{note.totalVotes != 0 ? note.totalVotes : ''}}</strong>
-          </button>
-          <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[uid]" type="button" (click)="downVote(bucket, note)">
-            <mat-icon aria-hidden="true">remove_circle</mat-icon>
-          </button>
-          <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[uid])" type="button" (click)="upVote(bucket, note)">
-            <mat-icon aria-hidden="true">add_circlebox</mat-icon>
-          </button>
-        </mat-list-item>
-        <mat-list-item class="note-wrapper">
-          <button mat-button title=" Add entry to {{bucket.name}} " aria-label="Add entry " class="list-group-item list-group-item-new "
-            [class.success]="bucket.type==='success' " [class.danger]="bucket.type==='danger' " [class.info]="bucket.type==='info' "
-            (click)="openModal(addtemplate, bucket) ">
-            <mat-icon aria-hidden="true ">add</mat-icon>
-          </button>
-        </mat-list-item>
-      </mat-list>
-    </div>
+<div class="page-container mat-typography">
+  <div class="primary-header">
+    <h1>{{ retroboard?.name }}</h1>
   </div>
-  <exporting [jsonData]="jsonData "></exporting>
+  <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="5px">
+    <mat-card fxFlex *ngFor="let bucket of buckets | async">
+      <mat-card-header>
+        <mat-card-title>{{ bucket.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item class="note-wrapper" *ngFor="let note of bucket.notes | async">
+            <button mat-button class="list-group-item" [class.success]="bucket.type === 'success'" [class.danger]="bucket.type === 'danger'"
+              [class.info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
+              {{note.message}}
+              <strong class="count">{{note.totalVotes != 0 ? note.totalVotes : ''}}</strong>
+            </button>
+            <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[uid]" type="button" (click)="downVote(bucket, note)">
+              <mat-icon aria-hidden="true">remove_circle</mat-icon>
+            </button>
+            <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[uid])" type="button" (click)="upVote(bucket, note)">
+              <mat-icon aria-hidden="true">add_circlebox</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-list-item class="note-wrapper">
+            <button mat-button title=" Add entry to {{bucket.name}} " aria-label="Add entry " class="list-group-item list-group-item-new "
+              [class.success]="bucket.type==='success' " [class.danger]="bucket.type==='danger' " [class.info]="bucket.type==='info' "
+              (click)="openModal(addtemplate, bucket) ">
+              <mat-icon aria-hidden="true ">add</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- TODO: Fix this component! -->
+  <!-- <exporting [jsonData]="jsonData "></exporting> -->
 </div>
 
 <ng-template #addtemplate>

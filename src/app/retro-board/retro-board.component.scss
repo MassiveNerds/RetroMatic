@@ -1,9 +1,14 @@
 @import '../../sass/variables';
-.page-container {
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  justify-content: flex-start;
+.primary-header {
+  background: #7b1fa2;
+  padding-left: 20px;
+  h1 {
+    font-weight: 300;
+    margin: 0;
+    padding: 28px 8px;
+    font-size: 20px;
+    color: #fff
+  }
 }
 
 .success {
@@ -19,25 +24,6 @@
 .info {
   color: #31708f;
   background-color: #d9edf7;
-}
-
-.list-container {
-  width: auto;
-}
-
-.mat-title {
-  padding-left: 15px;
-}
-
-.buckets-container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-evenly;
-}
-
-.bucket-container {
-  flex: 1 1 375px;
-  padding: 15px;
 }
 
 .note-wrapper {
