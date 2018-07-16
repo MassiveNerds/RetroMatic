@@ -7,7 +7,7 @@ import * as momentTimeZone from 'moment-timezone';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-user-detail',

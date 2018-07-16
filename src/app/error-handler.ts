@@ -38,7 +38,7 @@ export class UIErrorHandler extends ErrorHandler {
       <p>{{data.message}}</p>
     </div>
     <div mat-dialog-actions>
-      <button mat-button (click)="closeDialog()">Close</button>
+      <button mat-button mat-dialog-close>Close</button>
     </div>
   `,
 })
@@ -47,8 +47,4 @@ export class ModalContentComponent {
     public dialogRef: MatDialogRef<ModalContentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {}
-
-  closeDialog(): void {
-    this.dialogRef.close();
-  }
 }

@@ -3,29 +3,52 @@
     <h1>{{ retroboard?.name }}</h1>
   </div>
   <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="5px">
-    <mat-card fxFlex *ngFor="let bucket of buckets | async">
+    <mat-card fxFlex="33%" *ngFor="let bucket of buckets | async">
       <mat-card-header>
         <mat-card-title>{{ bucket.name }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-list>
-          <mat-list-item class="note-wrapper" *ngFor="let note of bucket.notes | async">
-            <button mat-button class="list-group-item" [class.success]="bucket.type === 'success'" [class.danger]="bucket.type === 'danger'"
-              [class.info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
+          <mat-list-item class="retro-note" *ngFor="let note of bucket.notes | async">
+            <button 
+              color="warn" 
+              mat-icon-button 
+              *ngIf="note.votes && note.votes[uid]" 
+              (click)="downVote(bucket, note)">
+              <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+            </button>
+            <button 
+              color="accent" 
+              mat-icon-button 
+              *ngIf="!note.votes || (note.votes && !note.votes[uid])" 
+              (click)="upVote(bucket, note)">
+              <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+            </button>
+            <button
+              id="noteButton"
+              [matBadge]="note.totalVotes != 0 ? note.totalVotes : ''"
+              [matBadgeHidden]="!!note.totalVotes == 0"
+              mat-button
+              fxFlex
+              fxLayoutAlign="space-between center"
+              [class.success]="bucket.type === 'success'"
+              [class.danger]="bucket.type === 'danger'"
+              [class.info]="bucket.type === 'info'"
+              (click)="openModal(edittemplate, bucket, note)">
               {{note.message}}
-              <strong class="count">{{note.totalVotes != 0 ? note.totalVotes : ''}}</strong>
-            </button>
-            <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[uid]" type="button" (click)="downVote(bucket, note)">
-              <mat-icon aria-hidden="true">remove_circle</mat-icon>
-            </button>
-            <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[uid])" type="button" (click)="upVote(bucket, note)">
-              <mat-icon aria-hidden="true">add_circlebox</mat-icon>
             </button>
           </mat-list-item>
-          <mat-list-item class="note-wrapper">
-            <button mat-button title=" Add entry to {{bucket.name}} " aria-label="Add entry " class="list-group-item list-group-item-new "
-              [class.success]="bucket.type==='success' " [class.danger]="bucket.type==='danger' " [class.info]="bucket.type==='info' "
-              (click)="openModal(addtemplate, bucket) ">
+          <mat-list-item>
+            <button 
+              mat-button 
+              fxFlex
+              title="Add entry to {{bucket.name}}" 
+              aria-label="Add entry" 
+              class="add-new-button"
+              [class.success]="bucket.type==='success'"
+              [class.danger]="bucket.type==='danger'"
+              [class.info]="bucket.type==='info'"
+              (click)="openModal(addtemplate, bucket)">
               <mat-icon aria-hidden="true ">add</mat-icon>
             </button>
           </mat-list-item>
@@ -38,45 +61,48 @@
 </div>
 
 <ng-template #addtemplate>
-  <div class="modal-header ">
-    <h4 class="modal-title pull-left ">Add entry to
-      <strong>{{activeBucket.name}}</strong>
-    </h4>
-    <button type="button " class="close pull-right " aria-label="Close " (click)="modalRef.hide() ">
-      <span aria-hidden="true ">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body ">
-    <div class="form-group ">
-      <textarea #addmessage class="form-control " rows="3 "></textarea>
-    </div>
-    <div class="form-group ">
-      <button class="btn btn-primary " (click)="addNote(addmessage.value) ">Add</button>
-      <button class="btn btn-default " (click)="modalRef.hide() ">Cancel</button>
-    </div>
-  </div>
+  <mat-card>
+    <mat-card-header fxLayout="row" fxLayoutAlign="space-between start">
+      <mat-card-title>Add entry to
+        <strong>{{activeBucket.name}}</strong>
+      </mat-card-title>
+      <button mat-icon-button mat-dialog-close>
+        <mat-icon aria-label="Close">close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field fxFlex>
+        <textarea matInput #addmessage rows="3"></textarea>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="addNote(addmessage.value)">Add</button>
+      <button mat-button mat-dialog-close>Cancel</button>
+    </mat-card-actions>
+  </mat-card>
 </ng-template>
 
 <ng-template #edittemplate>
-  <div class="modal-header ">
-    <h4 class="modal-title pull-left ">Update entry to
-      <strong>{{activeBucket.name}}</strong>
-    </h4>
-    <button type="button " class="close pull-right " aria-label="Close " (click)="modalRef.hide() ">
-      <span aria-hidden="true ">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body ">
-    <div class="form-group ">
-      <textarea #editmessage class="form-control " rows="3 ">{{activeNote.message}}</textarea>
-    </div>
-    <div class="form-group ">
-      <button class="btn btn-primary " (click)="updateNote(editmessage.value) ">Update</button>
-      <button class="btn btn-danger " (click)="deleteNote() ">Delete</button>
-      <button class="btn btn-default " (click)="modalRef.hide() ">Cancel</button>
-      <button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[uid]) " class="btn btn-default pull-right
-          " (click)="upVote() ">Vote up</button>
-      <button *ngIf="activeNote.votes && activeNote.votes[uid] " class="btn btn-default pull-right " (click)="downVote() ">Down vote</button>
-    </div>
-  </div>
+  <mat-card>
+    <mat-card-header fxLayout="row" fxLayoutAlign="space-between start">
+      <mat-card-title>Update entry to
+        <strong>{{activeBucket.name}}</strong>
+      </mat-card-title>
+      <button mat-icon-button mat-dialog-close>
+        <mat-icon aria-label="Close">close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field fxFlex>
+        <textarea matInput #editmessage rows="3" [value]="activeNote.message"></textarea>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="updateNote(editmessage.value) ">Update</button>
+      <button mat-raised-button color="warn" (click)="deleteNote() ">Delete</button>
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-stroked-button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[uid]) " (click)="upVote() ">Vote up</button>
+      <button mat-stroked-button *ngIf="activeNote.votes && activeNote.votes[uid]" (click)="downVote() ">Down vote</button>
+    </mat-card-actions>
+  </mat-card>
 </ng-template>
