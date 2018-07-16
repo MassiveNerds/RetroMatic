@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-retro-board',
@@ -26,18 +27,20 @@ export class RetroBoardComponent implements OnInit {
   activeNote: any;
   activeVote: boolean;
   jsonData: Object;
+  dialogRef;
 
   constructor(
     private db: AngularFireDatabase,
     private route: ActivatedRoute,
     private router: Router,
     public afAuth: AngularFireAuth,
+    public dialog: MatDialog,
   ) {
     this.user = afAuth.authState;
     this.user.subscribe((result) => (this.uid = result.uid));
   }
 
-  compareFn = (a, b) => {
+  compareFn(a, b) {
     const aVotes = a.totalVotes || -1;
     const bVotes = b.totalVotes || -1;
     if (aVotes < bVotes) {
@@ -54,7 +57,9 @@ export class RetroBoardComponent implements OnInit {
     if (note) {
       this.activeNote = note;
     }
-    // this.modalRef = this.modalService.show(template, this.config);
+    this.dialogRef = this.dialog.open(template, {
+      panelClass: 'custom-dialog-container',
+    });
   }
 
   ngOnInit() {
@@ -125,15 +130,15 @@ export class RetroBoardComponent implements OnInit {
   addNote(message: string) {
     this.db
       .list(`/notes/${this.activeBucket.key}`)
-      .push({ message: message, votes: {} });
-    // .then(() => this.modalRef.hide());
+      .push({ message: message, votes: {} })
+      .then(() => this.dialogRef.close());
   }
 
   updateNote(message: string) {
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
-      .update({ message: message });
-    // .then(() => this.modalRef.hide());
+      .update({ message: message })
+      .then(() => this.dialogRef.close());
   }
 
   upVote(bucket?: any, note?: any) {
@@ -156,8 +161,8 @@ export class RetroBoardComponent implements OnInit {
       .update({
         votes: this.activeNote.votes,
         totalVotes: this.activeNote.totalVotes,
-      });
-    // .then(() => (this.modalRef ? this.modalRef.hide() : ''));
+      })
+      .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
   downVote(bucket: any, note?: any) {
@@ -174,14 +179,14 @@ export class RetroBoardComponent implements OnInit {
       .update({
         votes: this.activeNote.votes,
         totalVotes: this.activeNote.totalVotes,
-      });
-    // .then(() => (this.modalRef ? this.modalRef.hide() : ''));
+      })
+      .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
   deleteNote() {
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
-      .remove();
-    // .then(() => this.modalRef.hide());
+      .remove()
+      .then(() => this.dialogRef.close());
   }
 }

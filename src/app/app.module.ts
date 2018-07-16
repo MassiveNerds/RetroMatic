@@ -29,6 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
+import {MatBadgeModule} from '@angular/material/badge';
 
 const appRoutes: Routes = [
   {
@@ -88,6 +89,7 @@ const appRoutes: Routes = [
     MatIconModule,
     MatMenuModule,
     MatExpansionModule,
+    MatBadgeModule,
   ],
   entryComponents: [ModalContentComponent],
   providers: [
