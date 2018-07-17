@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material';
   styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
+  error: Error;
   user: Observable<firebase.User>;
   userChanges: Subscription;
   uid: string;
@@ -85,9 +86,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         });
         buckets.push({
           name:
-            bucket2 && bucket2.length > 0
-              ? bucket2
-              : 'What can be improved?',
+            bucket2 && bucket2.length > 0 ? bucket2 : 'What can be improved?',
           type: 'danger',
         });
         buckets.push({

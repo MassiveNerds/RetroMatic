@@ -40,16 +40,27 @@
       <mat-form-field color="accent" [hideRequiredMarker]="true">
         <input matInput #name placeholder="Retrospective name" required>
       </mat-form-field>
-      <label for="bucket1">Customize buckets (Optional)</label>
-      <mat-form-field color="accent">
-        <input matInput #bucket1 placeholder="What went well?">
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <input matInput #bucket2 placeholder="What can be improved?">
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <input matInput #bucket3 placeholder="Action items">
-      </mat-form-field>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Optional
+          </mat-panel-title>
+          <mat-panel-description>
+            Customize buckets
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-action-row fxLayout="column">
+          <mat-form-field color="accent">
+            <input matInput #bucket1 placeholder="What went well?">
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input matInput #bucket2 placeholder="What can be improved?">
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <input matInput #bucket3 placeholder="Action items">
+          </mat-form-field>
+        </mat-action-row>
+      </mat-expansion-panel>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button color="accent" (click)="createRetroboard(name.value, bucket1.value, bucket2.value, bucket3.value)">Add</button>
