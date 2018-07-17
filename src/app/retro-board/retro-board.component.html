@@ -26,8 +26,8 @@
             </button>
             <button
               id="noteButton"
-              [matBadge]="note.totalVotes != 0 ? note.totalVotes : ''"
-              [matBadgeHidden]="!!note.totalVotes == 0"
+              [matBadge]="note.totalVotes"
+              [matBadgeHidden]="!note.totalVotes || note.totalVotes === 0"
               mat-button
               fxFlex
               fxLayoutAlign="space-between center"

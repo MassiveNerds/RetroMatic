@@ -54,16 +54,18 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.afAuth.authState
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((result) => (this.uid = result.uid));
     const id = this.route.snapshot.paramMap.get('id');
 
-    this.db
-      .object(`/retroboards/${this.uid}/${id}`)
-      .valueChanges()
+    this.afAuth.authState
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((retroboard) => (this.retroboard = retroboard));
+      .subscribe((user) => {
+        this.uid = user.uid;
+        this.db
+          .object(`/retroboards/${user.uid}/${id}`)
+          .valueChanges()
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe((retroboard) => (this.retroboard = retroboard));
+      });
 
     this.buckets = this.db
       .list(`/buckets/${id}`)
