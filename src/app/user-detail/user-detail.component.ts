@@ -74,7 +74,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           name && name.length > 0
             ? name
             : moment().format('dddd, MMMM Do YYYY'),
-        dateCreated: moment().format('YYYY-MM-DD HH:mm'),
+        dateCreated: moment().format('YYYY/MM/DD HH:mm'),
         timeZone: momentTimeZone.tz.guess(),
       })
       .then((result) => {
