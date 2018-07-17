@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material';
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss'],
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent implements OnInit, OnDestroy {
   user: Observable<firebase.User>;
   userChanges: Subscription;
   uid: string;
