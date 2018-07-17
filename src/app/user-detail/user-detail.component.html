@@ -1,8 +1,8 @@
-<div class="user-detail-container mat-typography" fxLayout="row" fxLayoutAlign="center">
+<div class="user-detail-container mat-typography" fxLayout="column" fxLayoutAlign="center">
+  <div class="primary-header">
+    <h1>My Retrospectives</h1>
+  </div>
   <mat-card fxFlex>
-    <mat-card-header>
-      <mat-card-title><h1>My Retrospectives</h1></mat-card-title>
-    </mat-card-header>
     <mat-card-content>
       <ng-container *ngIf="($retroboards | async) as retroboards; else loadingRetros">
         <mat-list fxLayout="column" *ngIf="retroboards.length; else noRetros">
@@ -34,7 +34,7 @@
     <mat-card-header>
       <mat-card-title>Create a new retrospective</mat-card-title>
     </mat-card-header>
-    <mat-card-content class="container">
+    <mat-card-content fxLayout="column">
       <mat-form-field color="accent" [hideRequiredMarker]="true">
         <input matInput #name placeholder="Retrospective name" required>
       </mat-form-field>
