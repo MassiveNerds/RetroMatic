@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
@@ -51,9 +51,9 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-  // ngOnDestroy() {
-  //   this.userChanges.unsubscribe();
-  // }
+  ngOnDestroy() {
+    this.userChanges.unsubscribe();
+  }
 
   openModal(template: TemplateRef<any>) {
     this.dialogRef = this.dialog.open(template, {
