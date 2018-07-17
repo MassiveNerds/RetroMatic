@@ -1,37 +1,38 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import * as momentTimeZone from 'moment-timezone';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.less'],
+  styleUrls: ['./user-detail.component.scss'],
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent implements OnInit, OnDestroy {
+  error: Error;
   user: Observable<firebase.User>;
   userChanges: Subscription;
   uid: string;
   retroboards: AngularFireList<any>;
   $retroboards: any;
-  modalRef: BsModalRef;
   config = {
     animated: true,
     keyboard: true,
     backdrop: true,
     ignoreBackdropClick: false,
   };
+  dialogRef;
 
   constructor(
     private db: AngularFireDatabase,
     public afAuth: AngularFireAuth,
-    private modalService: BsModalService,
+    public dialog: MatDialog,
     private router: Router,
   ) {
     this.user = afAuth.authState;
@@ -56,7 +57,9 @@ export class UserDetailComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, this.config);
+    this.dialogRef = this.dialog.open(template, {
+      panelClass: 'custom-dialog-container',
+    });
   }
 
   createRetroboard(
@@ -64,7 +67,6 @@ export class UserDetailComponent implements OnInit {
     bucket1: string,
     bucket2: string,
     bucket3: string,
-    hasTimer: boolean,
   ) {
     this.retroboards
       .push({
@@ -72,7 +74,8 @@ export class UserDetailComponent implements OnInit {
           name && name.length > 0
             ? name
             : moment().format('dddd, MMMM Do YYYY'),
-        hasTimer: hasTimer,
+        dateCreated: moment().format('YYYY-MM-DD HH:mm'),
+        timeZone: momentTimeZone.tz.guess(),
       })
       .then((result) => {
         const newId = result.key;
@@ -93,7 +96,7 @@ export class UserDetailComponent implements OnInit {
         return newId;
       })
       .then((id) => {
-        this.modalRef.hide();
+        this.dialogRef.close();
         this.router.navigate(['/retroboard/', id]);
       });
   }

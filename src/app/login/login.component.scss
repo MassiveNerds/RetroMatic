@@ -1,0 +1,24 @@
+@import '../../sass/variables';
+.login-page {
+  height: 100vh;
+  background-image: $login-background;
+  background-size: 100% auto;
+}
+
+.mobile-background {
+  background-position: center;
+  background-size: auto 100%;
+}
+
+mat-card {
+  width: 400px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: $error;
+}

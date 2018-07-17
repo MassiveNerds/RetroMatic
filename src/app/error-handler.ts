@@ -1,12 +1,21 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { Component, ErrorHandler, NgModule, Injectable, Injector } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import {
+  Component,
+  ErrorHandler,
+  NgModule,
+  Injectable,
+  Injector,
+  Inject,
+} from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+export interface DialogData {
+  title: string;
+  message: string;
+}
 
 @Injectable()
 export class UIErrorHandler extends ErrorHandler {
-  bsModalRef: BsModalRef;
-  constructor(private injector: Injector) {
+  constructor(public dialog: MatDialog, private injector: Injector) {
     super();
   }
   handleError(error) {
@@ -15,38 +24,27 @@ export class UIErrorHandler extends ErrorHandler {
   }
 
   openModal(error: any) {
-    const modalService = this.injector.get(BsModalService);
-    const list = [
-      'Open a modal with component',
-      'Pass your data',
-      'Do something else',
-      '...'
-    ];
-    this.bsModalRef = modalService.show(ModalContentComponent);
-    this.bsModalRef.content.title = `Whoops!`;
-    this.bsModalRef.content.message = error.message;
+    const dialogRef = this.dialog.open(ModalContentComponent, {
+      data: { title: 'Whoops!', message: error.message },
+    });
   }
 }
 
 @Component({
-  selector: 'modal-content',
+  selector: 'app-modal-content-component',
   template: `
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">{{title}}</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div mat-dialog-title>{{data.title}}</div>
+    <div mat-dialog-content>
+      <p>{{data.message}}</p>
     </div>
-    <div class="modal-body">
-      <p>{{message}}</p>
+    <div mat-dialog-actions>
+      <button mat-button mat-dialog-close>Close</button>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Close</button>
-    </div>
-  `
+  `,
 })
 export class ModalContentComponent {
-  title: string;
-  message: string;
-  constructor(public bsModalRef: BsModalRef) { }
+  constructor(
+    public dialogRef: MatDialogRef<ModalContentComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  ) {}
 }
