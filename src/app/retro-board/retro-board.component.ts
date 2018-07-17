@@ -1,44 +1,35 @@
-import { map, switchMap } from 'rxjs/operators';
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
 import { MatDialog } from '@angular/material';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-retro-board',
   templateUrl: './retro-board.component.html',
   styleUrls: ['./retro-board.component.scss'],
 })
-export class RetroBoardComponent implements OnInit {
-  user: Observable<firebase.User>;
+export class RetroBoardComponent implements OnInit, OnDestroy {
   uid: string;
   retroboard: any;
   buckets: Observable<any[]>;
-  config = {
-    animated: true,
-    keyboard: true,
-    backdrop: true,
-    ignoreBackdropClick: false,
-  };
   activeBucket: any;
   activeNote: any;
   activeVote: boolean;
   jsonData: Object;
   dialogRef;
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
     private db: AngularFireDatabase,
     private route: ActivatedRoute,
-    private router: Router,
     public afAuth: AngularFireAuth,
     public dialog: MatDialog,
-  ) {
-    this.user = afAuth.authState;
-    this.user.subscribe((result) => (this.uid = result.uid));
-  }
+  ) {}
 
   compareFn(a, b) {
     const aVotes = a.totalVotes || -1;
@@ -63,44 +54,47 @@ export class RetroBoardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.afAuth.authState
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((result) => (this.uid = result.uid));
     const id = this.route.snapshot.paramMap.get('id');
 
     this.db
       .object(`/retroboards/${this.uid}/${id}`)
       .valueChanges()
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((retroboard) => (this.retroboard = retroboard));
 
-    this.buckets = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.db
-          .list(`/buckets/${params.get('id')}`)
-          .snapshotChanges()
-          .pipe(
-            map((actions) => {
-              return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
-            }),
-          ),
-      ),
-      map((buckets) => {
-        return buckets.map((bucket: any) => {
-          bucket.notes = this.db
-            .list(`/notes/${bucket.key}`)
-            .snapshotChanges()
-            .pipe(
-              map((actions) => {
-                return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
-              }),
-              map((notes) => {
-                return notes.sort(this.compareFn);
-              }),
-            );
-          return bucket;
-        });
-      }),
-    );
+    this.buckets = this.db
+      .list(`/buckets/${id}`)
+      .snapshotChanges()
+      .pipe(
+        map((actions) => {
+          return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
+        }),
+        map((buckets) => {
+          return buckets.map((bucket: any) => {
+            bucket.notes = this.db
+              .list(`/notes/${bucket.key}`)
+              .snapshotChanges()
+              .pipe(
+                map((actions) => {
+                  return actions.map((a) => ({
+                    key: a.key,
+                    ...a.payload.val(),
+                  }));
+                }),
+                map((notes) => {
+                  return notes.sort(this.compareFn);
+                }),
+              );
+            return bucket;
+          });
+        }),
+      );
 
     this.jsonData = {};
-    this.buckets.subscribe((data) => {
+    this.buckets.pipe(takeUntil(this.ngUnsubscribe)).subscribe((data) => {
       data.map((bucket) => {
         this.db
           .list(`/notes/${bucket.key}`)
@@ -110,6 +104,7 @@ export class RetroBoardComponent implements OnInit {
               actions.map((a) => ({ key: a.key, ...a.payload.val() })),
             ),
           )
+          .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe((notes) => {
             notes.map((note: any) => {
               if (!this.jsonData[bucket.key]) {
@@ -125,6 +120,11 @@ export class RetroBoardComponent implements OnInit {
           });
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   addNote(message: string) {
