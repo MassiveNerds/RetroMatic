@@ -6,7 +6,7 @@
     "ng": "ng",
     "config": "ts-node ./set-env.ts",
     "start": "ng serve",
-    "build": "npm run config -- --environment=prod && ng build",
+    "build": "npm run config -- --environment=prod && ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
