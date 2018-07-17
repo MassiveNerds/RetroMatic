@@ -1,5 +1,5 @@
 <div class="export" [ngClass]="{'open':exportOpen}">
-	<button class="btn btn-primary" id="exportLink" (click)="exportData()">Export</button>
-	<div id="html-container" (click)="selectText('html-container')"></div>
-	<div id="json-container" (click)="selectText('json-container')"></div>
+  <button mat-button color="accent" id="exportLink" (click)="exportData()">Export</button>
+  <div id="html-container" (click)="selectText('html-container')"></div>
+  <div id="json-container" (click)="selectText('json-container')"></div>
 </div>

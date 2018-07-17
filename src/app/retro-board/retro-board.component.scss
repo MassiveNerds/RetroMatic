@@ -1,0 +1,39 @@
+@import '../../sass/variables';
+.success {
+  color: #3c763d;
+  background-color: #dff0d8;
+}
+
+.danger {
+  color: #a94442;
+  background-color: #f2dede;
+}
+
+.info {
+  color: #31708f;
+  background-color: #d9edf7;
+}
+
+.retro-note {
+  height: auto !important;
+  #noteButton {
+    white-space: normal;
+    line-height: normal;
+    text-align: left;
+    border-radius: 10px;
+    padding: 15px 15px 15px 15px;
+  }
+  margin-bottom: 15px;
+}
+
+.add-new-button {
+  border-radius: 10px;
+  border: 2px dashed $border-color;
+  opacity: 0.5;
+  text-align: center;
+  margin-left: 39px;
+}
+
+.edit-actions > button {
+  margin: 0;
+}

@@ -3,8 +3,8 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 @Component({
   selector: 'exporting',
   templateUrl: './exporting.component.html',
-  styleUrls: ['./exporting.component.less'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./exporting.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ExportingComponent implements OnInit {
   @Input() jsonData: any;
@@ -15,7 +15,7 @@ export class ExportingComponent implements OnInit {
   jsonString: string;
   timeNow = new Date().toLocaleDateString();
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.jsonContainer = document.getElementById('json-container');
@@ -33,7 +33,7 @@ export class ExportingComponent implements OnInit {
 
   exportData() {
     this.clearExports();
-    
+
     let exportedHTML = `<pre class="html-pre"><code class="html">`;
     exportedHTML += this.dateUserTableString(this.timeNow);
     exportedHTML += this.dataString(this.jsonData, this.noteString);
@@ -42,7 +42,7 @@ export class ExportingComponent implements OnInit {
     const newEle2 = document.createElement('div');
     newEle2.innerHTML = exportedHTML;
     this.htmlContainer.insertBefore(newEle2, null);
-    
+
     this.jsonString = JSON.stringify(this.jsonData);
     const newEle1 = document.createElement('div');
     newEle1.innerHTML = `<pre class="json-pre">${this.jsonString}</pre>`;
@@ -66,7 +66,7 @@ export class ExportingComponent implements OnInit {
   }
 
   dateUserTableString(time) {
-  	return `&lt;table class='confluenceTable'&gt;
+    return `&lt;table class='confluenceTable'&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
       &lt;th class='confluenceTh' &gt;Date&lt;/th&gt;
@@ -83,18 +83,18 @@ export class ExportingComponent implements OnInit {
   dataString(data, fxn) {
     let returnString = `
 &lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
-    Object.keys(data).map(item => {
+    Object.keys(data).map((item) => {
       Object.keys(data[item]).map((note, i) => {
-      	returnString += fxn(item,note,i, data);
+        returnString += fxn(item, note, i, data);
       });
     });
     returnString += `
 &lt;/div&gt;`;
-  	return returnString;
+    return returnString;
   }
 
   noteString(item, note, i, data) {
-  	let returnString = '';
+    let returnString = '';
     let css = '';
     switch (data[item][note].type) {
       case 'success':
@@ -115,34 +115,40 @@ export class ExportingComponent implements OnInit {
 	    &lt;div class='innerCell' contenteditable='true'&gt;
 	      &lt;table class='confluenceTable'&gt;
 	        &lt;colgroup&gt;&lt;col&gt;&lt;col&gt;&lt;col&gt;&lt;/colgroup&gt;`;
-	        }
-	        returnString += `
+    }
+    returnString += `
 	        &lt;tr&gt;`;
-	        if (i === 0) {
-	          returnString += `
-	          &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${data[item][note].bucketName}&lt;/p&gt;`;
-	        }
-	        returnString += `
-	          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${data[item][note].votes}&lt;/td&gt;
-	          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${data[item][note].message}&lt;/td&gt;
-	        &lt;/tr&gt;`;  	
-	        if (i === Object.keys(data[item]).length - 1){
-	      returnString += `
+    if (i === 0) {
+      returnString += `
+	          &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${
+              data[item][note].bucketName
+            }&lt;/p&gt;`;
+    }
+    returnString += `
+	          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${
+      data[item][note].votes
+    }&lt;/td&gt;
+	          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${
+      data[item][note].message
+    }&lt;/td&gt;
+	        &lt;/tr&gt;`;
+    if (i === Object.keys(data[item]).length - 1) {
+      returnString += `
 	      &lt;/table&gt;
 	    &lt;/div&gt;
 	  &lt;/div&gt;`;
-        }
+    }
     return returnString;
   }
 
   addlTasksString() {
-  	return `
+    return `
 &lt;hr&gt;
 &lt;h2&gt;Tasks&lt;/h2&gt;
 &lt;ul class="inline-task-list"&gt;
   &lt;li data-inline-task-id=""&gt;
     &lt;span&gt;Type your task here, using "@" to assign to a user and "//" to select a due date&lt;/span&gt;
   &lt;/li&gt;
-&lt;/ul&gt;`
+&lt;/ul&gt;`;
   }
 }

@@ -1,47 +1,37 @@
-import { map, switchMap } from 'rxjs/operators';
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
+import { MatDialog } from '@angular/material';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-retro-board',
   templateUrl: './retro-board.component.html',
-  styleUrls: ['./retro-board.component.less'],
+  styleUrls: ['./retro-board.component.scss'],
 })
-export class RetroBoardComponent implements OnInit {
-  user: Observable<firebase.User>;
+export class RetroBoardComponent implements OnInit, OnDestroy {
   uid: string;
   retroboard: any;
   buckets: Observable<any[]>;
-  modalRef: BsModalRef;
-  config = {
-    animated: true,
-    keyboard: true,
-    backdrop: true,
-    ignoreBackdropClick: false,
-  };
   activeBucket: any;
   activeNote: any;
   activeVote: boolean;
   jsonData: Object;
+  dialogRef;
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
     private db: AngularFireDatabase,
-    private modalService: BsModalService,
     private route: ActivatedRoute,
-    private router: Router,
     public afAuth: AngularFireAuth,
-  ) {
-    this.user = afAuth.authState;
-    this.user.subscribe((result) => (this.uid = result.uid));
-  }
+    public dialog: MatDialog,
+  ) {}
 
-  compareFn = (a, b) => {
+  compareFn(a, b) {
     const aVotes = a.totalVotes || -1;
     const bVotes = b.totalVotes || -1;
     if (aVotes < bVotes) {
@@ -51,55 +41,62 @@ export class RetroBoardComponent implements OnInit {
       return -1;
     }
     return 0;
-  };
+  }
 
   openModal(template: TemplateRef<any>, bucket: any, note?: any) {
     this.activeBucket = bucket;
     if (note) {
       this.activeNote = note;
     }
-    this.modalRef = this.modalService.show(template, this.config);
+    this.dialogRef = this.dialog.open(template, {
+      panelClass: 'custom-dialog-container',
+    });
   }
 
   ngOnInit() {
-    let id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
 
-    this.db
-      .object(`/retroboards/${this.uid}/${id}`)
-      .valueChanges()
-      .subscribe((retroboard) => (this.retroboard = retroboard));
-
-    this.buckets = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
+    this.afAuth.authState
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((user) => {
+        this.uid = user.uid;
         this.db
-          .list(`/buckets/${params.get('id')}`)
-          .snapshotChanges()
-          .pipe(
-            map((actions) => {
-              return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
-            }),
-          ),
-      ),
-      map((buckets) => {
-        return buckets.map((bucket: any) => {
-          bucket.notes = this.db
-            .list(`/notes/${bucket.key}`)
-            .snapshotChanges()
-            .pipe(
-              map((actions) => {
-                return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
-              }),
-              map((notes) => {
-                return notes.sort(this.compareFn);
-              }),
-            );
-          return bucket;
-        });
-      }),
-    );
+          .object(`/retroboards/${user.uid}/${id}`)
+          .valueChanges()
+          .pipe(takeUntil(this.ngUnsubscribe))
+          .subscribe((retroboard) => (this.retroboard = retroboard));
+      });
+
+    this.buckets = this.db
+      .list(`/buckets/${id}`)
+      .snapshotChanges()
+      .pipe(
+        map((actions) => {
+          return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
+        }),
+        map((buckets) => {
+          return buckets.map((bucket: any) => {
+            bucket.notes = this.db
+              .list(`/notes/${bucket.key}`)
+              .snapshotChanges()
+              .pipe(
+                map((actions) => {
+                  return actions.map((a) => ({
+                    key: a.key,
+                    ...a.payload.val(),
+                  }));
+                }),
+                map((notes) => {
+                  return notes.sort(this.compareFn);
+                }),
+              );
+            return bucket;
+          });
+        }),
+      );
 
     this.jsonData = {};
-    this.buckets.subscribe((data) => {
+    this.buckets.pipe(takeUntil(this.ngUnsubscribe)).subscribe((data) => {
       data.map((bucket) => {
         this.db
           .list(`/notes/${bucket.key}`)
@@ -109,6 +106,7 @@ export class RetroBoardComponent implements OnInit {
               actions.map((a) => ({ key: a.key, ...a.payload.val() })),
             ),
           )
+          .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe((notes) => {
             notes.map((note: any) => {
               if (!this.jsonData[bucket.key]) {
@@ -126,18 +124,23 @@ export class RetroBoardComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   addNote(message: string) {
     this.db
       .list(`/notes/${this.activeBucket.key}`)
       .push({ message: message, votes: {} })
-      .then(() => this.modalRef.hide());
+      .then(() => this.dialogRef.close());
   }
 
   updateNote(message: string) {
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
       .update({ message: message })
-      .then(() => this.modalRef.hide());
+      .then(() => this.dialogRef.close());
   }
 
   upVote(bucket?: any, note?: any) {
@@ -161,7 +164,7 @@ export class RetroBoardComponent implements OnInit {
         votes: this.activeNote.votes,
         totalVotes: this.activeNote.totalVotes,
       })
-      .then(() => (this.modalRef ? this.modalRef.hide() : ''));
+      .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
   downVote(bucket: any, note?: any) {
@@ -179,13 +182,13 @@ export class RetroBoardComponent implements OnInit {
         votes: this.activeNote.votes,
         totalVotes: this.activeNote.totalVotes,
       })
-      .then(() => (this.modalRef ? this.modalRef.hide() : ''));
+      .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
   deleteNote() {
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
       .remove()
-      .then(() => this.modalRef.hide());
+      .then(() => this.dialogRef.close());
   }
 }

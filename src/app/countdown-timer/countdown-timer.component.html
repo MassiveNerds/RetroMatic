@@ -1,6 +1,0 @@
-<div class="timer-container">
-  <div [@visibilityChanged]="!isTimerRunning && !isTimerEnded"  class="timer-text">{{countdownTimerString}}</div>
-  <div [@hideRunningOutaTime]="!shouldHideRunningOutaTime" class="timer-background blue"></div>
-  <div [@hideOutaTime]="!shouldHideOutaTime" class="timer-background purple"></div>
-  <div class="timer-background red"></div>
-</div>

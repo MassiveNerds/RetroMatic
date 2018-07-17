@@ -1,0 +1,25 @@
+@import '~@angular/material/prebuilt-themes/purple-green.css';
+@import './variables';
+.custom-dialog-container .mat-dialog-container {
+  padding: 0;
+}
+
+.app-background {
+  background: #303030;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.primary-header {
+  background: #7b1fa2;
+  padding-left: 20px;
+  h1 {
+    font-weight: 300;
+    margin: 0;
+    padding: 28px 8px;
+    font-size: 20px;
+    color: #fff
+  }
+}
