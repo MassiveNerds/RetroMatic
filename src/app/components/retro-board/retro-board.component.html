@@ -3,17 +3,17 @@
     <h1>{{ retroboard?.name }}</h1>
   </div>
   <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="5px">
-    <mat-card fxFlex="33%" *ngFor="let bucket of buckets | async">
+    <mat-card fxFlex="33%" *ngFor="let bucket of buckets$ | async">
       <mat-card-header>
         <mat-card-title>{{ bucket.name }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-list>
           <mat-list-item class="retro-note" *ngFor="let note of bucket.notes | async">
-            <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[uid]" (click)="downVote(bucket, note)">
+            <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[user.uid]" (click)="downVote(bucket, note)">
               <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
             </button>
-            <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[uid])" (click)="upVote(bucket, note)">
+            <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[user.uid])" (click)="upVote(bucket, note)">
               <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
             </button>
             <button id="noteButton" [matBadge]="note.totalVotes" [matBadgeHidden]="!note.totalVotes || note.totalVotes === 0" mat-button
@@ -32,7 +32,12 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <exporting [jsonData]="jsonData"></exporting>
+  <div fxLayout="row">
+    <exporting [jsonData]="jsonData"></exporting>
+    <button mat-icon-button color="accent" (click)="deleteRetro(deleteConfirmDialog)">
+      <mat-icon aria-label="delete">delete</mat-icon>
+    </button>
+  </div>
 </div>
 
 <ng-template #addtemplate>
@@ -76,9 +81,18 @@
       <button fxFlex.xs="50%" mat-raised-button color="primary" (click)="updateNote(editmessage.value) ">Update</button>
       <button fxFlex.xs="50%" mat-raised-button color="warn" (click)="deleteNote() ">Delete</button>
       <button fxFlex.xs="50%" mat-button mat-dialog-close>Cancel</button>
-      <button fxFlex.xs="50%" mat-stroked-button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[uid])"
+      <button fxFlex.xs="50%" mat-stroked-button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[user.uid])"
         (click)="upVote() ">Vote up</button>
-      <button fxFlex.xs="50%" mat-stroked-button *ngIf="activeNote.votes && activeNote.votes[uid]" (click)="downVote() ">Down vote</button>
+      <button fxFlex.xs="50%" mat-stroked-button *ngIf="activeNote.votes && activeNote.votes[user.uid]" (click)="downVote() ">Down vote</button>
     </mat-card-actions>
   </mat-card>
+</ng-template>
+
+<ng-template #deleteConfirmDialog>
+  <h2 mat-dialog-title>Delete "{{ retroboard?.name }}"</h2>
+  <mat-dialog-content>Are you sure?</mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>No</button>
+    <button mat-button [mat-dialog-close]="true">Yes</button>
+  </mat-dialog-actions>
 </ng-template>

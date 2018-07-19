@@ -9,14 +9,14 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
-import { RetroBoardComponent } from './retro-board/retro-board.component';
-import { LoginComponent } from './login/login.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { AuthGuard } from './auth.guard';
-import { UserDetailComponent } from './user-detail/user-detail.component';
+import { RetroBoardComponent } from './components/retro-board/retro-board.component';
+import { LoginComponent } from './components/login/login.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AuthGuard } from './guards/auth.guard';
+import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ExportingComponent } from './exporting/exporting.component';
-import { TheHeaderComponent } from './the-header/the-header.component';
+import { ExportingComponent } from './components/exporting/exporting.component';
+import { TheHeaderComponent } from './components/the-header/the-header.component';
 
 import { MatInputModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,7 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
 
 const appRoutes: Routes = [
   {
