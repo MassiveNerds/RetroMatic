@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -14,9 +14,10 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./retro-board.component.scss'],
 })
 export class RetroBoardComponent implements OnInit, OnDestroy {
-  uid: string;
+  user: any;
   retroboard: any;
-  buckets: Observable<any[]>;
+  buckets: any;
+  buckets$: Observable<any[]>;
   activeBucket: any;
   activeNote: any;
   activeVote: boolean;
@@ -29,6 +30,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public afAuth: AngularFireAuth,
     public dialog: MatDialog,
+    private router: Router,
   ) {}
 
   compareFn(a, b) {
@@ -59,15 +61,20 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     this.afAuth.authState
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((user) => {
-        this.uid = user.uid;
+        this.user = user;
         this.db
           .object(`/retroboards/${user.uid}/${id}`)
-          .valueChanges()
+          .snapshotChanges()
+          .pipe(
+            map((snapshot) => {
+              return { key: snapshot.key, ...snapshot.payload.val() };
+            }),
+          )
           .pipe(takeUntil(this.ngUnsubscribe))
           .subscribe((retroboard) => (this.retroboard = retroboard));
       });
 
-    this.buckets = this.db
+    this.buckets$ = this.db
       .list(`/buckets/${id}`)
       .snapshotChanges()
       .pipe(
@@ -96,8 +103,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       );
 
     this.jsonData = {};
-    this.buckets.pipe(takeUntil(this.ngUnsubscribe)).subscribe((data) => {
-      data.map((bucket) => {
+    this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((buckets) => {
+      this.buckets = buckets;
+      buckets.map((bucket) => {
         this.db
           .list(`/notes/${bucket.key}`)
           .snapshotChanges()
@@ -151,10 +159,10 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       this.activeNote = note;
     }
     if (this.activeNote.votes) {
-      this.activeNote.votes[this.uid] = true;
+      this.activeNote.votes[this.user.uid] = true;
     } else {
       this.activeNote.votes = {};
-      this.activeNote.votes[this.uid] = true;
+      this.activeNote.votes[this.user.uid] = true;
     }
     this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
 
@@ -174,7 +182,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     if (note) {
       this.activeNote = note;
     }
-    delete this.activeNote.votes[this.uid];
+    delete this.activeNote.votes[this.user.uid];
     this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
@@ -190,5 +198,28 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
       .remove()
       .then(() => this.dialogRef.close());
+  }
+
+  deleteRetro(template: TemplateRef<any>) {
+    const dialogRef = this.dialog.open(template);
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        Promise.all(
+          this.buckets.map((bucket) =>
+            this.db.object(`/notes/${bucket.key}`).remove(),
+          ),
+        )
+          .then(() =>
+            this.db.object(`/buckets/${this.retroboard.key}`).remove(),
+          )
+          .then(() =>
+            this.db
+              .object(`/retroboards/${this.user.uid}/${this.retroboard.key}`)
+              .remove(),
+          )
+          .then(() => this.router.navigate(['/home']));
+      }
+    });
   }
 }
