@@ -1,7 +1,7 @@
 # RetroMatic
 
-[![Build Status](https://travis-ci.org/wordythebyrd/agile-retrospective.svg?branch=master)](https://travis-ci.org/wordythebyrd/agile-retrospective)
-[![Latest Version](https://img.shields.io/github/tag/wordythebyrd/agile-retrospective.svg)](https://github.com/wordythebyrd/agile-retrospective)
+[![Build Status](https://travis-ci.org/wordythebyrd/RetroMatic.svg?branch=master)](https://travis-ci.org/wordythebyrd/RetroMatic)
+[![Latest Version](https://img.shields.io/github/tag/wordythebyrd/RetroMatic.svg)](https://github.com/wordythebyrd/RetroMatic)
 [![Twitter](https://img.shields.io/twitter/follow/massivenerds.svg?style=social&label=Follow)](https://twitter.com/massivenerds)
 
 ![RetroMatic](src/assets/Images/rmbg.jpg)
