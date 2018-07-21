@@ -158,13 +158,20 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     if (note) {
       this.activeNote = note;
     }
-    if (this.activeNote.votes) {
+    if (!this.activeNote.votes) {
+      this.activeNote.votes = {};
+    }
+
+    if (this.activeNote.votes[this.user.uid] !== true) {
       this.activeNote.votes[this.user.uid] = true;
     } else {
-      this.activeNote.votes = {};
-      this.activeNote.votes[this.user.uid] = true;
+      delete this.activeNote.votes[this.user.uid];
     }
-    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
+
+    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).reduce(
+      (total, vote) => (this.activeNote.votes[vote] ? total + 1 : total - 1),
+      0,
+    );
 
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
@@ -182,8 +189,21 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     if (note) {
       this.activeNote = note;
     }
-    delete this.activeNote.votes[this.user.uid];
-    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).length;
+    if (!this.activeNote.votes) {
+      this.activeNote.votes = {};
+    }
+
+    if (this.activeNote.votes[this.user.uid] !== false) {
+      this.activeNote.votes[this.user.uid] = false;
+    } else {
+      delete this.activeNote.votes[this.user.uid];
+    }
+
+    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).reduce(
+      (total, vote) => (this.activeNote.votes[vote] ? total + 1 : total - 1),
+      0,
+    );
+
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
       .update({
@@ -198,6 +218,16 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
       .remove()
       .then(() => this.dialogRef.close());
+  }
+
+  hasVoted(votes, voted) {
+    if (!votes) {
+      return false;
+    }
+    if (voted) {
+      return votes[this.user.uid] === true;
+    }
+    return votes[this.user.uid] === false;
   }
 
   deleteRetro(template: TemplateRef<any>) {
