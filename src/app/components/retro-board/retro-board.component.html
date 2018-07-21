@@ -9,16 +9,33 @@
       </mat-card-header>
       <mat-card-content>
         <mat-list>
-          <mat-list-item class="retro-note" *ngFor="let note of bucket.notes | async">
-            <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[user.uid]" (click)="downVote(bucket, note)">
+          <mat-list-item
+            class="retro-note"
+            *ngFor="let note of bucket.notes | async">
+            <!-- <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[user.uid]" (click)="downVote(bucket, note)">
               <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
             </button>
             <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[user.uid])" (click)="upVote(bucket, note)">
               <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
-            </button>
-            <button id="noteButton" [matBadge]="note.totalVotes" [matBadgeHidden]="!note.totalVotes || note.totalVotes === 0" mat-button
-              fxFlex fxLayoutAlign="space-between center" [class.success]="bucket.type === 'success'" [class.danger]="bucket.type === 'danger'"
-              [class.info]="bucket.type === 'info'" (click)="openModal(edittemplate, bucket, note)">
+            </button> -->
+            <div fxFlex fxLayout="column">
+              <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button (click)="upVote(bucket, note)">
+                <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+              </button>
+              <button [ngClass]="{'mat-warn': hasVoted(note.votes, false)}" mat-icon-button (click)="downVote(bucket, note)">
+                <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+              </button>
+            </div>
+            <button
+              id="noteButton"
+              [matBadge]="note.totalVotes"
+              [matBadgeHidden]="!note.totalVotes || note.totalVotes === 0"
+              [class.success]="bucket.type === 'success'"
+              [class.danger]="bucket.type === 'danger'"
+              [class.info]="bucket.type === 'info'"
+              mat-button fxFlex=100
+              class="mat-elevation-z6"
+              (click)="openModal(edittemplate, bucket, note)">
               {{note.message}}
             </button>
           </mat-list-item>
