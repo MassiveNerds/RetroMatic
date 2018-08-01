@@ -5,6 +5,15 @@
     <span fxHide.xs>
       <button mat-button [routerLink]="['/home']">My Dashboard</button>
       <span class="display mat-body-1">{{ loginDisplay }}</span>
+      <a 
+        mat-button 
+        href="https://github.com/wordythebyrd/RetroMatic"
+        aria-label="GitHub Repository">
+        <img class="github-logo"
+            src="../../assets/Images/github-circle-white-transparent.svg"
+            alt="github">
+        GitHub
+      </a>
       <button mat-button (click)="logout()">Log out</button>
     </span>
     <span fxHide.gt-xs>
@@ -13,6 +22,15 @@
       </button>
       <mat-menu #appMenu="matMenu">
         <button mat-menu-item [routerLink]="['/home']">My Dashboard</button>
+        <a 
+          mat-menu-item 
+          href="https://github.com/wordythebyrd/RetroMatic"
+          aria-label="GitHub Repository">
+          <img class="github-logo"
+              src="../../assets/Images/github-circle-white-transparent.svg"
+              alt="github">
+          GitHub
+        </a>     
         <button mat-menu-item (click)="logout()">Log out</button>
       </mat-menu>
     </span>
