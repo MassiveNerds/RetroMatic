@@ -4,7 +4,7 @@
   <span *ngIf="(user | async)?.uid">
     <span fxHide.xs>
       <button mat-button [routerLink]="['/home']">My Dashboard</button>
-      <span class="display mat-body-1">{{ loginDisplay }}</span>
+      <theme-picker></theme-picker>
       <a 
         mat-button 
         href="https://github.com/wordythebyrd/RetroMatic"
