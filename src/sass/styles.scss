@@ -1,11 +1,20 @@
-@import '~@angular/material/prebuilt-themes/purple-green.css';
+@import '~@angular/material/theming';
+@import '../app-theme';
 @import './variables';
+
+// Include material core styles.
+@include mat-core();
+
+// Define the light theme.
+$primary: mat-palette($mat-indigo);
+$accent:  mat-palette($mat-pink, A200, A100, A400);
+
+$theme: mat-light-theme($primary, $accent);
+@include angular-material-theme($theme);
+@include material-docs-app-theme($theme);
+
 .custom-dialog-container .mat-dialog-container {
   padding: 0;
-}
-
-.app-background {
-  background: #303030;
 }
 
 body {
@@ -13,7 +22,6 @@ body {
 }
 
 .primary-header {
-  background: #7b1fa2;
   padding-left: 20px;
   h1 {
     font-weight: 300;

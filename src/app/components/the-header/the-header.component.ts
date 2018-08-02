@@ -9,23 +9,12 @@ import * as firebase from 'firebase/app';
   templateUrl: './the-header.component.html',
   styleUrls: ['./the-header.component.scss'],
 })
-export class TheHeaderComponent implements OnInit {
+export class TheHeaderComponent {
   user: Observable<firebase.User>;
   userChanges: Subscription;
-  loginDisplay = '';
 
   constructor(public afAuth: AngularFireAuth, private router: Router) {
     this.user = afAuth.authState;
-  }
-  ngOnInit() {
-    this.userChanges = this.user.subscribe((user) => {
-      if (user) {
-        const displayName = user.isAnonymous
-          ? 'anonymous user'
-          : `${user.email}`;
-        this.loginDisplay = `Signed in as ${displayName}`;
-      }
-    });
   }
 
   logout() {
