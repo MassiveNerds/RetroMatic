@@ -1,7 +1,7 @@
 # RetroMatic
 
-[![Build Status](https://travis-ci.org/wordythebyrd/RetroMatic.svg?branch=master)](https://travis-ci.org/wordythebyrd/RetroMatic)
-[![Latest Version](https://img.shields.io/github/tag/wordythebyrd/RetroMatic.svg)](https://github.com/wordythebyrd/RetroMatic)
+[![Build Status](https://travis-ci.org/MassiveNerds/RetroMatic.svg?branch=master)](https://travis-ci.org/MassiveNerds/RetroMatic)
+[![Latest Version](https://img.shields.io/github/tag/MassiveNerds/RetroMatic.svg)](https://github.com/MassiveNerds/RetroMatic)
 [![Twitter](https://img.shields.io/twitter/follow/massivenerds.svg?style=social&label=Follow)](https://twitter.com/massivenerds)
 
 ![RetroMatic](src/assets/Images/rmbg.jpg)
