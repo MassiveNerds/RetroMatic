@@ -69,7 +69,7 @@
     </mat-card-header>
     <mat-card-content>
       <mat-form-field fxFlex>
-        <textarea matInput #addmessage cdkFocusInitial cdkTextareaAutosize cdkAutosizeMinRows="3"></textarea>
+        <textarea matInput #addmessage cdkFocusInitial cdkTextareaAutosize></textarea>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
@@ -91,7 +91,7 @@
     </mat-card-header>
     <mat-card-content>
       <mat-form-field fxFlex>
-        <textarea matInput #editmessage cdkTextareaAutosize cdkAutosizeMinRows="3" cdkFocusInitial [value]="activeNote.message"></textarea>
+        <textarea matInput #editmessage cdkTextareaAutosize cdkFocusInitial [value]="activeNote.message"></textarea>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions class="edit-actions" fxLayout="row wrap">
