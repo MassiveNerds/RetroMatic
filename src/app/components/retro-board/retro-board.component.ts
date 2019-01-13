@@ -107,21 +107,11 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
         }),
       );
 
-    this.jsonData = {};
-    this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((buckets) => {
-      this.buckets = buckets;
-      buckets.map((bucket) => {
-        this.db
-          .list(`/notes/${bucket.key}`)
-          .snapshotChanges()
-          .pipe(
-            map((actions) =>
-              actions.map((a) => ({ key: a.key, ...a.payload.val() })),
-            ),
-          )
-          .pipe(takeUntil(this.ngUnsubscribe))
-          .subscribe((notes) => {
-            notes.map((note: any) => {
+      this.jsonData = {};
+      this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(buckets => {
+        buckets.forEach(bucket => {
+          bucket.notes.subscribe(notes => {
+            notes.forEach(note => {
               if (!this.jsonData[bucket.key]) {
                 this.jsonData[bucket.key] = {};
               }
@@ -133,8 +123,8 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
               };
             });
           });
+        });
       });
-    });
   }
 
   ngOnDestroy() {
@@ -219,6 +209,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   deleteNote() {
+    delete this.jsonData[this.activeBucket.key][this.activeNote.key];
     this.db
       .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
       .remove()
