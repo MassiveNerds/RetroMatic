@@ -6,8 +6,6 @@ import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as momentTimeZone from 'moment-timezone';
 
-const DEFAULT_BUCKETS: string[] = ['What went well?', 'What can be improved?', 'Action items'];
-
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +35,20 @@ export class RetroboardService {
     return this.$retroboards;
   }
 
+  async updateRetroboard(id: string, options: {name: string, buckets?: {name: string, key?: string}[]}) {
+    this.db
+    .object(`/retroboards/${this.uid}/${id}`)
+      .update({ name: options.name });
+
+    if (options.buckets) {
+      options.buckets.forEach(bucket => {
+        this.db
+          .object(`/buckets/${id}/${bucket.key}`)
+          .update({ name: bucket.name });
+      });
+    }
+  }
+
   async createRetroboard(name: string, bucketNames: string[] = []) {
     const result = await this.retroboards
       .push({
@@ -47,9 +59,6 @@ export class RetroboardService {
       });
     const newId = result.key;
     const buckets: AngularFireList<any> = this.db.list(`/buckets/${newId}`);
-    if (!bucketNames.length) {
-      bucketNames = DEFAULT_BUCKETS;
-    }
     bucketNames.forEach(bucketName => {
       buckets.push({ name: bucketName });
     });

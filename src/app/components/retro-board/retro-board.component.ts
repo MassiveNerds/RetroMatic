@@ -7,6 +7,8 @@ import { Subject } from 'rxjs/Subject';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { MatDialog } from '@angular/material';
 import { takeUntil } from 'rxjs/operators';
+import { RetroBoardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
+import { ExportService } from './export.service';
 
 @Component({
   selector: 'app-retro-board',
@@ -23,6 +25,8 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   activeVote: boolean;
   jsonData: Object;
   dialogRef;
+  retroboardId: string;
+  htmlExport: string;
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
@@ -31,6 +35,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     public afAuth: AngularFireAuth,
     public dialog: MatDialog,
     private router: Router,
+    private exportService: ExportService,
   ) {}
 
   compareFn(a, b) {
@@ -251,5 +256,36 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
           .then(() => this.router.navigate(['/home']));
       }
     });
+  }
+
+  openRetroBoardDetailsModal() {
+    this.dialogRef = this.dialog.open(RetroBoardDetailsModalComponent, {
+      panelClass: 'custom-dialog-container',
+      data: { retroboard: this.retroboard,
+              buckets: this.buckets,
+            }
+    });
+  }
+
+  openExportModal(template: TemplateRef<any>) {
+    this.htmlExport = this.exportService.export(this.jsonData);
+    this.dialogRef = this.dialog.open(template, {
+      panelClass: 'custom-dialog-container',
+    });
+  }
+
+  copyText() {
+    let range;
+    if ((document as any).selection) {
+      range = (document.body as any).createTextRange();
+      range.moveToElementText(document.getElementById('html-container'));
+      range.select();
+    } else if (window.getSelection) {
+      range = document.createRange();
+      range.selectNode(document.getElementById('html-container'));
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+    document.execCommand('copy');
   }
 }

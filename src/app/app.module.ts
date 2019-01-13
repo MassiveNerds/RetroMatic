@@ -15,7 +15,6 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { AuthGuard } from './guards/auth.guard';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ExportingComponent } from './components/exporting/exporting.component';
 import { TheHeaderComponent } from './components/the-header/the-header.component';
 import { RetroBoardDetailsModalComponent } from './components/retro-board-details-modal/retro-board-details-modal.component';
 
@@ -68,7 +67,6 @@ const appRoutes: Routes = [
     LoginComponent,
     PageNotFoundComponent,
     UserDetailComponent,
-    ExportingComponent,
     ModalContentComponent,
     TheHeaderComponent,
     ThemePickerComponent,
