@@ -12,12 +12,6 @@
           <mat-list-item
             class="retro-note"
             *ngFor="let note of bucket.notes | async">
-            <!-- <button color="warn" mat-icon-button *ngIf="note.votes && note.votes[user.uid]" (click)="downVote(bucket, note)">
-              <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
-            </button>
-            <button color="accent" mat-icon-button *ngIf="!note.votes || (note.votes && !note.votes[user.uid])" (click)="upVote(bucket, note)">
-              <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
-            </button> -->
             <div fxFlex fxLayout="column">
               <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button (click)="upVote(bucket, note)">
                 <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
@@ -49,11 +43,20 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div fxLayout="row">
-    <exporting [jsonData]="jsonData"></exporting>
-    <button mat-icon-button color="accent" (click)="deleteRetro(deleteConfirmDialog)">
-      <mat-icon aria-label="delete">delete</mat-icon>
-    </button>
+  <div class="retroboard-toolbar" fxLayout="row">
+      <span class="fill-remaining-space"></span>
+      <button mat-raised-button color="accent" (click)="openExportModal(exporttemplate)">
+          <mat-icon>save_alt</mat-icon>
+          Export
+      </button>
+      <button mat-raised-button color="accent" (click)="deleteRetro(deleteConfirmDialog)">
+          <mat-icon>delete</mat-icon>
+          Delete
+      </button>
+      <button mat-raised-button color="accent" (click)="openRetroBoardDetailsModal()">
+          <mat-icon>edit</mat-icon>
+          Edit
+      </button>
   </div>
 </div>
 
@@ -72,9 +75,9 @@
         <textarea matInput #addmessage cdkFocusInitial cdkTextareaAutosize></textarea>
       </mat-form-field>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="addNote(addmessage.value)">Add</button>
+    <mat-card-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary" (click)="addNote(addmessage.value)">Add</button>
     </mat-card-actions>
   </mat-card>
 </ng-template>
@@ -94,13 +97,10 @@
         <textarea matInput #editmessage cdkTextareaAutosize cdkFocusInitial [value]="activeNote.message"></textarea>
       </mat-form-field>
     </mat-card-content>
-    <mat-card-actions class="edit-actions" fxLayout="row wrap">
-      <button fxFlex.xs="50%" mat-raised-button color="primary" (click)="updateNote(editmessage.value) ">Update</button>
-      <button fxFlex.xs="50%" mat-raised-button color="warn" (click)="deleteNote() ">Delete</button>
+    <mat-card-actions class="edit-actions" fxLayout="row wrap" align="end">
+      <button fxFlex.xs="50%" mat-button color="warn" (click)="deleteNote() ">Delete</button>
       <button fxFlex.xs="50%" mat-button mat-dialog-close>Cancel</button>
-      <button fxFlex.xs="50%" mat-stroked-button *ngIf="!activeNote.votes || (activeNote.votes && !activeNote.votes[user.uid])"
-        (click)="upVote() ">Vote up</button>
-      <button fxFlex.xs="50%" mat-stroked-button *ngIf="activeNote.votes && activeNote.votes[user.uid]" (click)="downVote() ">Down vote</button>
+      <button fxFlex.xs="50%" mat-raised-button color="primary" (click)="updateNote(editmessage.value) ">Update</button>
     </mat-card-actions>
   </mat-card>
 </ng-template>
@@ -108,8 +108,26 @@
 <ng-template #deleteConfirmDialog>
   <h2 mat-dialog-title>Delete "{{ retroboard?.name }}"</h2>
   <mat-dialog-content>Are you sure?</mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>No</button>
-    <button mat-button [mat-dialog-close]="true">Yes</button>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Delete</button>
   </mat-dialog-actions>
 </ng-template>
+
+<ng-template #exporttemplate>
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="space-between start">
+        <h2 mat-dialog-title>Export HTML</h2>
+        <button mat-icon-button mat-dialog-close>
+          <mat-icon aria-label="Close">close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div id="html-container" [innerHTML]="htmlExport"></div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button mat-dialog-close color="primary">Close</button>
+        <button mat-raised-button color="primary" (click)="copyText()">Copy</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-template>

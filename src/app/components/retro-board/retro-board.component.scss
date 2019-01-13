@@ -37,3 +37,22 @@
 .edit-actions > button {
   margin: 0;
 }
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.retroboard-toolbar
+ {
+   button {
+    margin:5px 10px 0 0;
+   }
+ }
+
+#html-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: auto;
+  height: 250px;
+  font-size: 13px;
+}

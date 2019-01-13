@@ -1,8 +1,6 @@
-import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { AngularFireList } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
-import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { RetroBoardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
