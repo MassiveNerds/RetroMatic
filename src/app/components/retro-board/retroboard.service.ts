@@ -16,9 +16,11 @@ export class RetroboardService {
   retroboards: AngularFireList<any>;
   $retroboards: any;
 
-  constructor(private db: AngularFireDatabase, public afAuth: AngularFireAuth) {
-    this.user = afAuth.authState;
-    this.userChanges = this.user.subscribe((user) => {
+  constructor(private db: AngularFireDatabase, public afAuth: AngularFireAuth) {}
+
+  openSubscription() {
+    this.user = this.afAuth.authState;
+    this.userChanges = this.userChanges ? this.userChanges : this.user.subscribe((user) => {
       this.uid = user.uid;
       this.retroboards = this.db.list(`/retroboards/${this.uid}`);
       this.$retroboards = this.retroboards
@@ -29,6 +31,12 @@ export class RetroboardService {
           ),
         );
     });
+  }
+
+  closeSubscription() {
+    if (this.userChanges) {
+      this.userChanges.unsubscribe();
+    }
   }
 
   getRetroboards() {

@@ -1,4 +1,4 @@
-<div class="login-page" ngClass.lt-md="mobile-background" fxLayout="column" fxLayoutAlign="center center">
+<div class="login-page" ngClass.lt-md="mobile-background" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
   <mat-card class="mat-elevation-z6" ngStyle.lt-md="width: auto;">
     <mat-card-content>
       <p *ngIf="error" class="error mat-body-1">
@@ -11,23 +11,11 @@
         <input #password type="password" matInput placeholder="Password">
       </mat-form-field>
     </mat-card-content>
-    <mat-card-actions fxLayout="column">
-      <div fxLayout="row">
-        <button mat-raised-button fxFlex=66 color="primary" (click)="login(email.value, password.value)">Sign in</button>
-        <button mat-button fxFlex=33 color="accent" (click)="register(email.value, password.value)">Register</button>
-      </div>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Advanced
-          </mat-panel-title>
-          <mat-panel-description>
-            Other sign-in methods
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <button fxFlex=100 mat-button (click)="loginWithGoogle()" aria-label="Sign in with Google ">Sign in with Google</button>
-        <button fxFlex=100 mat-button (click)="loginAsGuest()">Continue as guest</button>
-      </mat-expansion-panel>
+    <mat-card-actions align="end">
+        <button mat-button (click)="register(email.value, password.value)">Register</button>
+        <button mat-raised-button color="primary" (click)="login(email.value, password.value)">Sign in</button>
     </mat-card-actions>
   </mat-card>
+  <button mat-raised-button color="accent" (click)="loginWithGoogle()" aria-label="Sign in with Google">Sign in with Google</button>
+  <button mat-raised-button color="accent" (click)="loginAsGuest()" aria-label="Continue as guest">Continue as guest</button>
 </div>

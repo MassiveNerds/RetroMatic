@@ -109,6 +109,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
       this.jsonData = {};
       this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(buckets => {
+        this.buckets = buckets;
         buckets.forEach(bucket => {
           bucket.notes.subscribe(notes => {
             notes.forEach(note => {
