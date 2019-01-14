@@ -29,7 +29,9 @@ export class UserDetailComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private retroboardService: RetroboardService,
-  ) {}
+  ) {
+    retroboardService.openSubscription();
+  }
 
   ngOnInit() {
     this.$retroboards = this.retroboardService.getRetroboards();
