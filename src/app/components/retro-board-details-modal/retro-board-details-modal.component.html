@@ -1,0 +1,30 @@
+<mat-card>
+  <mat-card-header>
+    <h2 mat-dialog-title>{{isUpdate ? 'Update retrospective' : 'Create a new retrospective'}}</h2>
+  </mat-card-header>
+  <mat-card-content fxLayout="column">
+    <mat-form-field [hideRequiredMarker]="true">
+      <input [(ngModel)]="retroboardName" matInput #name placeholder="Retrospective name" required>
+    </mat-form-field>
+    <mat-expansion-panel [expanded]="isUpdate">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Optional
+        </mat-panel-title>
+        <mat-panel-description>
+          Customize buckets
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-action-row fxLayout="column">
+        <mat-form-field *ngFor="let bucket of buckets">
+            <input matInput [(ngModel)]="bucket.name">
+        </mat-form-field>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-button (click)="closeDialog()">Cancel</button>
+    <button *ngIf="!isUpdate" mat-raised-button color="primary" (click)="createRetroboard()">Create</button>
+    <button *ngIf="isUpdate" mat-raised-button color="primary" (click)="updateRetroboard()">Update</button>
+  </mat-card-actions>
+</mat-card>
