@@ -36,6 +36,7 @@ export class RetroboardService {
   closeSubscription() {
     if (this.userChanges) {
       this.userChanges.unsubscribe();
+      this.userChanges = null;
     }
   }
 
