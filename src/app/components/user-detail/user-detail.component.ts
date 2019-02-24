@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AngularFireList } from 'angularfire2/database';
+import { AngularFireList } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material';

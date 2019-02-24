@@ -1,10 +1,10 @@
 import { map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { MatDialog } from '@angular/material';
 import { takeUntil } from 'rxjs/operators';
 import { RetroBoardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
