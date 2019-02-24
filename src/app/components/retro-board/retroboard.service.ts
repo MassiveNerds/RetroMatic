@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
