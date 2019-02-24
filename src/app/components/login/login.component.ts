@@ -27,6 +27,10 @@ export class LoginComponent implements OnInit {
   }
 
   register(email: string, password: string) {
+    (<any>window).gtag('event', 'register', {
+      'event_category': 'authentication',
+      'event_label': 'origin'
+    });
     this.afAuth.auth
       .createUserWithEmailAndPassword(email, password)
       .then((user) => this.login(email, password))
@@ -34,6 +38,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(email: string, password: string) {
+    (<any>window).gtag('event', 'login', {
+      'event_category': 'authentication',
+      'event_label': 'origin'
+    });
     this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then(() => this.router.navigateByUrl(this.returnUrl))
@@ -41,6 +49,10 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle() {
+    (<any>window).gtag('event', 'google', {
+      'event_category': 'authentication',
+      'event_label': 'origin'
+    });
     this.afAuth.auth
       .signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then(() => this.router.navigateByUrl(this.returnUrl))
@@ -48,6 +60,10 @@ export class LoginComponent implements OnInit {
   }
 
   loginAsGuest() {
+    (<any>window).gtag('event', 'guest', {
+      'event_category': 'authentication',
+      'event_label': 'origin'
+    });
     this.afAuth.auth
       .signInAnonymously()
       .then(() => this.router.navigateByUrl(this.returnUrl))

@@ -232,6 +232,10 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
+        (<any>window).gtag('event', 'delete', {
+          'event_category': 'retrospective',
+          'event_label': 'origin'
+        });
         Promise.all(
           this.buckets.map((bucket) =>
             this.db.object(`/notes/${bucket.key}`).remove(),
@@ -260,6 +264,10 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   openExportModal(template: TemplateRef<any>) {
+    (<any>window).gtag('event', 'export', {
+      'event_category': 'retrospective',
+      'event_label': 'origin'
+    });
     this.htmlExport = this.exportService.export(this.jsonData);
     this.dialogRef = this.dialog.open(template, {
       panelClass: 'custom-dialog-container',
