@@ -35,6 +35,7 @@ export class RetroboardService {
   }
 
   async updateRetroboard(id: string, options: { name: string, buckets?: Bucket[] }) {
+    this.sendRetrospectiveEvent('update');
     const uid = this.authService.getUserDetails().uid;
     this.db.object(`/retroboards/${uid}/${id}`).update({ name: options.name });
 
@@ -67,6 +68,7 @@ export class RetroboardService {
   }
 
   async createRetroboard(name: string, bucketNames: string[] = []) {
+    this.sendRetrospectiveEvent('create');
     const uid = this.authService.getUserDetails().uid;
     const retroboardName = (name && name.length > 0) ? name : moment().format('dddd, MMMM Do YYYY');
     const result = await this.db.list<Retroboard>(`/retroboards/${uid}`)

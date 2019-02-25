@@ -38,10 +38,6 @@ export class RetroboardDetailsModalComponent implements OnInit {
   }
 
   createRetroboard() {
-    (<any>window).gtag('event', 'create', {
-      'event_category': 'retrospective',
-      'event_label': 'origin'
-    });
     this.retroboardService.createRetroboard(this.retroboardName, this.buckets.map(b => b.name))
       .then((id) => {
         this.dialogRef.close();
@@ -50,10 +46,6 @@ export class RetroboardDetailsModalComponent implements OnInit {
   }
 
   updateRetroboard() {
-    (<any>window).gtag('event', 'update', {
-      'event_category': 'retrospective',
-      'event_label': 'origin'
-    });
     this.retroboardService.updateRetroboard(this.data.retroboard.key, {
       name: this.retroboardName,
       buckets: this.buckets,
