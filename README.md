@@ -42,6 +42,7 @@ $ cd agile-retrospective
 # Install dependencies
 $ npm install
 ```
+
 Update firebase config values in `firebase.ts`.  This config file will be ignored from GIT. Copy `firebase.example.ts` and rename it to `firebase.ts`. These values can be found here: Firebase Console > Overview > Add Firebase to your web app.
 
 ```javascript
@@ -55,27 +56,11 @@ Update firebase config values in `firebase.ts`.  This config file will be ignore
     }
 ```
 
-
 ```bash
 # Run the app
 $ ng serve
 ```
+
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-```bash
-$ ng test
-```
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-```bash
-$ ng e2e
-```
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.

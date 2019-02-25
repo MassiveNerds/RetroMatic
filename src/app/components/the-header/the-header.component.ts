@@ -1,9 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import * as firebase from 'firebase/app';
-import { RetroboardService } from '../retro-board/retroboard.service';
+import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-the-header',
@@ -11,20 +7,12 @@ import { RetroboardService } from '../retro-board/retroboard.service';
   styleUrls: ['./the-header.component.scss'],
 })
 export class TheHeaderComponent {
-  user: Observable<firebase.User>;
-  userChanges: Subscription;
 
   constructor(
-    public afAuth: AngularFireAuth,
-    private router: Router,
-    private retroboardService: RetroboardService,
-  ) {
-    this.user = afAuth.authState;
-  }
+    private authService: AuthService,
+  ) { }
 
   logout() {
-    this.retroboardService.closeSubscription();
-    this.afAuth.auth.signOut();
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }

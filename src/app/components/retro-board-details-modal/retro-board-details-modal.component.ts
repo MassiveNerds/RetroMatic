@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { RetroboardService } from '../retro-board/retroboard.service';
+import { RetroboardService } from '../../services/retroboard.service';
 import { Router } from '@angular/router';
 
 const DEFAULT_BUCKETS = [
@@ -14,7 +14,7 @@ const DEFAULT_BUCKETS = [
   templateUrl: './retro-board-details-modal.component.html',
   styleUrls: ['./retro-board-details-modal.component.scss']
 })
-export class RetroBoardDetailsModalComponent implements OnInit {
+export class RetroboardDetailsModalComponent implements OnInit {
 
   isUpdate: boolean;
   retroboardName = '';
@@ -22,7 +22,7 @@ export class RetroBoardDetailsModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<RetroBoardDetailsModalComponent>,
+    public dialogRef: MatDialogRef<RetroboardDetailsModalComponent>,
     private retroboardService: RetroboardService,
     private router: Router,
   ) { }
@@ -38,10 +38,6 @@ export class RetroBoardDetailsModalComponent implements OnInit {
   }
 
   createRetroboard() {
-    (<any>window).gtag('event', 'create', {
-      'event_category': 'retrospective',
-      'event_label': 'origin'
-    });
     this.retroboardService.createRetroboard(this.retroboardName, this.buckets.map(b => b.name))
       .then((id) => {
         this.dialogRef.close();
@@ -50,10 +46,6 @@ export class RetroBoardDetailsModalComponent implements OnInit {
   }
 
   updateRetroboard() {
-    (<any>window).gtag('event', 'update', {
-      'event_category': 'retrospective',
-      'event_label': 'origin'
-    });
     this.retroboardService.updateRetroboard(this.data.retroboard.key, {
       name: this.retroboardName,
       buckets: this.buckets,
