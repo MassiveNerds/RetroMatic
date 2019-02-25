@@ -16,7 +16,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TheHeaderComponent } from './components/the-header/the-header.component';
-import { RetroBoardDetailsModalComponent } from './components/retro-board-details-modal/retro-board-details-modal.component';
+import { RetroboardDetailsModalComponent } from './components/retro-board-details-modal/retro-board-details-modal.component';
 
 import { MatInputModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -31,6 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import { ThemePickerComponent } from './components/theme-picker/theme-picker.component';
 import { ThemeStorage } from './components/theme-picker/theme-storage/theme-storage';
@@ -70,7 +71,7 @@ const appRoutes: Routes = [
     ModalContentComponent,
     TheHeaderComponent,
     ThemePickerComponent,
-    RetroBoardDetailsModalComponent
+    RetroboardDetailsModalComponent
   ],
   imports: [
     BrowserModule,
@@ -96,9 +97,10 @@ const appRoutes: Routes = [
     MatMenuModule,
     MatExpansionModule,
     MatBadgeModule,
-    MatGridListModule
+    MatGridListModule,
+    MatProgressBarModule
   ],
-  entryComponents: [ModalContentComponent, RetroBoardDetailsModalComponent],
+  entryComponents: [ModalContentComponent, RetroboardDetailsModalComponent],
   providers: [
     AuthGuard,
     StyleManager,
