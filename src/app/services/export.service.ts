@@ -73,16 +73,16 @@ function noteString(item, note, i, data) {
   if (i === 0) {
     returnString += `
           &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${
-            data[item][note].bucketName
-          }&lt;/p&gt;`;
+      data[item][note].bucketName
+      }&lt;/p&gt;`;
   }
   returnString += `
           &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${
     data[item][note].votes
-  }&lt;/td&gt;
+    }&lt;/td&gt;
           &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${
     data[item][note].message
-  }&lt;/td&gt;
+    }&lt;/td&gt;
         &lt;/tr&gt;`;
   if (i === Object.keys(data[item]).length - 1) {
     returnString += `

@@ -12,10 +12,10 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions align="end">
-        <button mat-button (click)="register(email.value, password.value)">Register</button>
-        <button mat-raised-button color="primary" (click)="login(email.value, password.value)">Sign in</button>
+        <button mat-button (click)="tryRegister(email.value, password.value)">Register</button>
+        <button mat-raised-button color="primary" (click)="tryLogin(email.value, password.value)">Sign in</button>
     </mat-card-actions>
   </mat-card>
-  <button mat-raised-button color="accent" (click)="loginWithGoogle()" aria-label="Sign in with Google">Sign in with Google</button>
-  <button mat-raised-button color="accent" (click)="loginAsGuest()" aria-label="Continue as guest">Continue as guest</button>
+  <button mat-raised-button color="accent" (click)="tryLoginWithGoogle()" aria-label="Sign in with Google">Sign in with Google</button>
+  <button mat-raised-button color="accent" (click)="tryLoginAsGuest()" aria-label="Continue as guest">Continue as guest</button>
 </div>

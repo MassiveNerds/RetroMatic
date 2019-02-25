@@ -1,40 +1,36 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AngularFireList } from '@angular/fire/database';
-import * as firebase from 'firebase/app';
-import { Observable, Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material';
-import { RetroBoardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
-import { RetroboardService } from '../retro-board/retroboard.service';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { RetroboardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
+import { RetroboardService } from '../../services/retroboard.service';
+import { Retroboard } from '../../types/retroboard';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss'],
 })
-export class UserDetailComponent implements OnInit {
-  error: Error;
-  user: Observable<firebase.User>;
-  userChanges: Subscription;
-  uid: string;
-  retroboards: AngularFireList<any>;
-  $retroboards: any;
-  config = {
-    animated: true,
-    keyboard: true,
-    backdrop: true,
-    ignoreBackdropClick: false,
-  };
-  dialogRef;
+export class UserDetailComponent implements OnInit, OnDestroy {
+  private retroboards: Retroboard[];
+  private dialogRef: MatDialogRef<any>;
+  private subscription: Subscription;
 
   constructor(
     public dialog: MatDialog,
     private retroboardService: RetroboardService,
-  ) {
-    retroboardService.openSubscription();
-  }
+  ) { }
 
   ngOnInit() {
-    this.$retroboards = this.retroboardService.getRetroboards();
+    this.getRetroboards();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  getRetroboards() {
+    this.subscription = this.retroboardService.getRetroboards()
+      .subscribe(retroboards => this.retroboards = retroboards);
   }
 
   openModal(template: TemplateRef<any>) {
@@ -44,7 +40,7 @@ export class UserDetailComponent implements OnInit {
   }
 
   openRetroBoardDetailsModal() {
-    this.dialogRef = this.dialog.open(RetroBoardDetailsModalComponent, {
+    this.dialogRef = this.dialog.open(RetroboardDetailsModalComponent, {
       panelClass: 'custom-dialog-container',
     });
   }
