@@ -4,7 +4,8 @@
   </mat-card-header>
   <mat-card-content fxLayout="column">
     <mat-form-field [hideRequiredMarker]="true">
-      <input [(ngModel)]="retroboardName" matInput #name placeholder="Retrospective name" required>
+      <input [(ngModel)]="retroboardName" matInput #name placeholder="Retrospective name" required 
+      (keyup.enter)="isUpdate ? updateRetroboard() : createRetroboard()">
     </mat-form-field>
     <mat-expansion-panel [expanded]="isUpdate">
       <mat-expansion-panel-header>
