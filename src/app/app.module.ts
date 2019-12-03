@@ -13,7 +13,7 @@ import { RetroBoardComponent } from './components/retro-board/retro-board.compon
 import { LoginComponent } from './components/login/login.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from './guards/auth.guard';
-import { UserDetailComponent } from './components/user-detail/user-detail.component';
+import { MyDashboardComponent } from './components/my-dashboard/my-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TheHeaderComponent } from './components/the-header/the-header.component';
 import { RetroboardDetailsModalComponent } from './components/retro-board-details-modal/retro-board-details-modal.component';
@@ -32,6 +32,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatGridListModule } from '@angular/material/grid-list';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 import { ThemePickerComponent } from './components/theme-picker/theme-picker.component';
 import { ThemeStorage } from './components/theme-picker/theme-storage/theme-storage';
@@ -46,7 +47,7 @@ const appRoutes: Routes = [
   {
     path: 'home',
     canActivate: [AuthGuard],
-    component: UserDetailComponent
+    component: MyDashboardComponent
   },
   {
     path: 'login',
@@ -67,7 +68,7 @@ const appRoutes: Routes = [
     RetroBoardComponent,
     LoginComponent,
     PageNotFoundComponent,
-    UserDetailComponent,
+    MyDashboardComponent,
     ModalContentComponent,
     TheHeaderComponent,
     ThemePickerComponent,
@@ -98,7 +99,8 @@ const appRoutes: Routes = [
     MatExpansionModule,
     MatBadgeModule,
     MatGridListModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatPaginatorModule
   ],
   entryComponents: [ModalContentComponent, RetroboardDetailsModalComponent],
   providers: [
