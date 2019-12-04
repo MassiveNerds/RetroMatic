@@ -23,7 +23,7 @@ body {
 
 .primary-header {
   height: 64px;
-  padding-left: 20px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   h1 {
@@ -33,6 +33,9 @@ body {
     font-size: 20px;
     color: #fff;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

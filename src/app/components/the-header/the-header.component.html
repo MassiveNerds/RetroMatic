@@ -1,23 +1,22 @@
 <mat-toolbar class="the-header" color="primary">
-  <span [ngStyle.xs]="{'font-size.px': 40}" class="title">RetroMatic</span>
+  <span [ngStyle.lt-md]="{'font-size.px': 40}" class="title">RetroMatic</span>
   <span fxFlex class="spacer"></span>
-  <span fxHide.xs>
+  <span fxHide.lt-md>
     <button *ngIf="authService.isLoggedIn()" mat-button [routerLink]="['/home']">My Dashboard</button>
     <theme-picker></theme-picker>
     <a mat-button href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
-      <img class="github-logo" src="../../assets/Images/github-circle-white-transparent.svg" alt="github">
+      <img class="the-header__github-logo" src="../../assets/images/github-circle-white-transparent.svg" alt="github">
       GitHub
     </a>
     <button *ngIf="authService.isLoggedIn()" mat-button (click)="logout()">Log out</button>
   </span>
-  <span fxHide.gt-xs>
+  <span fxHide.gt-sm>
     <button mat-icon-button [matMenuTriggerFor]="appMenu">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #appMenu="matMenu">
       <button *ngIf="authService.isLoggedIn()" mat-menu-item [routerLink]="['/home']">My Dashboard</button>
       <a mat-menu-item href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
-        <img class="github-logo" src="../../assets/Images/github-circle-white-transparent.svg" alt="github">
         GitHub
       </a>
       <button *ngIf="authService.isLoggedIn()" mat-menu-item (click)="logout()">Log out</button>
