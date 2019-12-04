@@ -5,7 +5,7 @@
     <button *ngIf="authService.isLoggedIn()" mat-button [routerLink]="['/home']">My Dashboard</button>
     <theme-picker></theme-picker>
     <a mat-button href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
-      <img class="the-header__github-logo" src="../../assets/images/github-circle-white-transparent.svg" alt="github">
+      <img class="the-header__github-logo" src="../../assets/github-circle-white-transparent.svg" alt="github">
       GitHub
     </a>
     <button *ngIf="authService.isLoggedIn()" mat-button (click)="logout()">Log out</button>

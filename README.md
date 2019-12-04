@@ -4,7 +4,7 @@
 [![Latest Version](https://img.shields.io/github/tag/MassiveNerds/RetroMatic.svg)](https://github.com/MassiveNerds/RetroMatic)
 [![Twitter](https://img.shields.io/twitter/follow/massivenerds.svg?style=social&label=Follow)](https://twitter.com/massivenerds)
 
-![RetroMatic](src/assets/Images/rmbg.jpg)
+![RetroMatic](src/assets/rmbg.jpg)
 
 RetroMatic is used for **real-time retrospectives**. See how to leverage **Angular 6** and **Firebase** for syncing data across all the participants. Retrospective's are held at the end of sprints in Agile software development. The team reflects on what happened in the sprint and determines actions for improvement.
 
