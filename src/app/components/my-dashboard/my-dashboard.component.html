@@ -2,7 +2,7 @@
   <div class="primary-header">
     <h1>My Dashboard</h1>
   </div>
-  <div class="my-dashboard__content" fxLayout="row" fxLayoutAlign="center start">
+  <div ngClass="my-dashboard__content" [ngClass.lt-md]="{'my-dashboard__content':false}" fxLayout="row" fxLayoutAlign="center start">
     <mat-card class="my-dashboard__retrospectives" fxFlex="50%" fxFlex.lt-md="100%">
       <mat-card-header fxLayoutAlign="center center">
         <mat-card-title class="card-title">My Retrospectives</mat-card-title>
