@@ -1,7 +1,7 @@
 <mat-card>
-  <mat-card-header>
-    <h2 mat-dialog-title>{{isUpdate ? 'Update retrospective' : 'Create a new retrospective'}}</h2>
-  </mat-card-header>
+  <mat-card-title class="create-update-retro-modal__title">
+    {{isUpdate ? 'update retrospective' : 'create new retrospective'}}
+  </mat-card-title>
   <mat-card-content fxLayout="column">
     <mat-form-field [hideRequiredMarker]="true">
       <input [(ngModel)]="retroboardName" matInput #name placeholder="Retrospective name" required 
