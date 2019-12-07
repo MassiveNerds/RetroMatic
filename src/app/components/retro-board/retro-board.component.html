@@ -11,7 +11,7 @@
         <mat-list>
           <mat-list-item
             class="retro-note"
-            *ngFor="let note of bucket.notes | async">
+            *ngFor="let note of bucket.notes$ | async">
             <div fxFlex fxLayout="column">
               <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button (click)="upVote(bucket, note)">
                 <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
@@ -22,8 +22,8 @@
             </div>
             <button
               id="noteButton"
-              [matBadge]="note.totalVotes"
-              [matBadgeHidden]="!note.totalVotes || note.totalVotes === 0"
+              [matBadge]="note.voteCount"
+              [matBadgeHidden]="!note.voteCount || note.voteCount === 0"
               [class.success]="bucket.type === 'success'"
               [class.danger]="bucket.type === 'danger'"
               [class.info]="bucket.type === 'info'"

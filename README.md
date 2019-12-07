@@ -64,9 +64,8 @@ npm start
           ├── bucketId ($bucketId)
           ├── message
           ├── voteCount
-          ├── votes
-          │   └── $userId
-          └── username
+          └── votes
+              └── $userId
 ```
 
 ## Firebase Authentication

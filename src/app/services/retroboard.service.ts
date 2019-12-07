@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as momentTimeZone from 'moment-timezone';
-import { Retroboard, Bucket } from '../types';
+import { Retroboard, Bucket, Note } from '../types';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class RetroboardService {
 
   getRetroboards(): Observable<Retroboard[]> {
     const uid = this.authService.getUserDetails().uid;
-    return this.db.list<Retroboard>(`/retroboards/${uid}`).snapshotChanges()
+    return this.db.list<Retroboard>(`/retroboards`, ref => ref.orderByChild('creatorId').equalTo(uid)).snapshotChanges()
       .pipe(
         map((actions) =>
           actions.map(a => ({ key: a.key, ...a.payload.val() })),
@@ -25,8 +25,7 @@ export class RetroboardService {
   }
 
   getRetroboard(id: string): Observable<Retroboard> {
-    const uid = this.authService.getUserDetails().uid;
-    return this.db.object<Retroboard>(`/retroboards/${uid}/${id}`).snapshotChanges()
+    return this.db.object<Retroboard>(`/retroboards/${id}`).snapshotChanges()
       .pipe(
         map((snapshot) => {
           return { key: snapshot.key, ...snapshot.payload.val() };
@@ -34,55 +33,53 @@ export class RetroboardService {
       );
   }
 
-  async updateRetroboard(id: string, options: { name: string, buckets?: Bucket[] }) {
+  async updateRetroboard(id: string, options: { name: string, buckets: Partial<Bucket>[] }) {
     this.sendRetrospectiveEvent('update');
-    const uid = this.authService.getUserDetails().uid;
-    this.db.object(`/retroboards/${uid}/${id}`).update({ name: options.name });
+    this.db.object(`/retroboards/${id}`).update({ name: options.name });
 
     if (options.buckets) {
       options.buckets.forEach(bucket => {
-        this.db.object(`/buckets/${id}/${bucket.key}`).update({ name: bucket.name });
+        this.db.object(`/buckets/${bucket.key}`).update({ name: bucket.name });
       });
     }
   }
 
-  async doDeleteRetro(buckets: Bucket[], retroboard: Retroboard, user: firebase.User) {
-    return new Promise<any>((resolve, reject) => {
-      this.sendRetrospectiveEvent('delete');
-      Promise.all(
-        buckets.map((bucket) =>
-          this.db.object(`/notes/${bucket.key}`).remove(),
-        ),
-      )
-        .then(() =>
-          this.db.object(`/buckets/${retroboard.key}`).remove(),
-        )
-        .then(() =>
-          this.db
-            .object(`/retroboards/${user.uid}/${retroboard.key}`)
-            .remove(),
-        ).then(result => {
-          resolve(result);
-        }, error => reject(error));
-    });
+  async deleteRetroboard(retroboard: Retroboard) {
+    this.sendRetrospectiveEvent('delete');
+    this.db.list<Note>('/notes', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
+      .snapshotChanges().subscribe(snapshots => {
+        snapshots.forEach(async (snapshot) => {
+          await this.db.object<Note>(`/notes/${snapshot.key}`).remove();
+        });
+      });
+    this.db.list<Bucket>('/buckets', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
+      .snapshotChanges().subscribe(snapshots => {
+        snapshots.forEach(async (snapshot) => {
+          await this.db.object<Bucket>(`/buckets/${snapshot.key}`).remove();
+        });
+      });
+    await this.db.object<Retroboard>(`/retroboards/${retroboard.key}`).remove();
   }
 
   async createRetroboard(name: string, bucketNames: string[] = []) {
     this.sendRetrospectiveEvent('create');
-    const uid = this.authService.getUserDetails().uid;
+    const userDetails = this.authService.getUserDetails();
     const retroboardName = (name && name.length > 0) ? name : moment().format('dddd, MMMM Do YYYY');
-    const result = await this.db.list<Retroboard>(`/retroboards/${uid}`)
+    const result = await this.db.list<Retroboard>(`/retroboards`)
       .push({
+        creator: userDetails.displayName,
+        creatorId: userDetails.uid,
+        noteCount: 0,
         name: retroboardName,
-        dateCreated: moment().format('YYYY/MM/DD HH:mm'),
+        dateCreated: moment().format('YYYY/MM/DD HH:mm:ss'),
         timeZone: momentTimeZone.tz.guess()
       });
-    const newId = result.key;
-    const buckets: AngularFireList<any> = this.db.list(`/buckets/${newId}`);
-    bucketNames.forEach(name => {
-      buckets.push({ name });
+    const retroboardId = result.key;
+    const buckets: AngularFireList<Bucket> = this.db.list(`/buckets`);
+    bucketNames.forEach(bucketName => {
+      buckets.push({ name: bucketName, retroboardId });
     });
-    return newId;
+    return retroboardId;
   }
 
   private sendRetrospectiveEvent(eventName: string) {
