@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef, PageEvent } from '@angular/material';
-import { RetroboardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
+import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
 import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard } from '../../types/retroboard';
 import { Subscription, Observable } from 'rxjs';
@@ -53,7 +53,7 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   }
 
   openRetroBoardDetailsModal() {
-    this.dialogRef = this.dialog.open(RetroboardDetailsModalComponent, {
+    this.dialogRef = this.dialog.open(CreateUpdateRetroModalComponent, {
       panelClass: 'custom-dialog-container',
     });
   }

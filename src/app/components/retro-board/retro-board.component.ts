@@ -6,7 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { takeUntil } from 'rxjs/operators';
-import { RetroboardDetailsModalComponent } from '../retro-board-details-modal/retro-board-details-modal.component';
+import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
 import { ExportService } from '../../services/export.service';
 import { AuthService } from '../../services/auth.service';
 import { RetroboardService } from '../../services/retroboard.service';
@@ -80,7 +80,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .pipe(
         map((actions) => {
-          return actions.map((a) => ({ key: a.key, ...a.payload.val() }));
+          return actions.map((a) => ({ key: a.key, ...(a.payload.val() as any) }));
         }),
         map((buckets) => {
           return buckets.map((bucket: any) => {
@@ -91,7 +91,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
                 map((actions) => {
                   return actions.map((a) => ({
                     key: a.key,
-                    ...a.payload.val(),
+                    ...(a.payload.val() as any),
                   }));
                 }),
                 map((notes) => {
@@ -235,7 +235,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   openRetroboardDetailsModal() {
-    this.dialogRef = this.dialog.open(RetroboardDetailsModalComponent, {
+    this.dialogRef = this.dialog.open(CreateUpdateRetroModalComponent, {
       panelClass: 'custom-dialog-container',
       data: {
         retroboard: this.retroboard,
