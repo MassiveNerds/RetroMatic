@@ -16,7 +16,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { MyDashboardComponent } from './components/my-dashboard/my-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TheHeaderComponent } from './components/the-header/the-header.component';
-import { RetroboardDetailsModalComponent } from './components/retro-board-details-modal/retro-board-details-modal.component';
+import { CreateUpdateRetroModalComponent } from './components/create-update-retro-modal/create-update-retro-modal.component';
 
 import { MatInputModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -72,7 +72,7 @@ const appRoutes: Routes = [
     ModalContentComponent,
     TheHeaderComponent,
     ThemePickerComponent,
-    RetroboardDetailsModalComponent
+    CreateUpdateRetroModalComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +102,7 @@ const appRoutes: Routes = [
     MatProgressBarModule,
     MatPaginatorModule
   ],
-  entryComponents: [ModalContentComponent, RetroboardDetailsModalComponent],
+  entryComponents: [ModalContentComponent, CreateUpdateRetroModalComponent],
   providers: [
     AuthGuard,
     StyleManager,

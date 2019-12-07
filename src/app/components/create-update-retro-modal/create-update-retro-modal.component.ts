@@ -10,11 +10,11 @@ const DEFAULT_BUCKETS = [
 ];
 
 @Component({
-  selector: 'app-retro-board-details-modal',
-  templateUrl: './retro-board-details-modal.component.html',
-  styleUrls: ['./retro-board-details-modal.component.scss']
+  selector: 'app-create-update-retro-modal',
+  templateUrl: './create-update-retro-modal.component.html',
+  styleUrls: ['./create-update-retro-modal.component.scss']
 })
-export class RetroboardDetailsModalComponent implements OnInit {
+export class CreateUpdateRetroModalComponent implements OnInit {
 
   isUpdate: boolean;
   retroboardName = '';
@@ -22,7 +22,7 @@ export class RetroboardDetailsModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<RetroboardDetailsModalComponent>,
+    public dialogRef: MatDialogRef<CreateUpdateRetroModalComponent>,
     private retroboardService: RetroboardService,
     private router: Router,
   ) { }
