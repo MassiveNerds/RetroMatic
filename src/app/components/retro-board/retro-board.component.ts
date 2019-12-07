@@ -20,7 +20,8 @@ import { Retroboard, Bucket, Note } from '../../types';
 export class RetroBoardComponent implements OnInit, OnDestroy {
   private retroboard: Retroboard;
   private buckets: Bucket[];
-  private buckets$: Observable<any[]>;
+  private buckets$: Observable<Bucket[]>;
+  private notes$: Observable<Note[]>;
   private activeBucket: Bucket;
   private activeNote: Note;
   private activeVote: boolean;
@@ -41,9 +42,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     private exportService: ExportService,
   ) { }
 
-  private compareFn(a, b) {
-    const aVotes = a.totalVotes || -1;
-    const bVotes = b.totalVotes || -1;
+  private compareNotes(a: Note, b: Note) {
+    const aVotes = a.voteCount || -1;
+    const bVotes = b.voteCount || -1;
     if (aVotes < bVotes) {
       return 1;
     }
@@ -71,32 +72,30 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    const retroboardId = this.route.snapshot.paramMap.get('id');
     this.userDetails = this.authService.getUserDetails();
-    this.getRetroboard(id);
+    this.getRetroboard(retroboardId);
 
     this.buckets$ = this.db
-      .list(`/buckets/${id}`)
+      .list(`/buckets`, ref => ref.orderByChild('retroboardId').equalTo(retroboardId))
       .snapshotChanges()
       .pipe(
         map((actions) => {
           return actions.map((a) => ({ key: a.key, ...(a.payload.val() as any) }));
         }),
         map((buckets) => {
-          return buckets.map((bucket: any) => {
-            bucket.notes = this.db
-              .list(`/notes/${bucket.key}`)
+          return buckets.map((bucket: Bucket) => {
+            bucket.notes$ = this.db
+              .list<Note>(`/notes`, ref => ref.orderByChild('bucketId').equalTo(bucket.key))
               .snapshotChanges()
               .pipe(
-                map((actions) => {
-                  return actions.map((a) => ({
+                map((actions) =>
+                  actions.map((a) => ({
                     key: a.key,
                     ...(a.payload.val() as any),
-                  }));
-                }),
-                map((notes) => {
-                  return notes.sort(this.compareFn);
-                }),
+                  }))
+                ),
+                map((notes: Note[]) => notes.sort(this.compareNotes)),
               );
             return bucket;
           });
@@ -107,16 +106,16 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(buckets => {
       this.buckets = buckets;
       buckets.forEach(bucket => {
-        bucket.notes.pipe(takeUntil(this.ngUnsubscribe)).subscribe(notes => {
+        bucket.notes$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(notes => {
           notes.forEach(note => {
             if (!this.jsonData[bucket.key]) {
               this.jsonData[bucket.key] = {};
             }
             this.jsonData[bucket.key][note.key] = {
-              type: bucket.type,
+              // type: bucket.type,
               bucketName: bucket.name,
               message: note.message,
-              votes: note.totalVotes || 0,
+              votes: note.voteCount || 0,
             };
           });
         });
@@ -132,14 +131,22 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
   addNote(message: string) {
     this.db
-      .list(`/notes/${this.activeBucket.key}`)
-      .push({ message: message, votes: {} })
+      .list(`/notes`)
+      .push({
+        creator: this.userDetails.displayName,
+        creatorId: this.userDetails.uid,
+        retroboardId: this.retroboard.key,
+        bucketId: this.activeBucket.key,
+        message: message,
+        voteCount: 0,
+        votes: {}
+      })
       .then(() => this.dialogRef.close());
   }
 
   updateNote(message: string) {
     this.db
-      .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
+      .object(`/notes/${this.activeNote.key}`)
       .update({ message: message })
       .then(() => this.dialogRef.close());
   }
@@ -161,16 +168,16 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       delete this.activeNote.votes[this.userDetails.uid];
     }
 
-    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).reduce(
+    this.activeNote.voteCount = Object.keys(this.activeNote.votes).reduce(
       (total, vote) => (this.activeNote.votes[vote] ? total + 1 : total - 1),
       0,
     );
 
     this.db
-      .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
+      .object(`/notes/${this.activeNote.key}`)
       .update({
         votes: this.activeNote.votes,
-        totalVotes: this.activeNote.totalVotes,
+        voteCount: this.activeNote.voteCount,
       })
       .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
@@ -192,16 +199,16 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       delete this.activeNote.votes[this.userDetails.uid];
     }
 
-    this.activeNote.totalVotes = Object.keys(this.activeNote.votes).reduce(
+    this.activeNote.voteCount = Object.keys(this.activeNote.votes).reduce(
       (total, vote) => (this.activeNote.votes[vote] ? total + 1 : total - 1),
       0,
     );
 
     this.db
-      .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
+      .object(`/notes/${this.activeNote.key}`)
       .update({
         votes: this.activeNote.votes,
-        totalVotes: this.activeNote.totalVotes,
+        voteCount: this.activeNote.voteCount,
       })
       .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
@@ -209,15 +216,15 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   deleteNote() {
     delete this.jsonData[this.activeBucket.key][this.activeNote.key];
     this.db
-      .object(`/notes/${this.activeBucket.key}/${this.activeNote.key}`)
+      .object(`/notes/${this.activeNote.key}`)
       .remove()
       .then(() => this.dialogRef.close());
   }
 
-  hasVoted(votes, voted) {
+  hasVoted(votes: { [userId: string]: boolean }, voted: boolean) {
     if (!votes) {
       return false;
-    };
+    }
     if (voted) {
       return votes[this.userDetails.uid] === true;
     }
@@ -228,7 +235,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(template);
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
-        this.retroboardService.doDeleteRetro(this.buckets, this.retroboard, this.userDetails)
+        this.retroboardService.deleteRetroboard(this.retroboard)
           .then(() => this.router.navigate(['/home']));
       }
     });

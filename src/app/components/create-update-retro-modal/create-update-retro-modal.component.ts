@@ -2,12 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { RetroboardService } from '../../services/retroboard.service';
 import { Router } from '@angular/router';
+import { Bucket } from '../../types';
 
-const DEFAULT_BUCKETS = [
-  { name: 'What went well?' },
-  { name: 'What can be improved?' },
-  { name: 'Action items' }
-];
+const DEFAULT_BUCKETS = [{ name: 'What went well?' }, { name: 'What can be improved?' }, { name: 'Action items' }];
 
 @Component({
   selector: 'app-create-update-retro-modal',
@@ -18,7 +15,7 @@ export class CreateUpdateRetroModalComponent implements OnInit {
 
   isUpdate: boolean;
   retroboardName = '';
-  buckets: { name: string, key?: string }[] = [];
+  buckets: Partial<Bucket>[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -38,7 +35,7 @@ export class CreateUpdateRetroModalComponent implements OnInit {
   }
 
   createRetroboard() {
-    this.retroboardService.createRetroboard(this.retroboardName, this.buckets.map(b => b.name))
+    this.retroboardService.createRetroboard(this.retroboardName, this.buckets.map(bucket => bucket.name))
       .then((id) => {
         this.dialogRef.close();
         this.router.navigate(['/retroboard/', id]);
