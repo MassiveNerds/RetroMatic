@@ -3,8 +3,11 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
+import { AngularFireDatabase } from '@angular/fire/database';
+import { User } from '../types';
+import md5 from 'md5';
 
-type AuthOptions = {
+interface AuthOptions {
   email: string;
   password: string;
 }
@@ -14,54 +17,54 @@ type AuthOptions = {
 })
 export class AuthService {
 
-  private user: Observable<firebase.User>;
-  private userDetails: firebase.User = null;
+  user$: Observable<firebase.User>;
+  userDetails: firebase.User = null;
 
-  constructor(private afAuth: AngularFireAuth, private router: Router) {
-    this.user = afAuth.authState;
-    this.user.subscribe(
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
+    this.user$ = afAuth.authState;
+    this.user$.subscribe(
       (user) => {
         if (user) {
           this.userDetails = user;
-        }
-        else {
+        } else {
           this.userDetails = null;
         }
       }
     );
   }
 
-  doRegister(options: AuthOptions) {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('register');
-      this.afAuth.auth.createUserWithEmailAndPassword(options.email, options.password)
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
+  async register({ email, password, displayName }: {
+    email: string;
+    password: string;
+    displayName: string;
+  }) {
+    this.sendAuthenticationEvent('register');
+    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    await this.db.object<User>(`/users/${user.uid}`).set({
+      displayName,
+      md5hash: md5(email),
+      favorites: []
     });
   }
 
-  doLogin(options: AuthOptions) {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('login');
-      this.afAuth.auth.signInWithEmailAndPassword(options.email, options.password)
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
-    });
+  async login(options: AuthOptions) {
+    this.sendAuthenticationEvent('login');
+    await this.afAuth.auth.signInWithEmailAndPassword(options.email, options.password);
   }
 
-  doLoginWithGoogle() {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('google');
-      this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
-    });
+  async loginWithGoogle() {
+    this.sendAuthenticationEvent('google');
+    const { user, additionalUserInfo } = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    if (additionalUserInfo.isNewUser) {
+      await this.db.object<User>(`/users/${user.uid}`).set({
+        displayName: user.displayName,
+        md5hash: md5(user.email),
+        favorites: []
+      });
+    }
   }
 
-  doLoginAsGuest() {
+  loginAsGuest() {
     return new Promise<any>((resolve, reject) => {
       this.sendAuthenticationEvent('guest');
       this.afAuth.auth.signInAnonymously()
@@ -86,6 +89,10 @@ export class AuthService {
   logout() {
     this.afAuth.auth.signOut()
       .then(() => this.router.navigate(['/login']));
+  }
+
+  resetPassword(email: string) {
+    return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 
   private sendAuthenticationEvent(eventName: string) {

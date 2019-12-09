@@ -4,6 +4,9 @@ import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/cr
 import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard } from '../../types/Retroboard';
 import { Subscription, Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../types';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @Component({
   selector: 'app-my-dashboard',
@@ -11,30 +14,39 @@ import { Subscription, Observable } from 'rxjs';
   styleUrls: ['./my-dashboard.component.scss'],
 })
 export class MyDashboardComponent implements OnInit, OnDestroy {
-  private retroboards: Retroboard[];
-  private total: number;
-  private dialogRef: MatDialogRef<any>;
-  private subscription: Subscription;
 
+  retroboards: Retroboard[];
+  total: number;
+  dialogRef: MatDialogRef<any>;
+  retroboardSubscription: Subscription;
+  userSubscription: Subscription;
   pageSize = 5;
   pageSizeOptions = [5, 10, 25, 100];
   pageIndex = 0;
+  displayName: string;
 
   constructor(
     public dialog: MatDialog,
     private retroboardService: RetroboardService,
+    private db: AngularFireDatabase,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
     this.getRetroboards();
+    const userDetails = this.authService.getUserDetails();
+    this.userSubscription = this.db.object<User>(`/users/${userDetails.uid}`).valueChanges().subscribe(user => {
+      this.displayName = user.displayName;
+    });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.retroboardSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 
   getRetroboards() {
-    this.subscription = this.retroboardService.getRetroboards()
+    this.retroboardSubscription = this.retroboardService.getRetroboards()
       .subscribe(retroboards => {
         this.total = retroboards.length;
         const mutableRetroboards = [...retroboards].sort((a, b) => {

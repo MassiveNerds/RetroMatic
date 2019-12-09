@@ -1,24 +1,13 @@
 @import '../../../sass/variables';
+
 .login-page {
-  height: 100vh;
-  background-image: $login-background;
-  background-size: 100% auto;
+  height: calc(100vh - 64px);
 }
 
-.mobile-background {
-  background-position: center;
-  background-size: auto 100%;
-}
-
-mat-card {
-  width: 400px;
-}
-
-mat-card-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.error {
+.error-text {
   color: $error;
+}
+
+.login__reset-password-button {
+  font-weight: 400;
 }
