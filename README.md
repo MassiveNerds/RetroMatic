@@ -112,7 +112,7 @@ npm start
       ".indexOn": ["bucketId", "retroboardId"],
       "$noteId": {
         ".write": "(auth != null && !data.exists()) || data.child('creatorId').val() === auth.uid",
-        ".validate": "newData.hasChildren(['creator', 'creatorId', 'retroboardId', 'bucketId', 'message', 'voteCount', 'votes'])",
+        ".validate": "newData.hasChildren(['creator', 'creatorId', 'retroboardId', 'bucketId', 'message', 'voteCount'])",
         "creatorId": {
           ".validate": "auth.uid === newData.val()"
         }
