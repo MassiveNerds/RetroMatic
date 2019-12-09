@@ -7,6 +7,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../types';
 import md5 from 'md5';
 import { uniqueNamesGenerator, Config, starWars } from 'unique-names-generator';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class AuthService {
 
   user$: Observable<firebase.User>;
   userDetails: firebase.User = null;
+  appUserSubscription: Subscription;
+  appUser: User;
 
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
     this.user$ = afAuth.authState;
@@ -22,6 +25,9 @@ export class AuthService {
       (user) => {
         if (user) {
           this.userDetails = user;
+          this.appUserSubscription = this.db.object<User>(`/users/${this.userDetails.uid}`).valueChanges().subscribe(appUser => {
+            this.appUser = appUser;
+          });
         } else {
           this.userDetails = null;
         }
@@ -103,9 +109,14 @@ export class AuthService {
     return this.userDetails;
   }
 
-  logout() {
-    this.afAuth.auth.signOut()
-      .then(() => this.router.navigate(['/login']));
+  getAppUser() {
+    return this.appUser;
+  }
+
+  async logout() {
+    this.appUserSubscription.unsubscribe();
+    await this.afAuth.auth.signOut();
+    this.router.navigate(['/login']);
   }
 
   resetPassword(email: string) {
