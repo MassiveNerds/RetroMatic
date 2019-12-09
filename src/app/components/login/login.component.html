@@ -22,12 +22,12 @@
     </mat-card-content>
     <mat-card-actions align="end">
       <button class="login__reset-password-button" mat-button color="primary" (click)="goToResetPassword()">Reset password</button>
-      <button mat-raised-button color="accent" (click)="loginWithGoogle()" aria-label="Sign in with Google">Sign in with Google</button>
+      <button mat-raised-button color="accent" (click)="loginWithGoogle($event)" aria-label="Sign in with Google">Sign in with Google</button>
       <button mat-raised-button color="primary" type="submit">Sign in</button>
     </mat-card-actions>
     <mat-card-actions align="center"> 
       <p class="mat-body">Don't have an account? <button mat-button color="primary" (click)="goToRegister()">Sign up</button></p>
-      <p class="mat-body">Just joining a retrospective? <button mat-button color="primary" (click)="loginAsGuest()">Continue as guest</button></p>
+      <p class="mat-body">Just joining a retrospective? <button mat-button color="primary" (click)="loginAsGuest($event)">Continue as guest</button></p>
     </mat-card-actions>
   </mat-card>
 </form>

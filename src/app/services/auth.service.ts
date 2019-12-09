@@ -6,11 +6,7 @@ import { Router } from '@angular/router';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../types';
 import md5 from 'md5';
-
-interface AuthOptions {
-  email: string;
-  password: string;
-}
+import { uniqueNamesGenerator, Config, starWars } from 'unique-names-generator';
 
 @Injectable({
   providedIn: 'root'
@@ -47,9 +43,25 @@ export class AuthService {
     });
   }
 
-  async login(options: AuthOptions) {
+  async login({ email, password }: {
+    email: string;
+    password: string;
+  }) {
     this.sendAuthenticationEvent('login');
-    await this.afAuth.auth.signInWithEmailAndPassword(options.email, options.password);
+    const { user } = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    const snapshot = await firebase.database().ref('/users').child(user.uid).once('value');
+    if (!snapshot.exists()) {
+      const config: Config = {
+        dictionaries: [starWars],
+        length: 1
+      };
+      const characterName: string = uniqueNamesGenerator(config);
+      await this.db.object<User>(`/users/${user.uid}`).set({
+        displayName: characterName,
+        md5hash: md5(email),
+        favorites: []
+      });
+    }
   }
 
   async loginWithGoogle() {
@@ -64,13 +76,18 @@ export class AuthService {
     }
   }
 
-  loginAsGuest() {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('guest');
-      this.afAuth.auth.signInAnonymously()
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
+  async loginAsGuest() {
+    this.sendAuthenticationEvent('guest');
+    const { user } = await this.afAuth.auth.signInAnonymously();
+    const config: Config = {
+      dictionaries: [starWars],
+      length: 1
+    };
+    const characterName: string = uniqueNamesGenerator(config);
+    await this.db.object<User>(`/users/${user.uid}`).set({
+      displayName: characterName,
+      md5hash: '',
+      favorites: []
     });
   }
 
