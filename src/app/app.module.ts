@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { UIErrorHandler, ModalContentComponent } from './error-handler';
+import { GlobalErrorHandlerModalComponent } from './components/global-error-handler-modal/global-error-handler-modal.component';
+import { UIErrorHandler } from './components/global-error-handler-modal/ui-error-handler';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -82,7 +83,7 @@ const appRoutes: Routes = [
     ResetPasswordComponent,
     PageNotFoundComponent,
     MyDashboardComponent,
-    ModalContentComponent,
+    GlobalErrorHandlerModalComponent,
     TheHeaderComponent,
     ThemePickerComponent,
     CreateUpdateRetroModalComponent
@@ -117,7 +118,7 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatSnackBarModule
   ],
-  entryComponents: [ModalContentComponent, CreateUpdateRetroModalComponent],
+  entryComponents: [GlobalErrorHandlerModalComponent, CreateUpdateRetroModalComponent],
   providers: [
     AuthGuard,
     StyleManager,

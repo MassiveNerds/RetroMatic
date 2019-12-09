@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, PageEvent } from '@angular/material';
 import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
 import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard } from '../../types/Retroboard';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../types';
 import { AngularFireDatabase } from '@angular/fire/database';
