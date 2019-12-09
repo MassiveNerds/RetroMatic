@@ -18,7 +18,8 @@ export class CreateUpdateRetroModalComponent implements OnInit {
   buckets: Partial<Bucket>[] = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA)
+    public data: any,
     public dialogRef: MatDialogRef<CreateUpdateRetroModalComponent>,
     private retroboardService: RetroboardService,
     private router: Router,
