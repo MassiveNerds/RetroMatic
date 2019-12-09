@@ -127,7 +127,7 @@ npm start
         "creatorId": {
           ".validate": "auth.uid === newData.val()"
         }
-      } 
+      }
     },
     "users": {
       "$userId": {
@@ -139,7 +139,7 @@ npm start
         },
         "md5hash": {
           ".validate": "newData.isString()"
-        },   
+        }
       }
     },
     "$other": { ".validate": false }
