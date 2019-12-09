@@ -55,17 +55,96 @@ npm start
 ├── buckets
 │   └── $bucketId
 │       ├── retroboardId ($retroboardId)
+│       ├── creator (username)
+│       ├── creatorId ($userId)
 │       └── name
-└── notes
-      └── $noteId
-          ├── creator (username)
-          ├── creatorId ($userId)
-          ├── retroboardId ($retroboardId)
-          ├── bucketId ($bucketId)
-          ├── message
-          ├── voteCount
-          └── votes
-              └── $userId
+├── notes
+│     └── $noteId
+│         ├── creator (username)
+│         ├── creatorId ($userId)
+│         ├── retroboardId ($retroboardId)
+│         ├── bucketId ($bucketId)
+│         ├── message
+│         ├── voteCount
+│         └── votes
+│             └── $userId
+└── users
+    └── $userId
+        ├── favorites
+        │   └── $retroboardId
+        ├── md5hash
+        └── displayName
+```
+
+## Firebase Security Rules
+
+```javascript
+{
+  "rules": {
+    "retroboards": {
+      ".read": "auth != null",
+      ".indexOn": ["creatorId"],
+      "$retroboardId": {
+        ".write": "(auth != null && !data.exists()) || data.child('creatorId').val() === auth.uid",
+        ".validate": "newData.hasChildren(['creator', 'creatorId', 'noteCount', 'dateCreated', 'name', 'timeZone'])",
+        "creator": {
+          ".validate": "newData.isString()"
+        },
+        "creatorId": {
+          ".validate": "auth.uid === newData.val() && root.child('users/' + newData.val()).exists()"
+        },
+        "noteCount": {
+          ".validate": "newData.isNumber()"
+        },
+        "dateCreated": {
+          ".validate": "newData.isString()"
+        },
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "timeZone": {
+          ".validate": "newData.isString()"
+        }
+      }
+    },
+    "notes": {
+      ".read": "auth != null",
+      ".indexOn": ["bucketId", "retroboardId"],
+      "$noteId": {
+        ".write": "(auth != null && !data.exists()) || data.child('creatorId').val() === auth.uid",
+        ".validate": "newData.hasChildren(['creator', 'creatorId', 'retroboardId', 'bucketId', 'message', 'voteCount', 'votes'])",
+        "creatorId": {
+          ".validate": "auth.uid === newData.val()"
+        }
+      }
+    },
+    "buckets": {
+      ".read": "auth != null",
+      ".indexOn": ["retroboardId"],
+      "$bucketId": {
+        ".write": "(auth != null && !data.exists()) || data.child('creatorId').val() === auth.uid",
+        ".validate": "newData.hasChildren(['creator', 'creatorId', 'retroboardId', 'name'])",
+        "creatorId": {
+          ".validate": "auth.uid === newData.val()"
+        }
+      } 
+    },
+    "users": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid",
+        ".validate": "newData.hasChildren(['displayName', 'md5hash'])",
+        "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "md5hash": {
+          ".validate": "newData.isString()"
+        },   
+      }
+    },
+    "$other": { ".validate": false }
+  }
+}
 ```
 
 ## Firebase Authentication

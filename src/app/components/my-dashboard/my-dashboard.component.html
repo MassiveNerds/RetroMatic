@@ -1,7 +1,7 @@
 <div class="my-dashboard mat-typography" fxLayout="column" fxLayoutAlign="center">
   <div class="primary-header">
-    <h1>My Dashboard</h1>
-  </div>
+    <h1 *ngIf="displayName">{{displayName}}'s Dashboard</h1>
+  </div> 
   <div ngClass="my-dashboard__content" [ngClass.lt-md]="{'my-dashboard__content':false}" fxLayout="row" fxLayoutAlign="center start">
     <mat-card class="my-dashboard__retrospectives" fxFlex="50%" fxFlex.lt-md="100%">
       <mat-card-header fxLayoutAlign="center center">

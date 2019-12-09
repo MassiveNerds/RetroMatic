@@ -62,24 +62,34 @@ export class RetroboardService {
   }
 
   async createRetroboard(name: string, bucketNames: string[] = []) {
-    this.sendRetrospectiveEvent('create');
-    const userDetails = this.authService.getUserDetails();
-    const retroboardName = (name && name.length > 0) ? name : moment().format('dddd, MMMM Do YYYY');
-    const result = await this.db.list<Retroboard>(`/retroboards`)
-      .push({
-        creator: userDetails.displayName,
-        creatorId: userDetails.uid,
-        noteCount: 0,
-        name: retroboardName,
-        dateCreated: moment().format('YYYY/MM/DD HH:mm:ss'),
-        timeZone: momentTimeZone.tz.guess()
+    try {
+      this.sendRetrospectiveEvent('create');
+      const userDetails = this.authService.getUserDetails();
+      const retroboardName = (name && name.length > 0) ? name : moment().format('dddd, MMMM Do YYYY');
+      const result = await this.db.list<Retroboard>(`/retroboards`)
+        .push({
+          creator: userDetails.displayName,
+          creatorId: userDetails.uid,
+          noteCount: 0,
+          name: retroboardName,
+          dateCreated: moment().format('YYYY/MM/DD HH:mm:ss'),
+          timeZone: momentTimeZone.tz.guess()
+        });
+      const retroboardId = result.key;
+      const buckets: AngularFireList<Bucket> = this.db.list(`/buckets`);
+      bucketNames.forEach(bucketName => {
+        buckets.push({
+          name: bucketName,
+          retroboardId,
+          creator: userDetails.displayName,
+          creatorId: userDetails.uid,
+        });
       });
-    const retroboardId = result.key;
-    const buckets: AngularFireList<Bucket> = this.db.list(`/buckets`);
-    bucketNames.forEach(bucketName => {
-      buckets.push({ name: bucketName, retroboardId });
-    });
-    return retroboardId;
+      return retroboardId;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   private sendRetrospectiveEvent(eventName: string) {
