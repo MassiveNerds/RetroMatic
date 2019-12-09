@@ -10,7 +10,7 @@ import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/cr
 import { ExportService } from '../../services/export.service';
 import { AuthService } from '../../services/auth.service';
 import { RetroboardService } from '../../services/retroboard.service';
-import { Retroboard, Bucket, Note } from '../../types';
+import { Retroboard, Bucket, Note, User } from '../../types';
 
 @Component({
   selector: 'app-retro-board',
@@ -18,19 +18,20 @@ import { Retroboard, Bucket, Note } from '../../types';
   styleUrls: ['./retro-board.component.scss'],
 })
 export class RetroBoardComponent implements OnInit, OnDestroy {
-  private retroboard: Retroboard;
-  private buckets: Bucket[];
-  private buckets$: Observable<Bucket[]>;
-  private notes$: Observable<Note[]>;
-  private activeBucket: Bucket;
-  private activeNote: Note;
-  private activeVote: boolean;
-  private jsonData: Object;
-  private dialogRef: MatDialogRef<any>;
-  private htmlExport: string;
-  private ngUnsubscribe: Subject<any> = new Subject();
-  private subscription: Subscription;
-  private userDetails: firebase.User;
+  retroboard: Retroboard;
+  buckets: Bucket[];
+  buckets$: Observable<Bucket[]>;
+  notes$: Observable<Note[]>;
+  activeBucket: Bucket;
+  activeNote: Note;
+  activeVote: boolean;
+  jsonData: Object;
+  dialogRef: MatDialogRef<any>;
+  htmlExport: string;
+  ngUnsubscribe: Subject<any> = new Subject();
+  retroboardSubscription: Subscription;
+  userDetails: firebase.User;
+  appUser: User;
 
   constructor(
     private db: AngularFireDatabase,
@@ -65,7 +66,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   private getRetroboard(id: string) {
-    this.subscription = this.retroboardService.getRetroboard(id)
+    this.retroboardSubscription = this.retroboardService.getRetroboard(id)
       .subscribe(retroboard => {
         this.retroboard = retroboard;
       });
@@ -112,7 +113,6 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
               this.jsonData[bucket.key] = {};
             }
             this.jsonData[bucket.key][note.key] = {
-              // type: bucket.type,
               bucketName: bucket.name,
               message: note.message,
               votes: note.voteCount || 0,
@@ -126,14 +126,15 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-    this.subscription.unsubscribe();
+    this.retroboardSubscription.unsubscribe();
   }
 
   addNote(message: string) {
+    this.appUser = this.authService.getAppUser();
     this.db
       .list(`/notes`)
       .push({
-        creator: this.userDetails.displayName,
+        creator: this.appUser.displayName,
         creatorId: this.userDetails.uid,
         retroboardId: this.retroboard.key,
         bucketId: this.activeBucket.key,

@@ -82,7 +82,7 @@ export class RetroboardService {
         buckets.push({
           name: bucketName,
           retroboardId,
-          creator: userDetails.displayName,
+          creator: appUser.displayName,
           creatorId: userDetails.uid,
         });
       });
