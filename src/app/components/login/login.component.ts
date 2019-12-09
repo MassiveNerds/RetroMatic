@@ -45,7 +45,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  async loginWithGoogle() {
+  async loginWithGoogle(event: Event) {
+    event.preventDefault();
     try {
       await this.authService.loginWithGoogle();
       this.router.navigateByUrl(this.returnUrl);
@@ -54,8 +55,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  async loginAsGuest() {
+  async loginAsGuest(event: Event) {
+    event.preventDefault();
     try {
+      this.loginForm.reset();
       await this.authService.loginAsGuest();
       this.router.navigateByUrl(this.returnUrl);
     } catch (error) {
