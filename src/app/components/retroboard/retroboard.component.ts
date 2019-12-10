@@ -13,9 +13,9 @@ import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard, Bucket, Note, User } from '../../types';
 
 @Component({
-  selector: 'app-retro-board',
-  templateUrl: './retro-board.component.html',
-  styleUrls: ['./retro-board.component.scss'],
+  selector: 'app-retroboard',
+  templateUrl: './retroboard.component.html',
+  styleUrls: ['./retroboard.component.scss'],
 })
 export class RetroBoardComponent implements OnInit, OnDestroy {
   retroboard: Retroboard;
@@ -129,10 +129,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     this.retroboardSubscription.unsubscribe();
   }
 
-  addNote(message: string) {
-    this.appUser = this.authService.getAppUser();
-    this.db
-      .list(`/notes`)
+  async addNote(message: string) {
+    this.appUser = await this.authService.getAppUser();
+    await this.db.list(`/notes`)
       .push({
         creator: this.appUser.displayName,
         creatorId: this.userDetails.uid,
@@ -141,18 +140,16 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
         message: message,
         voteCount: 0,
         votes: {}
-      })
-      .then(() => this.dialogRef.close());
+      });
+    this.dialogRef.close();
   }
 
-  updateNote(message: string) {
-    this.db
-      .object(`/notes/${this.activeNote.key}`)
-      .update({ message: message })
-      .then(() => this.dialogRef.close());
+  async updateNote(message: string) {
+    await this.db.object(`/notes/${this.activeNote.key}`).update({ message: message });
+    this.dialogRef.close();
   }
 
-  upVote(bucket?: any, note?: any) {
+  upvote(bucket: Bucket, note: Note) {
     if (bucket) {
       this.activeBucket = bucket;
     }
@@ -183,7 +180,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
-  downVote(bucket: any, note?: any) {
+  downvote(bucket: Bucket, note: Note) {
     if (bucket) {
       this.activeBucket = bucket;
     }

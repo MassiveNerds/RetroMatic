@@ -16,8 +16,6 @@ export class AuthService {
 
   user$: Observable<firebase.User>;
   userDetails: firebase.User = null;
-  appUserSubscription: Subscription;
-  appUser: User;
 
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
     this.user$ = afAuth.authState;
@@ -25,9 +23,6 @@ export class AuthService {
       (user) => {
         if (user) {
           this.userDetails = user;
-          this.appUserSubscription = this.db.object<User>(`/users/${this.userDetails.uid}`).valueChanges().subscribe(appUser => {
-            this.appUser = appUser;
-          });
         } else {
           this.userDetails = null;
         }
@@ -109,12 +104,12 @@ export class AuthService {
     return this.userDetails;
   }
 
-  getAppUser() {
-    return this.appUser;
+  async getAppUser() {
+    const snapshot = await firebase.database().ref('/users').child(this.userDetails.uid).once('value');
+    return snapshot.val();
   }
 
   async logout() {
-    this.appUserSubscription.unsubscribe();
     await this.afAuth.auth.signOut();
     this.router.navigate(['/login']);
   }

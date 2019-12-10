@@ -5,7 +5,7 @@
   <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="5px">
     <mat-card fxFlex="33%" *ngFor="let bucket of buckets$ | async">
       <mat-card-header>
-        <mat-card-title>{{ bucket.name }}</mat-card-title>
+        <mat-card-title class="retroboard__bucket-title">{{ bucket.name }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-list>
@@ -13,10 +13,10 @@
             class="retro-note"
             *ngFor="let note of bucket.notes$ | async">
             <div fxFlex fxLayout="column">
-              <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button (click)="upVote(bucket, note)">
+              <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button title="Vote Up" aria-label="Vote Up" (click)="upvote(bucket, note)">
                 <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
               </button>
-              <button [ngClass]="{'mat-warn': hasVoted(note.votes, false)}" mat-icon-button (click)="downVote(bucket, note)">
+              <button [ngClass]="{'mat-warn': hasVoted(note.votes, false)}" mat-icon-button title="Vote Down" aria-label="Vote Down" (click)="downvote(bucket, note)">
                 <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
               </button>
             </div>
@@ -28,9 +28,9 @@
               [class.danger]="bucket.type === 'danger'"
               [class.info]="bucket.type === 'info'"
               mat-button fxFlex=100
-              class="mat-elevation-z6"
+              class="mat-elevation-z2"
               (click)="openModal(edittemplate, bucket, note)">
-              {{note.message}}
+              <span class="retroboard__note-button-text">{{note.message}}</span>
             </button>
           </mat-list-item>
           <mat-list-item>
@@ -43,17 +43,16 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="retroboard-toolbar" fxLayout="row">
-      <span class="fill-remaining-space"></span>
+  <div class="retroboard-toolbar" fxLayout="row" fxLayoutAlign="end start">
       <button mat-raised-button color="accent" (click)="openExportModal(exporttemplate)">
           <mat-icon>save_alt</mat-icon>
           Export
       </button>
-      <button mat-raised-button color="accent" (click)="deleteRetro(deleteConfirmDialog)">
+      <button [disabled]="retroboard?.creatorId !== userDetails?.uid" mat-raised-button color="accent" (click)="deleteRetro(deleteConfirmDialog)">
           <mat-icon>delete</mat-icon>
           Delete
       </button>
-      <button mat-raised-button color="accent" (click)="openRetroboardDetailsModal()">
+      <button [disabled]="retroboard?.creatorId !== userDetails?.uid" mat-raised-button color="accent" (click)="openRetroboardDetailsModal()">
           <mat-icon>edit</mat-icon>
           Edit
       </button>
@@ -94,13 +93,13 @@
     </mat-card-header>
     <mat-card-content>
       <mat-form-field fxFlex>
-        <textarea (keydown.shift.enter)="updateNote(editmessage.value); false" matInput #editmessage cdkTextareaAutosize cdkFocusInitial [value]="activeNote.message"></textarea>
+        <textarea [readonly]="activeNote?.creatorId !== userDetails?.uid" (keydown.shift.enter)="updateNote(editmessage.value); false" matInput #editmessage cdkTextareaAutosize cdkFocusInitial [value]="activeNote.message"></textarea>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions class="edit-actions" fxLayout="row wrap" align="end">
-      <button fxFlex.xs="50%" mat-button color="warn" (click)="deleteNote() ">Delete</button>
+      <button [disabled]="activeNote?.creatorId !== userDetails?.uid" fxFlex.xs="50%" mat-button color="warn" (click)="deleteNote() ">Delete</button>
       <button fxFlex.xs="50%" mat-button mat-dialog-close>Cancel</button>
-      <button fxFlex.xs="50%" mat-raised-button color="primary" (click)="updateNote(editmessage.value) ">Update</button>
+      <button [disabled]="activeNote?.creatorId !== userDetails?.uid" fxFlex.xs="50%" mat-raised-button color="primary" (click)="updateNote(editmessage.value) ">Update</button>
     </mat-card-actions>
   </mat-card>
 </ng-template>
