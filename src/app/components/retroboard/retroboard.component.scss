@@ -39,10 +39,6 @@
   margin: 0;
 }
 
-.fill-remaining-space {
-  flex: 1 1 auto;
-}
-
 .retroboard-toolbar
  {
    button {
@@ -56,4 +52,16 @@
   overflow: auto;
   height: 250px;
   font-size: 13px;
+}
+
+.retroboard__bucket-title {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 14px;
+  color: hsl(0, 0%, 45%);
+  margin: 0;
+}
+
+.retroboard__note-button-text {
+  white-space: pre-wrap;
 }

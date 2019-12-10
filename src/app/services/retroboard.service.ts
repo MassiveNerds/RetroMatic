@@ -65,7 +65,7 @@ export class RetroboardService {
     try {
       this.sendRetrospectiveEvent('create');
       const userDetails = this.authService.getUserDetails();
-      const appUser = this.authService.getAppUser();
+      const appUser = await this.authService.getAppUser();
       const retroboardName = (name && name.length > 0) ? name : moment().format('dddd, MMMM Do YYYY');
       const result = await this.db.list<Retroboard>(`/retroboards`)
         .push({
