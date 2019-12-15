@@ -274,4 +274,8 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     }
     document.execCommand('copy');
   }
+
+  trackByFn(index: number, item: Note) {
+    return item.key;
+  }
 }

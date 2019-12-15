@@ -9,37 +9,41 @@
       </mat-card-header>
       <mat-card-content>
         <mat-list>
-          <mat-list-item
-            class="retro-note"
-            *ngFor="let note of bucket.notes$ | async">
-            <div fxFlex fxLayout="column">
-              <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button title="Vote Up" aria-label="Vote Up" (click)="upvote(bucket, note)">
-                <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+          <app-transition-group class="retro__notes">
+            <mat-list-item
+              appTransitionGroupItem
+              class="retro-note"
+              *ngFor="let note of bucket.notes$ | async; trackBy: trackByFn">
+              <div fxFlex fxLayout="column">
+                <button [ngClass]="{'mat-accent': hasVoted(note.votes, true)}" mat-icon-button title="Vote Up" aria-label="Vote Up" (click)="upvote(bucket, note)">
+                  <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+                </button>
+                <button [ngClass]="{'mat-warn': hasVoted(note.votes, false)}" mat-icon-button title="Vote Down" aria-label="Vote Down" (click)="downvote(bucket, note)">
+                  <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+                </button>
+              </div>
+              <button
+                id="noteButton"
+                [matBadge]="note.voteCount"
+                [matBadgeHidden]="!note.voteCount || note.voteCount === 0"
+                [class.success]="bucket.type === 'success'"
+                [class.danger]="bucket.type === 'danger'"
+                [class.info]="bucket.type === 'info'"
+                mat-button fxFlex=100
+                class="mat-elevation-z2"
+                (click)="openModal(edittemplate, bucket, note)">
+                <span class="retroboard__note-button-text">{{note.message}}</span>
               </button>
-              <button [ngClass]="{'mat-warn': hasVoted(note.votes, false)}" mat-icon-button title="Vote Down" aria-label="Vote Down" (click)="downvote(bucket, note)">
-                <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+            </mat-list-item>
+            <mat-list-item>
+              <button mat-button fxFlex title="Add entry to {{bucket.name}}" aria-label="Add entry" class="add-new-button" [class.success]="bucket.type==='success'"
+                [class.danger]="bucket.type==='danger'" [class.info]="bucket.type==='info'" (click)="openModal(addtemplate, bucket)">
+                <mat-icon aria-hidden="true ">add</mat-icon>
               </button>
-            </div>
-            <button
-              id="noteButton"
-              [matBadge]="note.voteCount"
-              [matBadgeHidden]="!note.voteCount || note.voteCount === 0"
-              [class.success]="bucket.type === 'success'"
-              [class.danger]="bucket.type === 'danger'"
-              [class.info]="bucket.type === 'info'"
-              mat-button fxFlex=100
-              class="mat-elevation-z2"
-              (click)="openModal(edittemplate, bucket, note)">
-              <span class="retroboard__note-button-text">{{note.message}}</span>
-            </button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button fxFlex title="Add entry to {{bucket.name}}" aria-label="Add entry" class="add-new-button" [class.success]="bucket.type==='success'"
-              [class.danger]="bucket.type==='danger'" [class.info]="bucket.type==='info'" (click)="openModal(addtemplate, bucket)">
-              <mat-icon aria-hidden="true ">add</mat-icon>
-            </button>
-          </mat-list-item>
+            </mat-list-item>
+          </app-transition-group>
         </mat-list>
+
       </mat-card-content>
     </mat-card>
   </div>
