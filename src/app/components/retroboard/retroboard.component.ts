@@ -40,8 +40,8 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     private retroboardService: RetroboardService,
     private dialog: MatDialog,
     private router: Router,
-    private exportService: ExportService,
-  ) { }
+    private exportService: ExportService
+  ) {}
 
   private compareNotes(first: Note, second: Note) {
     if (first.voteCount < second.voteCount) {
@@ -64,10 +64,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   private getRetroboard(id: string) {
-    this.retroboardSubscription = this.retroboardService.getRetroboard(id)
-      .subscribe(retroboard => {
-        this.retroboard = retroboard;
-      });
+    this.retroboardSubscription = this.retroboardService.getRetroboard(id).subscribe(retroboard => {
+      this.retroboard = retroboard;
+    });
   }
 
   ngOnInit() {
@@ -79,26 +78,29 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       .list(`/buckets`, ref => ref.orderByChild('retroboardId').equalTo(retroboardId))
       .snapshotChanges()
       .pipe(
-        map((actions) => {
-          return actions.map((a) => ({ key: a.key, ...(a.payload.val() as any) }));
+        map(actions => {
+          return actions.map(a => ({
+            key: a.key,
+            ...(a.payload.val() as any),
+          }));
         }),
-        map((buckets) => {
+        map(buckets => {
           return buckets.map((bucket: Bucket) => {
             bucket.notes$ = this.db
               .list<Note>(`/notes`, ref => ref.orderByChild('bucketId').equalTo(bucket.key))
               .snapshotChanges()
               .pipe(
-                map((actions) =>
-                  actions.map((a) => ({
+                map(actions =>
+                  actions.map(a => ({
                     key: a.key,
                     ...(a.payload.val() as any),
                   }))
                 ),
-                map((notes: Note[]) => notes.sort(this.compareNotes)),
+                map((notes: Note[]) => notes.sort(this.compareNotes))
               );
             return bucket;
           });
-        }),
+        })
       );
 
     this.jsonData = {};
@@ -129,16 +131,15 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
   async addNote(message: string) {
     this.appUser = await this.authService.getAppUser();
-    await this.db.list(`/notes`)
-      .push({
-        creator: this.appUser.displayName,
-        creatorId: this.userDetails.uid,
-        retroboardId: this.retroboard.key,
-        bucketId: this.activeBucket.key,
-        message: message,
-        voteCount: 0,
-        votes: {}
-      });
+    await this.db.list(`/notes`).push({
+      creator: this.appUser.displayName,
+      creatorId: this.userDetails.uid,
+      retroboardId: this.retroboard.key,
+      bucketId: this.activeBucket.key,
+      message: message,
+      voteCount: 0,
+      votes: {},
+    });
     this.dialogRef.close();
   }
 
@@ -166,7 +167,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
     this.activeNote.voteCount = Object.keys(this.activeNote.votes).reduce(
       (total, vote) => (this.activeNote.votes[vote] ? total + 1 : total - 1),
-      0,
+      0
     );
 
     this.db
@@ -197,7 +198,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
     this.activeNote.voteCount = Object.keys(this.activeNote.votes).reduce(
       (total, vote) => (this.activeNote.votes[vote] ? total + 1 : total - 1),
-      0,
+      0
     );
 
     this.db
@@ -229,10 +230,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
 
   deleteRetro(template: TemplateRef<any>) {
     const dialogRef = this.dialog.open(template);
-    dialogRef.afterClosed().subscribe((confirmed) => {
+    dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.retroboardService.deleteRetroboard(this.retroboard)
-          .then(() => this.router.navigate(['/home']));
+        this.retroboardService.deleteRetroboard(this.retroboard).then(() => this.router.navigate(['/home']));
       }
     });
   }
@@ -243,14 +243,14 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       data: {
         retroboard: this.retroboard,
         buckets: this.buckets,
-      }
+      },
     });
   }
 
   openExportModal(template: TemplateRef<any>) {
     (<any>window).gtag('event', 'export', {
-      'event_category': 'retrospective',
-      'event_label': 'origin'
+      event_category: 'retrospective',
+      event_label: 'origin',
     });
     this.htmlExport = this.exportService.export(this.jsonData);
     this.dialogRef = this.dialog.open(template, {

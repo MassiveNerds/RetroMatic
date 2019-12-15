@@ -9,10 +9,9 @@ const DEFAULT_BUCKETS = [{ name: 'What went well?' }, { name: 'What can be impro
 @Component({
   selector: 'app-create-update-retro-modal',
   templateUrl: './create-update-retro-modal.component.html',
-  styleUrls: ['./create-update-retro-modal.component.scss']
+  styleUrls: ['./create-update-retro-modal.component.scss'],
 })
 export class CreateUpdateRetroModalComponent implements OnInit {
-
   isUpdate: boolean;
   retroboardName = '';
   buckets: Partial<Bucket>[] = [];
@@ -22,8 +21,8 @@ export class CreateUpdateRetroModalComponent implements OnInit {
     public data: any,
     public dialogRef: MatDialogRef<CreateUpdateRetroModalComponent>,
     private retroboardService: RetroboardService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     if (this.data) {
@@ -36,18 +35,23 @@ export class CreateUpdateRetroModalComponent implements OnInit {
   }
 
   createRetroboard() {
-    this.retroboardService.createRetroboard(this.retroboardName, this.buckets.map(bucket => bucket.name))
-      .then((id) => {
+    this.retroboardService
+      .createRetroboard(
+        this.retroboardName,
+        this.buckets.map(bucket => bucket.name)
+      )
+      .then(id => {
         this.dialogRef.close();
         this.router.navigate(['/retroboard/', id]);
       });
   }
 
   updateRetroboard() {
-    this.retroboardService.updateRetroboard(this.data.retroboard.key, {
-      name: this.retroboardName,
-      buckets: this.buckets,
-    })
+    this.retroboardService
+      .updateRetroboard(this.data.retroboard.key, {
+        name: this.retroboardName,
+        buckets: this.buckets,
+      })
       .then(() => {
         this.dialogRef.close();
       });
@@ -56,5 +60,4 @@ export class CreateUpdateRetroModalComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close();
   }
-
 }

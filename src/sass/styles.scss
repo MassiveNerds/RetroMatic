@@ -7,7 +7,7 @@
 
 // Define the light theme.
 $primary: mat-palette($mat-indigo);
-$accent:  mat-palette($mat-pink, A200, A100, A400);
+$accent: mat-palette($mat-pink, A200, A100, A400);
 
 $theme: mat-light-theme($primary, $accent);
 @include angular-material-theme($theme);
@@ -18,7 +18,7 @@ $theme: mat-light-theme($primary, $accent);
 }
 
 body {
-  font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: Roboto, 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
 }
 
 .primary-header {

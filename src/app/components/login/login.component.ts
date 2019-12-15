@@ -13,20 +13,11 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
 
   loginForm = new FormGroup({
-    emailFormControl: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    passwordFormControl: new FormControl('', [
-      Validators.required
-    ])
+    emailFormControl: new FormControl('', [Validators.required, Validators.email]),
+    passwordFormControl: new FormControl('', [Validators.required]),
   });
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private authService: AuthService
-  ) { }
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
@@ -73,5 +64,4 @@ export class LoginComponent implements OnInit {
   goToResetPassword() {
     this.router.navigateByUrl('/resetpassword');
   }
-
 }

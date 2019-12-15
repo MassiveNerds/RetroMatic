@@ -48,32 +48,32 @@ const appRoutes: Routes = [
   {
     path: 'retroboard/:id',
     canActivate: [AuthGuard],
-    component: RetroBoardComponent
+    component: RetroBoardComponent,
   },
   {
     path: 'home',
     canActivate: [AuthGuard],
-    component: MyDashboardComponent
+    component: MyDashboardComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
   },
   {
     path: 'resetpassword',
-    component: ResetPasswordComponent
+    component: ResetPasswordComponent,
   },
   {
     path: '',
     redirectTo: '/home',
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
@@ -90,7 +90,7 @@ const appRoutes: Routes = [
     ThemePickerComponent,
     CreateUpdateRetroModalComponent,
     TransitionGroupItemDirective,
-    TransitionGroupComponent
+    TransitionGroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,7 +120,7 @@ const appRoutes: Routes = [
     MatGridListModule,
     MatProgressBarModule,
     MatPaginatorModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   entryComponents: [GlobalErrorHandlerModalComponent, CreateUpdateRetroModalComponent],
   providers: [
@@ -129,9 +129,9 @@ const appRoutes: Routes = [
     ThemeStorage,
     {
       provide: ErrorHandler,
-      useClass: UIErrorHandler
-    }
+      useClass: UIErrorHandler,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

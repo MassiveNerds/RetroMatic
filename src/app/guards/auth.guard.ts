@@ -1,11 +1,6 @@
 import { tap, map, take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -15,19 +10,18 @@ export class AuthGuard implements CanActivate {
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
+    state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     return this.afAuth.authState.pipe(
       take(1),
-      map((authState) => !!authState),
-      tap(
-        (auth) =>
-          !auth
-            ? this.router.navigate(['/login'], {
-                queryParams: { returnUrl: state.url },
-              })
-            : true,
-      ),
+      map(authState => !!authState),
+      tap(auth =>
+        !auth
+          ? this.router.navigate(['/login'], {
+              queryParams: { returnUrl: state.url },
+            })
+          : true
+      )
     );
   }
 }

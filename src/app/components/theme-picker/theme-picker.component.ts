@@ -1,18 +1,7 @@
-import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  NgModule
-} from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, NgModule } from '@angular/core';
 import { StyleManager } from '../style-manager/style-manager';
 import { ThemeStorage, DocsSiteTheme } from './theme-storage/theme-storage';
-import {
-  MatButtonModule,
-  MatGridListModule,
-  MatIconModule,
-  MatMenuModule,
-  MatTooltipModule
-} from '@angular/material';
+import { MatButtonModule, MatGridListModule, MatIconModule, MatMenuModule, MatTooltipModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -30,33 +19,30 @@ export class ThemePickerComponent {
       primary: '#673AB7',
       accent: '#FFC107',
       href: 'deeppurple-amber.css',
-      isDark: false
+      isDark: false,
     },
     {
       primary: '#3F51B5',
       accent: '#E91E63',
       href: 'indigo-pink.css',
       isDark: false,
-      isDefault: true
+      isDefault: true,
     },
     {
       primary: '#E91E63',
       accent: '#607D8B',
       href: 'pink-bluegrey.css',
-      isDark: true
+      isDark: true,
     },
     {
       primary: '#9C27B0',
       accent: '#4CAF50',
       href: 'purple-green.css',
-      isDark: true
-    }
+      isDark: true,
+    },
   ];
 
-  constructor(
-    public styleManager: StyleManager,
-    private _themeStorage: ThemeStorage
-  ) {
+  constructor(public styleManager: StyleManager, private _themeStorage: ThemeStorage) {
     const currentTheme = this._themeStorage.getStoredTheme();
     if (currentTheme) {
       this.installTheme(currentTheme);
@@ -83,16 +69,9 @@ export class ThemePickerComponent {
 }
 
 @NgModule({
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatGridListModule,
-    MatTooltipModule,
-    CommonModule
-  ],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatGridListModule, MatTooltipModule, CommonModule],
   exports: [ThemePickerComponent],
   declarations: [ThemePickerComponent],
-  providers: [StyleManager, ThemeStorage]
+  providers: [StyleManager, ThemeStorage],
 })
-export class ThemePickerModule { }
+export class ThemePickerModule {}

@@ -13,22 +13,12 @@ export class RegisterComponent {
   returnUrl: string;
 
   registerForm = new FormGroup({
-    displayNameFormControl: new FormControl('', [
-      Validators.required
-    ]),
-    emailFormControl: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    passwordFormControl: new FormControl('', [
-      Validators.required
-    ])
+    displayNameFormControl: new FormControl('', [Validators.required]),
+    emailFormControl: new FormControl('', [Validators.required, Validators.email]),
+    passwordFormControl: new FormControl('', [Validators.required]),
   });
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) { }
+  constructor(private router: Router, private authService: AuthService) {}
 
   async register() {
     if (!this.registerForm.valid) {
@@ -36,7 +26,11 @@ export class RegisterComponent {
     }
     try {
       const { displayNameFormControl, emailFormControl, passwordFormControl } = this.registerForm.value;
-      await this.authService.register({ displayName: displayNameFormControl, email: emailFormControl, password: passwordFormControl });
+      await this.authService.register({
+        displayName: displayNameFormControl,
+        email: emailFormControl,
+        password: passwordFormControl,
+      });
       await this.router.navigateByUrl('/home');
     } catch (error) {
       this.error = error;
