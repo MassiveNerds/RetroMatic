@@ -4,18 +4,17 @@ import { GlobalErrorHandlerModalComponent } from './global-error-handler-modal.c
 
 @Injectable()
 export class UIErrorHandler extends ErrorHandler {
+  constructor(public dialog: MatDialog, private zone: NgZone) {
+    super();
+  }
 
-    constructor(public dialog: MatDialog, private zone: NgZone) {
-        super();
-    }
+  handleError(error: Error) {
+    super.handleError(error);
 
-    handleError(error: Error) {
-        super.handleError(error);
-
-        this.zone.run(() => {
-            this.dialog.open(GlobalErrorHandlerModalComponent, {
-                data: { title: 'Whoops!', message: error.message }
-            });
-        });
-    }
+    this.zone.run(() => {
+      this.dialog.open(GlobalErrorHandlerModalComponent, {
+        data: { title: 'Whoops!', message: error.message },
+      });
+    });
+  }
 }

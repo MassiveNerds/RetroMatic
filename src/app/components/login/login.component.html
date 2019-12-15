@@ -1,12 +1,29 @@
-<form class="login-page topography-svg-bg" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center" [formGroup]="loginForm" (ngSubmit)="login()">
-  <mat-card class="mat-elevation-z6"  fxFlex.gt-lg='1 1 20%' fxFlex.lg='1 1 30%' fxFlex.md='1 1 40%' fxFlex.sm='1 1 70%' fxFlex.lt-sm='1 1 90%'>
+<form
+  class="login-page topography-svg-bg"
+  fxLayout="row"
+  fxLayoutGap="20px"
+  fxLayoutAlign="center center"
+  [formGroup]="loginForm"
+  (ngSubmit)="login()"
+>
+  <mat-card
+    class="mat-elevation-z6"
+    fxFlex.gt-lg="1 1 20%"
+    fxFlex.lg="1 1 30%"
+    fxFlex.md="1 1 40%"
+    fxFlex.sm="1 1 70%"
+    fxFlex.lt-sm="1 1 90%"
+  >
     <mat-card-content fxLayout="column">
-      <p *ngIf="error" class="error-text mat-body-1">
-        <strong>Oh snap!</strong> {{error.message}}
-      </p>
+      <p *ngIf="error" class="error-text mat-body-1"><strong>Oh snap!</strong> {{ error.message }}</p>
       <mat-form-field>
-        <input #email type="email" matInput placeholder="Email address" formControlName="emailFormControl">
-        <mat-error *ngIf="loginForm.controls['emailFormControl'].hasError('email') && !loginForm.controls['emailFormControl'].hasError('required')">
+        <input #email type="email" matInput placeholder="Email address" formControlName="emailFormControl" />
+        <mat-error
+          *ngIf="
+            loginForm.controls['emailFormControl'].hasError('email') &&
+            !loginForm.controls['emailFormControl'].hasError('required')
+          "
+        >
           Please enter a valid email address
         </mat-error>
         <mat-error *ngIf="loginForm.controls['emailFormControl'].hasError('required')">
@@ -14,20 +31,29 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field>
-        <input #password type="password" matInput placeholder="Password" formControlName="passwordFormControl">
+        <input #password type="password" matInput placeholder="Password" formControlName="passwordFormControl" />
         <mat-error *ngIf="loginForm.controls['passwordFormControl'].hasError('required')">
           Password is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button class="login__reset-password-button" mat-button color="primary" (click)="goToResetPassword()">Reset password</button>
-      <button mat-raised-button color="accent" (click)="loginWithGoogle($event)" aria-label="Sign in with Google">Sign in with Google</button>
+      <button class="login__reset-password-button" mat-button color="primary" (click)="goToResetPassword()">
+        Reset password
+      </button>
+      <button mat-raised-button color="accent" (click)="loginWithGoogle($event)" aria-label="Sign in with Google">
+        Sign in with Google
+      </button>
       <button mat-raised-button color="primary" type="submit">Sign in</button>
     </mat-card-actions>
-    <mat-card-actions align="center"> 
-      <p class="mat-body">Don't have an account? <button mat-button color="primary" (click)="goToRegister()">Sign up</button></p>
-      <p class="mat-body">Just joining a retrospective? <button mat-button color="primary" (click)="loginAsGuest($event)">Continue as guest</button></p>
+    <mat-card-actions align="center">
+      <p class="mat-body">
+        Don't have an account? <button mat-button color="primary" (click)="goToRegister()">Sign up</button>
+      </p>
+      <p class="mat-body">
+        Just joining a retrospective?
+        <button mat-button color="primary" (click)="loginAsGuest($event)">Continue as guest</button>
+      </p>
     </mat-card-actions>
   </mat-card>
 </form>

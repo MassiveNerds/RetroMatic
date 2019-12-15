@@ -1,6 +1,6 @@
 {
-  "name": "agile-retrospective",
-  "version": "2.0.27",
+  "name": "@massivenerds/retromatic",
+  "version": "3.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,7 @@
     "build-themes": "bash ./tools/build-themes.sh",
     "build": "npm run config -- --environment=prod && npm run build-themes && ng build --prod",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "prettier --write src/**/*.{ts,js,css,scss,html}",
     "e2e": "ng e2e",
     "postinstall": "bash ./tools/build-themes.sh"
   },
@@ -59,6 +59,7 @@
     "karma-coverage-istanbul-reporter": "^1.4.3",
     "karma-jasmine": "^1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "prettier": "^1.19.1",
     "protractor": "^5.3.2",
     "ts-node": "^3.3.0",
     "tslint": "~5.3.2",

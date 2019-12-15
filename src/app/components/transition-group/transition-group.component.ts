@@ -1,19 +1,12 @@
-import {
-  Component,
-  ContentChildren,
-  Input,
-  QueryList,
-  AfterContentInit,
-} from '@angular/core';
+import { Component, ContentChildren, Input, QueryList, AfterContentInit } from '@angular/core';
 import { TransitionGroupItemDirective } from '../../directives/transition-group-item.directive';
 
 @Component({
   selector: 'app-transition-group',
   templateUrl: './transition-group.component.html',
-  styleUrls: ['./transition-group.component.scss']
+  styleUrls: ['./transition-group.component.scss'],
 })
 export class TransitionGroupComponent implements AfterContentInit {
-
   @Input() class: string;
 
   @ContentChildren(TransitionGroupItemDirective) items: QueryList<TransitionGroupItemDirective>;
@@ -56,17 +49,15 @@ export class TransitionGroupComponent implements AfterContentInit {
     const style: any = el.style;
     el.classList.add(cssClass);
     style.transform = style.WebkitTransform = style.transitionDuration = '';
-    el.addEventListener(
-      'transitionend', () => {
-        return item.moveCallback = (e: any) => {
-          if (!e || /transform$/.test(e.propertyName)) {
-            el.removeEventListener('transitionend', item.moveCallback);
-            item.moveCallback = null;
-            el.classList.remove(cssClass);
-          }
-        };
-      }
-    );
+    el.addEventListener('transitionend', () => {
+      return (item.moveCallback = (e: any) => {
+        if (!e || /transform$/.test(e.propertyName)) {
+          el.removeEventListener('transitionend', item.moveCallback);
+          item.moveCallback = null;
+          el.classList.remove(cssClass);
+        }
+      });
+    });
   }
 
   refreshPosition(prop: string) {
@@ -84,12 +75,8 @@ export class TransitionGroupComponent implements AfterContentInit {
     if (dx || dy) {
       item.moved = true;
       const style: any = item.el.style;
-      style.transform = style.WebkitTransform =
-        'translate(' + dx + 'px,' + dy + 'px)';
+      style.transform = style.WebkitTransform = 'translate(' + dx + 'px,' + dy + 'px)';
       style.transitionDuration = '0s';
     }
   }
-
-
-
 }

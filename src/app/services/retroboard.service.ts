@@ -8,32 +8,31 @@ import { Retroboard, Bucket, Note } from '../types';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RetroboardService {
-
-  constructor(private db: AngularFireDatabase, private authService: AuthService) { }
+  constructor(private db: AngularFireDatabase, private authService: AuthService) {}
 
   getRetroboards(): Observable<Retroboard[]> {
     const uid = this.authService.getUserDetails().uid;
-    return this.db.list<Retroboard>(`/retroboards`, ref => ref.orderByChild('creatorId').equalTo(uid)).snapshotChanges()
-      .pipe(
-        map((actions) =>
-          actions.map(a => ({ key: a.key, ...a.payload.val() })),
-        ),
-      );
+    return this.db
+      .list<Retroboard>(`/retroboards`, ref => ref.orderByChild('creatorId').equalTo(uid))
+      .snapshotChanges()
+      .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))));
   }
 
   getRetroboard(id: string): Observable<Retroboard> {
-    return this.db.object<Retroboard>(`/retroboards/${id}`).snapshotChanges()
+    return this.db
+      .object<Retroboard>(`/retroboards/${id}`)
+      .snapshotChanges()
       .pipe(
-        map((snapshot) => {
+        map(snapshot => {
           return { key: snapshot.key, ...snapshot.payload.val() };
-        }),
+        })
       );
   }
 
-  async updateRetroboard(id: string, options: { name: string, buckets: Partial<Bucket>[] }) {
+  async updateRetroboard(id: string, options: { name: string; buckets: Partial<Bucket>[] }) {
     this.sendRetrospectiveEvent('update');
     this.db.object(`/retroboards/${id}`).update({ name: options.name });
 
@@ -46,15 +45,19 @@ export class RetroboardService {
 
   async deleteRetroboard(retroboard: Retroboard) {
     this.sendRetrospectiveEvent('delete');
-    this.db.list<Note>('/notes', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
-      .snapshotChanges().subscribe(snapshots => {
-        snapshots.forEach(async (snapshot) => {
+    this.db
+      .list<Note>('/notes', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
+      .snapshotChanges()
+      .subscribe(snapshots => {
+        snapshots.forEach(async snapshot => {
           await this.db.object<Note>(`/notes/${snapshot.key}`).remove();
         });
       });
-    this.db.list<Bucket>('/buckets', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
-      .snapshotChanges().subscribe(snapshots => {
-        snapshots.forEach(async (snapshot) => {
+    this.db
+      .list<Bucket>('/buckets', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
+      .snapshotChanges()
+      .subscribe(snapshots => {
+        snapshots.forEach(async snapshot => {
           await this.db.object<Bucket>(`/buckets/${snapshot.key}`).remove();
         });
       });
@@ -66,16 +69,15 @@ export class RetroboardService {
       this.sendRetrospectiveEvent('create');
       const userDetails = this.authService.getUserDetails();
       const appUser = await this.authService.getAppUser();
-      const retroboardName = (name && name.length > 0) ? name : moment().format('dddd, MMMM Do YYYY');
-      const result = await this.db.list<Retroboard>(`/retroboards`)
-        .push({
-          creator: appUser.displayName,
-          creatorId: userDetails.uid,
-          noteCount: 0,
-          name: retroboardName,
-          dateCreated: moment().format('YYYY/MM/DD HH:mm:ss'),
-          timeZone: momentTimeZone.tz.guess()
-        });
+      const retroboardName = name && name.length > 0 ? name : moment().format('dddd, MMMM Do YYYY');
+      const result = await this.db.list<Retroboard>(`/retroboards`).push({
+        creator: appUser.displayName,
+        creatorId: userDetails.uid,
+        noteCount: 0,
+        name: retroboardName,
+        dateCreated: moment().format('YYYY/MM/DD HH:mm:ss'),
+        timeZone: momentTimeZone.tz.guess(),
+      });
       const retroboardId = result.key;
       const buckets: AngularFireList<Bucket> = this.db.list(`/buckets`);
       bucketNames.forEach(bucketName => {
@@ -95,8 +97,8 @@ export class RetroboardService {
 
   private sendRetrospectiveEvent(eventName: string) {
     (<any>window).gtag('event', eventName, {
-      'event_category': 'retrospective',
-      'event_label': 'origin'
+      event_category: 'retrospective',
+      event_label: 'origin',
     });
   }
 }

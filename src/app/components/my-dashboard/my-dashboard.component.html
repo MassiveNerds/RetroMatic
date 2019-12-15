@@ -1,31 +1,48 @@
 <div class="my-dashboard mat-typography" fxLayout="column" fxLayoutAlign="center">
   <div class="primary-header">
-    <h1 *ngIf="displayName">{{displayName}}'s Dashboard</h1>
-  </div> 
-  <div ngClass="my-dashboard__content" [ngClass.lt-md]="{'my-dashboard__content':false}" fxLayout="row" fxLayoutAlign="center start">
+    <h1 *ngIf="displayName">{{ displayName }}'s Dashboard</h1>
+  </div>
+  <div
+    ngClass="my-dashboard__content"
+    [ngClass.lt-md]="{ 'my-dashboard__content': false }"
+    fxLayout="row"
+    fxLayoutAlign="center start"
+  >
     <mat-card class="my-dashboard__retrospectives" fxFlex="50%" fxFlex.lt-md="100%">
       <mat-card-header fxLayoutAlign="center center">
         <mat-card-title class="card-title">My Retrospectives</mat-card-title>
         <div fxFlex></div>
-        <button mat-icon-button color="accent" (click)="openRetroBoardDetailsModal()" title="Create Retrospective" aria-label="Create Retrospective">
+        <button
+          mat-icon-button
+          color="accent"
+          (click)="openRetroBoardDetailsModal()"
+          title="Create Retrospective"
+          aria-label="Create Retrospective"
+        >
           <mat-icon>add_circle</mat-icon>
         </button>
       </mat-card-header>
       <mat-card-content class="my-dashboard__retrospectives-content">
         <ng-container *ngIf="retroboards; else loadingRetros">
           <mat-nav-list fxLayout="column" *ngIf="retroboards.length; else noRetros">
-            <a mat-list-item fxFlex="1 1 auto" *ngFor="let retroboard of retroboards; last as last"
-              [routerLink]="['/retroboard/', retroboard.key]">
+            <a
+              mat-list-item
+              fxFlex="1 1 auto"
+              *ngFor="let retroboard of retroboards; last as last"
+              [routerLink]="['/retroboard/', retroboard.key]"
+            >
               <mat-icon mat-list-icon color="primary">note</mat-icon>
-              <h4 mat-line>{{retroboard.name}}</h4>
-              <p mat-line> {{retroboard.dateCreated | date}} </p>
+              <h4 mat-line>{{ retroboard.name }}</h4>
+              <p mat-line>{{ retroboard.dateCreated | date }}</p>
               <mat-divider *ngIf="!last"></mat-divider>
             </a>
           </mat-nav-list>
-          <mat-paginator [length]="total"
+          <mat-paginator
+            [length]="total"
             [pageSize]="pageSize"
             [pageSizeOptions]="pageSizeOptions"
-            (page)="handlePaginatorData($event)">
+            (page)="handlePaginatorData($event)"
+          >
           </mat-paginator>
         </ng-container>
       </mat-card-content>

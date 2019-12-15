@@ -12,9 +12,7 @@ export interface DocsSiteTheme {
 export class ThemeStorage {
   static storageKey = 'docs-theme-storage-current';
 
-  onThemeUpdate: EventEmitter<DocsSiteTheme> = new EventEmitter<
-    DocsSiteTheme
-  >();
+  onThemeUpdate: EventEmitter<DocsSiteTheme> = new EventEmitter<DocsSiteTheme>();
 
   storeTheme(theme: DocsSiteTheme) {
     try {

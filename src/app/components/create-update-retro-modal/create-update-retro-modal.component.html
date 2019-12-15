@@ -1,11 +1,17 @@
 <mat-card>
   <mat-card-title class="create-update-retro-modal__title">
-    {{isUpdate ? 'update retrospective' : 'create new retrospective'}}
+    {{ isUpdate ? 'update retrospective' : 'create new retrospective' }}
   </mat-card-title>
   <mat-card-content fxLayout="column">
     <mat-form-field [hideRequiredMarker]="true">
-      <input [(ngModel)]="retroboardName" matInput #name placeholder="Retrospective name" required 
-      (keyup.enter)="isUpdate ? updateRetroboard() : createRetroboard()">
+      <input
+        [(ngModel)]="retroboardName"
+        matInput
+        #name
+        placeholder="Retrospective name"
+        required
+        (keyup.enter)="isUpdate ? updateRetroboard() : createRetroboard()"
+      />
     </mat-form-field>
     <mat-expansion-panel [expanded]="isUpdate">
       <mat-expansion-panel-header>
@@ -18,7 +24,7 @@
       </mat-expansion-panel-header>
       <mat-action-row fxLayout="column">
         <mat-form-field *ngFor="let bucket of buckets">
-            <input matInput [(ngModel)]="bucket.name">
+          <input matInput [(ngModel)]="bucket.name" />
         </mat-form-field>
       </mat-action-row>
     </mat-expansion-panel>

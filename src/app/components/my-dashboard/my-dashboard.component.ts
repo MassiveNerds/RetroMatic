@@ -14,7 +14,6 @@ import { AngularFireDatabase } from '@angular/fire/database';
   styleUrls: ['./my-dashboard.component.scss'],
 })
 export class MyDashboardComponent implements OnInit, OnDestroy {
-
   retroboards: Retroboard[];
   total: number;
   dialogRef: MatDialogRef<any>;
@@ -30,14 +29,17 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
     private retroboardService: RetroboardService,
     private db: AngularFireDatabase,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getRetroboards();
     const userDetails = this.authService.getUserDetails();
-    this.userSubscription = this.db.object<User>(`/users/${userDetails.uid}`).valueChanges().subscribe(user => {
-      this.displayName = user.displayName;
-    });
+    this.userSubscription = this.db
+      .object<User>(`/users/${userDetails.uid}`)
+      .valueChanges()
+      .subscribe(user => {
+        this.displayName = user.displayName;
+      });
   }
 
   ngOnDestroy() {
@@ -46,16 +48,15 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   }
 
   getRetroboards() {
-    this.retroboardSubscription = this.retroboardService.getRetroboards()
-      .subscribe(retroboards => {
-        this.total = retroboards.length;
-        const mutableRetroboards = [...retroboards].sort((a, b) => {
-          return new Date(b.dateCreated || 0).getTime() - new Date(a.dateCreated || 0).getTime();
-        });
-        const start = this.pageIndex * this.pageSize;
-        const end = start + this.pageSize;
-        this.retroboards = mutableRetroboards.slice(start, end);
+    this.retroboardSubscription = this.retroboardService.getRetroboards().subscribe(retroboards => {
+      this.total = retroboards.length;
+      const mutableRetroboards = [...retroboards].sort((a, b) => {
+        return new Date(b.dateCreated || 0).getTime() - new Date(a.dateCreated || 0).getTime();
       });
+      const start = this.pageIndex * this.pageSize;
+      const end = start + this.pageSize;
+      this.retroboards = mutableRetroboards.slice(start, end);
+    });
   }
 
   openModal(template: TemplateRef<any>) {
