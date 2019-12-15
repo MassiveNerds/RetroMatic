@@ -26,11 +26,8 @@
                 id="noteButton"
                 [matBadge]="note.voteCount"
                 [matBadgeHidden]="!note.voteCount || note.voteCount === 0"
-                [class.success]="bucket.type === 'success'"
-                [class.danger]="bucket.type === 'danger'"
-                [class.info]="bucket.type === 'info'"
                 mat-button fxFlex=100
-                class="mat-elevation-z2"
+                class="retroboard__note mat-elevation-z2"
                 (click)="openModal(edittemplate, bucket, note)">
                 <span class="retroboard__note-button-text">{{note.message}}</span>
               </button>

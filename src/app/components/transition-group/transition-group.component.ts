@@ -57,20 +57,23 @@ export class TransitionGroupComponent implements AfterContentInit {
     el.classList.add(cssClass);
     style.transform = style.WebkitTransform = style.transitionDuration = '';
     el.addEventListener(
-      'transitionend',
-      (item.moveCallback = (e: any) => {
-        if (!e || /transform$/.test(e.propertyName)) {
-          el.removeEventListener('transitionend', item.moveCallback);
-          item.moveCallback = null;
-          el.classList.remove(cssClass);
-        }
-      })
+      'transitionend', () => {
+        return item.moveCallback = (e: any) => {
+          if (!e || /transform$/.test(e.propertyName)) {
+            el.removeEventListener('transitionend', item.moveCallback);
+            item.moveCallback = null;
+            el.classList.remove(cssClass);
+          }
+        };
+      }
     );
   }
 
   refreshPosition(prop: string) {
     this.items.forEach(item => {
-      item[prop] = item.el.getBoundingClientRect();
+      const { left, top, width, height } = item.el.getBoundingClientRect();
+      const position = new DOMRect(left + window.scrollX, top + window.scrollY, width, height);
+      item[prop] = position;
     });
   }
 
