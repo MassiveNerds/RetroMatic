@@ -6,6 +6,10 @@
   $foreground: map-get($theme, foreground);
 
   .retroboard__note {
-    background: mat-color($background, card)
+    background: mat-color($background, card);
+  }
+
+  .retroboard__action-bar {
+    background: mat-color($background, background);
   }
 }
