@@ -12,7 +12,7 @@
           <app-transition-group class="retro__notes">
             <mat-list-item
               appTransitionGroupItem
-              class="retro-note"
+              class="retroboard__note-item"
               *ngFor="let note of bucket.notes$ | async; trackBy: trackByFn"
             >
               <div fxFlex fxLayout="column">
@@ -67,7 +67,8 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="retroboard-toolbar" fxLayout="row" fxLayoutAlign="end start">
+  <mat-toolbar class="retroboard__action-bar">
+    <div fxFlex></div>
     <button mat-raised-button color="accent" (click)="openExportModal(exporttemplate)">
       <mat-icon>save_alt</mat-icon>
       Export
@@ -90,7 +91,7 @@
       <mat-icon>edit</mat-icon>
       Edit
     </button>
-  </div>
+  </mat-toolbar>
 </div>
 
 <ng-template #addtemplate>
