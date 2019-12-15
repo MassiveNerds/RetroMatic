@@ -7,4 +7,4 @@ $accent: mat-palette($mat-green, A200, A100, A400);
 
 $theme: mat-dark-theme($primary, $accent);
 @include angular-material-theme($theme);
-@include material-docs-app-theme($theme);
+@include retromatic-app-theme($theme);
