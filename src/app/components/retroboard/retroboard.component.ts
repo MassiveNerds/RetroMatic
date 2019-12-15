@@ -43,13 +43,11 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     private exportService: ExportService,
   ) { }
 
-  private compareNotes(a: Note, b: Note) {
-    const aVotes = a.voteCount || -1;
-    const bVotes = b.voteCount || -1;
-    if (aVotes < bVotes) {
+  private compareNotes(first: Note, second: Note) {
+    if (first.voteCount < second.voteCount) {
       return 1;
     }
-    if (aVotes > bVotes) {
+    if (first.voteCount > second.voteCount) {
       return -1;
     }
     return 0;
