@@ -1,21 +1,6 @@
 @import '../../../sass/variables';
 
-.success {
-  color: #3c763d;
-  background-color: #dff0d8;
-}
-
-.danger {
-  color: #a94442;
-  background-color: #f2dede;
-}
-
-.info {
-  color: #31708f;
-  background-color: #d9edf7;
-}
-
-.retro-note {
+.retroboard__note-item {
   height: auto !important;
   #noteButton {
     white-space: normal;
@@ -24,7 +9,7 @@
     border-radius: 10px;
     padding: 15px 15px 15px 15px;
   }
-  margin-bottom: 15px;
+  margin-bottom: 15px; 
 }
 
 .add-new-button {
@@ -37,12 +22,6 @@
 
 .edit-actions > button {
   margin: 0;
-}
-
-.retroboard-toolbar {
-  button {
-    margin: 5px 10px 0 0;
-  }
 }
 
 #html-container {
@@ -69,6 +48,11 @@
   transition: transform 1s;
 }
 
-.retroboard__note {
-  background-color: #fff;
+.retroboard__action-bar {
+  button {
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
