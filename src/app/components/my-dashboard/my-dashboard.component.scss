@@ -7,9 +7,6 @@
     color: hsl(0, 0%, 45%);
     margin: 0;
   }
-  .my-dashboard__content {
-    padding: 40px 0;
-  }
   .my-dashboard__loading-retros {
     min-height: 150px;
   }
@@ -17,4 +14,8 @@
 .mat-card-header-text {
   justify-content: center;
   align-items: center;
+}
+.my-dashboard__favorites,
+.my-dashboard__retrospectives {
+  margin: 20px 0;
 }

@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../types';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-my-dashboard',
@@ -15,14 +16,21 @@ import { AngularFireDatabase } from '@angular/fire/database';
 })
 export class MyDashboardComponent implements OnInit, OnDestroy {
   retroboards: Retroboard[];
+  favorites: Retroboard[];
   total: number;
   dialogRef: MatDialogRef<any>;
   retroboardSubscription: Subscription;
+  favoritesSubscription: Subscription;
   userSubscription: Subscription;
   pageSize = 5;
   pageSizeOptions = [5, 10, 25, 100];
   pageIndex = 0;
   displayName: string;
+  userDetails: firebase.User;
+  favoritesTotal: number;
+  favoritesPageSize = 5;
+  favoritesPageSizeOptions = [5, 10, 25, 100];
+  favoritesPageIndex = 0;
 
   constructor(
     public dialog: MatDialog,
@@ -33,13 +41,14 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getRetroboards();
-    const userDetails = this.authService.getUserDetails();
+    this.userDetails = this.authService.getUserDetails();
     this.userSubscription = this.db
-      .object<User>(`/users/${userDetails.uid}`)
+      .object<User>(`/users/${this.userDetails.uid}`)
       .valueChanges()
       .subscribe(user => {
         this.displayName = user.displayName;
       });
+    this.getFavorites();
   }
 
   ngOnDestroy() {
@@ -59,6 +68,26 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  async getFavorites() {
+    const dataSnapshot = await this.db.list(`/users/${this.userDetails.uid}/favorites`).query.once('value');
+    const favoritesIndex: { [key: string]: boolean } = dataSnapshot.val() || {};
+    const favorites = Object.keys(favoritesIndex).filter(key => favoritesIndex[key]);
+    this.db
+      .list<Retroboard>(`/retroboards`)
+      .snapshotChanges()
+      .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))))
+      .subscribe(retroboards => {
+        const favoriteRetroboards = retroboards.filter(retroboard => favorites.includes(retroboard.key));
+        this.favoritesTotal = favoriteRetroboards.length;
+        const mutableFavorites = [...favoriteRetroboards].sort((a, b) => {
+          return new Date(b.dateCreated || 0).getTime() - new Date(a.dateCreated || 0).getTime();
+        });
+        const start = this.favoritesPageIndex * this.favoritesPageSize;
+        const end = start + this.favoritesPageSize;
+        this.favorites = mutableFavorites.slice(start, end);
+      });
+  }
+
   openModal(template: TemplateRef<any>) {
     this.dialogRef = this.dialog.open(template, {
       panelClass: 'custom-dialog-container',
@@ -72,6 +101,7 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   }
 
   handlePaginatorData(event: PageEvent) {
+    console.log(event, 'note: how to store all in object with unique keys from this event');
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.getRetroboards();
