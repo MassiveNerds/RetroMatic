@@ -69,6 +69,16 @@
   </div>
   <mat-toolbar class="retroboard__action-bar">
     <div fxFlex></div>
+    <button *ngIf="isFavorite$ | async; else notFavorite" title="Remove from favorites" aria-label="Remove from favorites" mat-stroked-button color="accent" (click)="toggleFavorite()">
+      <mat-icon>favorite</mat-icon>
+      Favorite
+    </button>
+    <ng-template #notFavorite>
+      <button mat-stroked-button title="Add to favorites" aria-label="Add to favorites" color="accent" (click)="toggleFavorite()">
+        <mat-icon>favorite_border</mat-icon>
+        Favorite
+      </button>
+    </ng-template>
     <button mat-raised-button color="accent" (click)="openExportModal(exporttemplate)">
       <mat-icon>save_alt</mat-icon>
       Export
@@ -139,7 +149,7 @@
     <mat-card-content>
       <mat-form-field fxFlex>
         <textarea
-          [readonly]="activeNote?.creatorId !== userDetails?.uid"
+          [readonly]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
           (keydown.shift.enter)="updateNote(editmessage.value); (false)"
           matInput
           #editmessage
@@ -151,7 +161,7 @@
     </mat-card-content>
     <mat-card-actions class="edit-actions" fxLayout="row wrap" align="end">
       <button
-        [disabled]="activeNote?.creatorId !== userDetails?.uid"
+        [disabled]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
         fxFlex.xs="50%"
         mat-button
         color="warn"
@@ -161,7 +171,7 @@
       </button>
       <button fxFlex.xs="50%" mat-button mat-dialog-close>Cancel</button>
       <button
-        [disabled]="activeNote?.creatorId !== userDetails?.uid"
+        [disabled]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
         fxFlex.xs="50%"
         mat-raised-button
         color="primary"

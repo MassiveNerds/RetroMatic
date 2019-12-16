@@ -18,9 +18,9 @@ RetroMatic is used for **real-time retrospectives**. See how to leverage **Angul
 
 To clone and run this application locally, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
 
-Create a free [Firebase](https://firebase.google.com/) project.  In Firebase console, enable Email/Password, Google, and Anonymous sign-in under the sign-in method tab of the Auth section.
+Create a free [Firebase](https://firebase.google.com/) project. In Firebase console, enable Email/Password, Google, and Anonymous sign-in under the sign-in method tab of the Auth section.
 
-Update firebase config values in `firebase.ts`.  This config file will be ignored from Git. Copy `firebase.example.ts` and rename it to `firebase.ts`. These values can be found in Firebase console here: `Firebase Console > Overview > Add Firebase to your web app`.
+Update firebase config values in `firebase.ts`. This config file will be ignored from Git. Copy `firebase.example.ts` and rename it to `firebase.ts`. These values can be found in Firebase console here: `Firebase Console > Overview > Add Firebase to your web app`.
 
 ```javascript
 firebase: {
@@ -111,10 +111,16 @@ npm start
       ".read": "auth != null",
       ".indexOn": ["bucketId", "retroboardId"],
       "$noteId": {
-        ".write": "(auth != null && !data.exists()) || data.child('creatorId').val() === auth.uid",
+        ".write": "(auth != null && !data.exists()) || (data.child('creatorId').val() === auth.uid || root.child('retroboards/' + data.child('retroboardId').val()).child('creatorId').val() === auth.uid)",
         ".validate": "newData.hasChildren(['creator', 'creatorId', 'retroboardId', 'bucketId', 'message', 'voteCount'])",
         "creatorId": {
           ".validate": "auth.uid === newData.val()"
+        },
+        "votes": {
+          ".write": "auth != null"
+        },
+        "voteCount": {
+          ".write": "auth != null"
         }
       }
     },

@@ -32,6 +32,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   retroboardSubscription: Subscription;
   userDetails: firebase.User;
   appUser: User;
+  isFavorite$: Observable<boolean>;
 
   constructor(
     private db: AngularFireDatabase,
@@ -66,6 +67,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   private getRetroboard(id: string) {
     this.retroboardSubscription = this.retroboardService.getRetroboard(id).subscribe(retroboard => {
       this.retroboard = retroboard;
+      this.isFavorite$ = this.db
+        .object<boolean>(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`)
+        .valueChanges();
     });
   }
 
@@ -127,6 +131,17 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.retroboardSubscription.unsubscribe();
+  }
+
+  async toggleFavorite() {
+    const dataSnapshot = await this.db
+      .object(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`)
+      .query.once('value');
+    if (dataSnapshot.exists()) {
+      await this.db.object(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`).set(!dataSnapshot.val());
+    } else {
+      await this.db.object(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`).set(true);
+    }
   }
 
   async addNote(message: string) {
