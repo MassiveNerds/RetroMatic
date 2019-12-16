@@ -2,13 +2,8 @@
   <div class="primary-header">
     <h1 *ngIf="displayName">{{ displayName }}'s Dashboard</h1>
   </div>
-  <div
-    ngClass="my-dashboard__content"
-    [ngClass.lt-md]="{ 'my-dashboard__content': false }"
-    fxLayout="row"
-    fxLayoutAlign="center start"
-  >
-    <mat-card class="my-dashboard__retrospectives" fxFlex="50%" fxFlex.lt-md="100%">
+  <div ngClass="my-dashboard__content" fxLayout="row wrap" fxWrap="true" fxLayoutAlign="space-evenly start">
+    <mat-card class="my-dashboard__retrospectives">
       <mat-card-header fxLayoutAlign="center center">
         <mat-card-title class="card-title">My Retrospectives</mat-card-title>
         <div fxFlex></div>
@@ -47,6 +42,35 @@
         </ng-container>
       </mat-card-content>
     </mat-card>
+    <mat-card class="my-dashboard__favorites">
+      <mat-card-header fxLayoutAlign="start center">
+        <mat-card-title class="card-title">My Favorites</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="my-dashboard__favorites-content">
+        <ng-container *ngIf="favorites; else loadingRetros">
+          <mat-nav-list fxLayout="column" *ngIf="favorites.length; else noFavorites">
+            <a
+              mat-list-item
+              fxFlex="1 1 auto"
+              *ngFor="let favorite of favorites; last as last"
+              [routerLink]="['/retroboard/', favorite.key]"
+            >
+              <mat-icon mat-list-icon color="primary">favorite</mat-icon>
+              <h4 mat-line>{{ favorite.name }}</h4>
+              <p mat-line>{{ favorite.dateCreated | date }}</p>
+              <mat-divider *ngIf="!last"></mat-divider>
+            </a>
+          </mat-nav-list>
+          <mat-paginator
+            [length]="favoritesTotal"
+            [pageSize]="favoritesPageSize"
+            [pageSizeOptions]="favoritesPageSizeOptions"
+            (page)="handlePaginatorData($event)"
+          >
+          </mat-paginator>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
 
@@ -59,5 +83,10 @@
 <ng-template #noRetros>
   <mat-list>
     <mat-list-item>You have no retrospectives</mat-list-item>
+  </mat-list>
+</ng-template>
+<ng-template #noFavorites>
+  <mat-list>
+    <mat-list-item>You have no favorites</mat-list-item>
   </mat-list>
 </ng-template>
