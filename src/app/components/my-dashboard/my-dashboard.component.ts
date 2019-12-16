@@ -102,9 +102,14 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   }
 
   handlePaginatorData(event: PageEvent) {
-    console.log(event, 'note: how to store all in object with unique keys from this event');
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.getRetroboards();
+  }
+
+  handleFavoritesPaginatorData(event: PageEvent) {
+    this.favoritesPageSize = event.pageSize;
+    this.favoritesPageIndex = event.pageIndex;
+    this.getFavorites();
   }
 }
