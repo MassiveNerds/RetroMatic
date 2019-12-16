@@ -53,6 +53,7 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.retroboardSubscription.unsubscribe();
+    this.favoritesSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
   }
 
@@ -72,7 +73,7 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
     const dataSnapshot = await this.db.list(`/users/${this.userDetails.uid}/favorites`).query.once('value');
     const favoritesIndex: { [key: string]: boolean } = dataSnapshot.val() || {};
     const favorites = Object.keys(favoritesIndex).filter(key => favoritesIndex[key]);
-    this.db
+    this.favoritesSubscription = this.db
       .list<Retroboard>(`/retroboards`)
       .snapshotChanges()
       .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))))
