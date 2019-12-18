@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 /**
  * Class for managing stylesheets. Stylesheets are loaded into named slots so that they can be
@@ -10,7 +10,7 @@ export class StyleManager {
    * Set the stylesheet with the specified key.
    */
   setStyle(key: string, href: string) {
-    getLinkElementForKey(key).setAttribute("href", href);
+    getLinkElementForKey(key).setAttribute('href', href);
   }
 
   /**
@@ -29,14 +29,12 @@ function getLinkElementForKey(key: string) {
 }
 
 function getExistingLinkElementByKey(key: string) {
-  return document.head.querySelector(
-    `link[rel="stylesheet"].${getClassNameForKey(key)}`
-  );
+  return document.head.querySelector(`link[rel="stylesheet"].${getClassNameForKey(key)}`);
 }
 
 function createLinkElementWithKey(key: string) {
-  const linkEl = document.createElement("link");
-  linkEl.setAttribute("rel", "stylesheet");
+  const linkEl = document.createElement('link');
+  linkEl.setAttribute('rel', 'stylesheet');
   linkEl.classList.add(getClassNameForKey(key));
   document.head.appendChild(linkEl);
   return linkEl;

@@ -1,11 +1,11 @@
 <mat-toolbar class="the-header" color="primary">
-  <span [ngStyle.lt-md]="{'font-size.px': 40}" class="title">RetroMatic</span>
+  <span [ngStyle.lt-md]="{ 'font-size.px': 40 }" class="title">RetroMatic</span>
   <span fxFlex class="spacer"></span>
   <span fxHide.lt-md>
     <button *ngIf="authService.isLoggedIn()" mat-button [routerLink]="['/home']">My Dashboard</button>
-    <theme-picker></theme-picker>
+    <app-theme-picker></app-theme-picker>
     <a mat-button href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
-      <img class="the-header__github-logo" src="../../assets/github-circle-white-transparent.svg" alt="github">
+      <img class="the-header__github-logo" src="../../assets/github-circle-white-transparent.svg" alt="github" />
       GitHub
     </a>
     <button *ngIf="authService.isLoggedIn()" mat-button (click)="logout()">Log out</button>

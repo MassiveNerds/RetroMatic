@@ -1,3 +1,4 @@
-export * from './retroboard';
-export * from './bucket';
-export * from './note';
+export * from './Retroboard';
+export * from './Bucket';
+export * from './Note';
+export * from './User';

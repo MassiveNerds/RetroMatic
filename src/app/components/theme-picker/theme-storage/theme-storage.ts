@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { Injectable, EventEmitter } from '@angular/core';
 
 export interface DocsSiteTheme {
   href: string;
@@ -10,11 +10,9 @@ export interface DocsSiteTheme {
 
 @Injectable()
 export class ThemeStorage {
-  static storageKey = "docs-theme-storage-current";
+  static storageKey = 'docs-theme-storage-current';
 
-  onThemeUpdate: EventEmitter<DocsSiteTheme> = new EventEmitter<
-    DocsSiteTheme
-  >();
+  onThemeUpdate: EventEmitter<DocsSiteTheme> = new EventEmitter<DocsSiteTheme>();
 
   storeTheme(theme: DocsSiteTheme) {
     try {
