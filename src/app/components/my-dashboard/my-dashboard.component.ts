@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../types';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-my-dashboard',
@@ -44,8 +44,14 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
     this.userDetails = this.authService.getUserDetails();
     this.userSubscription = this.db
       .object<User>(`/users/${this.userDetails.uid}`)
-      .valueChanges()
+      .valueChanges().pipe(
+        take(1)
+      )
       .subscribe(user => {
+        if (!user) {
+          this.authService.logout();
+          return;
+        }
         this.displayName = user.displayName;
       });
     this.getFavorites();
