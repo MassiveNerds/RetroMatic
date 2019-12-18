@@ -68,6 +68,19 @@ export class AuthService {
         md5hash: md5(user.email),
         favorites: [],
       });
+    } else {
+      const snapshot = await firebase
+        .database()
+        .ref('/users')
+        .child(user.uid)
+        .once('value');
+      if (!snapshot.exists()) {
+        await this.db.object<User>(`/users/${user.uid}`).set({
+          displayName: user.displayName,
+          md5hash: md5(user.email),
+          favorites: [],
+        });
+      }
     }
   }
 
