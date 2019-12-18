@@ -1,20 +1,4 @@
-@import '../../../sass/variables';
-.success {
-  color: #3c763d;
-  background-color: #dff0d8;
-}
-
-.danger {
-  color: #a94442;
-  background-color: #f2dede;
-}
-
-.info {
-  color: #31708f;
-  background-color: #d9edf7;
-}
-
-.retro-note {
+.retroboard__note-item {
   height: auto !important;
   #noteButton {
     white-space: normal;
@@ -23,12 +7,12 @@
     border-radius: 10px;
     padding: 15px 15px 15px 15px;
   }
-  margin-bottom: 15px;
+  margin-bottom: 15px; 
 }
 
 .add-new-button {
   border-radius: 10px;
-  border: 2px dashed $border-color;
+  border: 2px dashed #aaa;
   opacity: 0.5;
   text-align: center;
   margin-left: 39px;
@@ -38,21 +22,35 @@
   margin: 0;
 }
 
-.fill-remaining-space {
-  flex: 1 1 auto;
-}
-
-.retroboard-toolbar
- {
-   button {
-    margin:5px 10px 0 0;
-   }
- }
-
 #html-container {
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: auto;
   height: 250px;
   font-size: 13px;
+}
+
+.retroboard__bucket-title {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 14px;
+  color: hsl(0, 0%, 45%);
+  margin: 0;
+}
+
+.retroboard__note-button-text {
+  white-space: pre-wrap;
+}
+
+.retro__notes-move {
+  transition: transform 1s;
+}
+
+.retroboard__action-bar {
+  button {
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }

@@ -1,0 +1,54 @@
+<form
+  class="register-page topography-svg-bg"
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  [formGroup]="registerForm"
+  (ngSubmit)="register()"
+>
+  <mat-card
+    class="mat-elevation-z6"
+    fxFlex.gt-lg="1 1 20%"
+    fxFlex.lg="1 1 30%"
+    fxFlex.md="1 1 40%"
+    fxFlex.sm="1 1 50%"
+    fxFlex.lt-sm="1 1 90%"
+  >
+    <mat-card-content fxLayout="column">
+      <p *ngIf="error" class="error-text mat-body-1"><strong>Oh snap!</strong> {{ error.message }}</p>
+      <mat-form-field>
+        <input #displayName type="text" matInput placeholder="Display name" formControlName="displayNameFormControl" />
+        <mat-error *ngIf="registerForm.controls['displayNameFormControl'].hasError('required')">
+          Dispay name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input #email type="email" matInput placeholder="Email address" formControlName="emailFormControl" />
+        <mat-error
+          *ngIf="
+            registerForm.controls['emailFormControl'].hasError('email') &&
+            !registerForm.controls['emailFormControl'].hasError('required')
+          "
+        >
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="registerForm.controls['emailFormControl'].hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input #password type="password" matInput placeholder="Password" formControlName="passwordFormControl" />
+        <mat-error *ngIf="registerForm.controls['passwordFormControl'].hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-raised-button type="submit" color="primary">Register</button>
+    </mat-card-actions>
+    <mat-card-actions align="center">
+      <p class="mat-body">
+        Already have an account? <button mat-button color="primary" (click)="goToLogin()">Login</button>
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</form>

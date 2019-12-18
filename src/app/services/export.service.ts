@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExportService {
-
-  constructor() { }
+  constructor() {}
 
   export(jsonData: any): string {
     let exportedHTML = `<pre class="html-pre"><code class="html">`;
@@ -35,7 +34,7 @@ function dateUserTableString(time) {
 function dataString(data, fxn) {
   let returnString = `
 &lt;div class='columnLayout three-equal' data-layout='three-equal'&gt;`;
-  Object.keys(data).map((item) => {
+  Object.keys(data).map(item => {
     Object.keys(data[item]).map((note, i) => {
       returnString += fxn(item, note, i, data);
     });
@@ -72,17 +71,11 @@ function noteString(item, note, i, data) {
         &lt;tr&gt;`;
   if (i === 0) {
     returnString += `
-          &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${
-      data[item][note].bucketName
-      }&lt;/p&gt;`;
+          &lt;p style='color:#333;background:#eee;' class='confluenceTh'&gt;${data[item][note].bucketName}&lt;/p&gt;`;
   }
   returnString += `
-          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${
-    data[item][note].votes
-    }&lt;/td&gt;
-          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${
-    data[item][note].message
-    }&lt;/td&gt;
+          &lt;td style='width:10%;${css}' class='confluenceTd'&gt;${data[item][note].votes}&lt;/td&gt;
+          &lt;td style='width:90%;${css}' class='confluenceTd'&gt;${data[item][note].message}&lt;/td&gt;
         &lt;/tr&gt;`;
   if (i === Object.keys(data[item]).length - 1) {
     returnString += `

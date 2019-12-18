@@ -1,0 +1,15 @@
+@mixin retroboard-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .retroboard__note {
+    background: mat-color($background, card);
+  }
+
+  .retroboard__action-bar {
+    background: mat-color($background, background);
+  }
+}

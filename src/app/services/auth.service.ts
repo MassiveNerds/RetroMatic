@@ -3,71 +3,86 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-
-type AuthOptions = {
-  email: string;
-  password: string;
-}
+import { AngularFireDatabase } from '@angular/fire/database';
+import { User } from '../types';
+import md5 from 'md5';
+import { uniqueNamesGenerator, Config, starWars } from 'unique-names-generator';
+import { Subscription } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  user$: Observable<firebase.User>;
+  userDetails: firebase.User = null;
 
-  private user: Observable<firebase.User>;
-  private userDetails: firebase.User = null;
-
-  constructor(private afAuth: AngularFireAuth, private router: Router) {
-    this.user = afAuth.authState;
-    this.user.subscribe(
-      (user) => {
-        if (user) {
-          this.userDetails = user;
-        }
-        else {
-          this.userDetails = null;
-        }
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
+    this.user$ = afAuth.authState;
+    this.user$.subscribe(user => {
+      if (user) {
+        this.userDetails = user;
+      } else {
+        this.userDetails = null;
       }
-    );
-  }
-
-  doRegister(options: AuthOptions) {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('register');
-      this.afAuth.auth.createUserWithEmailAndPassword(options.email, options.password)
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
     });
   }
 
-  doLogin(options: AuthOptions) {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('login');
-      this.afAuth.auth.signInWithEmailAndPassword(options.email, options.password)
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
+  async register({ email, password, displayName }: { email: string; password: string; displayName: string }) {
+    this.sendAuthenticationEvent('register');
+    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    await this.db.object<User>(`/users/${user.uid}`).set({
+      displayName,
+      md5hash: md5(email),
+      favorites: [],
     });
   }
 
-  doLoginWithGoogle() {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('google');
-      this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
-    });
+  async login({ email, password }: { email: string; password: string }) {
+    this.sendAuthenticationEvent('login');
+    const { user } = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    const snapshot = await firebase
+      .database()
+      .ref('/users')
+      .child(user.uid)
+      .once('value');
+    if (!snapshot.exists()) {
+      const config: Config = {
+        dictionaries: [starWars],
+        length: 1,
+      };
+      const characterName: string = uniqueNamesGenerator(config);
+      await this.db.object<User>(`/users/${user.uid}`).set({
+        displayName: characterName,
+        md5hash: md5(email),
+        favorites: [],
+      });
+    }
   }
 
-  doLoginAsGuest() {
-    return new Promise<any>((resolve, reject) => {
-      this.sendAuthenticationEvent('guest');
-      this.afAuth.auth.signInAnonymously()
-        .then(result => {
-          resolve(result);
-        }, error => reject(error));
+  async loginWithGoogle() {
+    this.sendAuthenticationEvent('google');
+    const { user, additionalUserInfo } = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    if (additionalUserInfo.isNewUser) {
+      await this.db.object<User>(`/users/${user.uid}`).set({
+        displayName: user.displayName,
+        md5hash: md5(user.email),
+        favorites: [],
+      });
+    }
+  }
+
+  async loginAsGuest() {
+    this.sendAuthenticationEvent('guest');
+    const { user } = await this.afAuth.auth.signInAnonymously();
+    const config: Config = {
+      dictionaries: [starWars],
+      length: 1,
+    };
+    const characterName: string = uniqueNamesGenerator(config);
+    await this.db.object<User>(`/users/${user.uid}`).set({
+      displayName: characterName,
+      md5hash: '',
+      favorites: [],
     });
   }
 
@@ -83,15 +98,28 @@ export class AuthService {
     return this.userDetails;
   }
 
-  logout() {
-    this.afAuth.auth.signOut()
-      .then(() => this.router.navigate(['/login']));
+  async getAppUser() {
+    const snapshot = await firebase
+      .database()
+      .ref('/users')
+      .child(this.userDetails.uid)
+      .once('value');
+    return snapshot.val();
+  }
+
+  async logout() {
+    await this.afAuth.auth.signOut();
+    this.router.navigate(['/login']);
+  }
+
+  resetPassword(email: string) {
+    return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 
   private sendAuthenticationEvent(eventName: string) {
     (<any>window).gtag('event', eventName, {
-      'event_category': 'authentication',
-      'event_label': 'origin'
+      event_category: 'authentication',
+      event_label: 'origin',
     });
   }
 }

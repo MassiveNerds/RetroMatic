@@ -1,63 +1,48 @@
-import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  NgModule
-} from "@angular/core";
-import { StyleManager } from "../style-manager/style-manager";
-import { ThemeStorage, DocsSiteTheme } from "./theme-storage/theme-storage";
-import {
-  MatButtonModule,
-  MatGridListModule,
-  MatIconModule,
-  MatMenuModule,
-  MatTooltipModule
-} from "@angular/material";
-import { CommonModule } from "@angular/common";
+import { Component, ViewEncapsulation, ChangeDetectionStrategy, NgModule } from '@angular/core';
+import { StyleManager } from '../style-manager/style-manager';
+import { ThemeStorage, DocsSiteTheme } from './theme-storage/theme-storage';
+import { MatButtonModule, MatGridListModule, MatIconModule, MatMenuModule, MatTooltipModule } from '@angular/material';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: "theme-picker",
-  templateUrl: "theme-picker.component.html",
-  styleUrls: ["theme-picker.component.scss"],
+  selector: 'app-theme-picker',
+  templateUrl: 'theme-picker.component.html',
+  styleUrls: ['theme-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  host: { "aria-hidden": "true" }
 })
 export class ThemePickerComponent {
-  currentTheme;
+  currentTheme: DocsSiteTheme;
 
   themes = [
     {
-      primary: "#673AB7",
-      accent: "#FFC107",
-      href: "deeppurple-amber.css",
-      isDark: false
-    },
-    {
-      primary: "#3F51B5",
-      accent: "#E91E63",
-      href: "indigo-pink.css",
+      primary: '#673AB7',
+      accent: '#FFC107',
+      href: 'deeppurple-amber.css',
       isDark: false,
-      isDefault: true
     },
     {
-      primary: "#E91E63",
-      accent: "#607D8B",
-      href: "pink-bluegrey.css",
-      isDark: true
+      primary: '#3F51B5',
+      accent: '#E91E63',
+      href: 'indigo-pink.css',
+      isDark: false,
+      isDefault: true,
     },
     {
-      primary: "#9C27B0",
-      accent: "#4CAF50",
-      href: "purple-green.css",
-      isDark: true
-    }
+      primary: '#E91E63',
+      accent: '#607D8B',
+      href: 'pink-bluegrey.css',
+      isDark: true,
+    },
+    {
+      primary: '#9C27B0',
+      accent: '#4CAF50',
+      href: 'purple-green.css',
+      isDark: true,
+    },
   ];
 
-  constructor(
-    public styleManager: StyleManager,
-    private _themeStorage: ThemeStorage
-  ) {
+  constructor(public styleManager: StyleManager, private _themeStorage: ThemeStorage) {
     const currentTheme = this._themeStorage.getStoredTheme();
     if (currentTheme) {
       this.installTheme(currentTheme);
@@ -68,9 +53,9 @@ export class ThemePickerComponent {
     this.currentTheme = this._getCurrentThemeFromHref(theme.href);
 
     if (theme.isDefault) {
-      this.styleManager.removeStyle("theme");
+      this.styleManager.removeStyle('theme');
     } else {
-      this.styleManager.setStyle("theme", `assets/${theme.href}`);
+      this.styleManager.setStyle('theme', `assets/${theme.href}`);
     }
 
     if (this.currentTheme) {
@@ -84,16 +69,9 @@ export class ThemePickerComponent {
 }
 
 @NgModule({
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatGridListModule,
-    MatTooltipModule,
-    CommonModule
-  ],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatGridListModule, MatTooltipModule, CommonModule],
   exports: [ThemePickerComponent],
   declarations: [ThemePickerComponent],
-  providers: [StyleManager, ThemeStorage]
+  providers: [StyleManager, ThemeStorage],
 })
 export class ThemePickerModule {}

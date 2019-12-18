@@ -1,14 +1,11 @@
-@import '../../../sass/variables';
-
 .the-header {
   z-index: 2;
 
   .title {
-    font-family:$accent-font;
+    font-family: Lobster, sans-serif;
     font-size: 60px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
-
 }
 
 .the-header__github-logo {
