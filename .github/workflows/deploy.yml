@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --ignore-scripts
 
-      - name: Rebuild node-sass
-        run: npm rebuild node-sass
-
       - name: Build
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
