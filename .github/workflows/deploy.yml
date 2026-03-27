@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
       - name: Configure git
         run: |
@@ -26,7 +25,7 @@ jobs:
           git config --global user.name "GitHub Actions"
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: npm install --legacy-peer-deps --ignore-scripts
 
       - name: Build
         env:
