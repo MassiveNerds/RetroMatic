@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "config": "ts-node --transpile-only --skip-project ./set-env.ts",
+    "config": "node ./set-env.js",
     "start": "ng serve",
     "build-themes": "bash ./tools/build-themes.sh",
     "build": "npm run config -- --environment=prod && npm run build-themes && ng build --prod",
