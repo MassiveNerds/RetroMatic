@@ -36,6 +36,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 import { ThemePickerComponent } from './components/theme-picker/theme-picker.component';
 import { ThemeStorage } from './components/theme-picker/theme-storage/theme-storage';
@@ -121,6 +122,7 @@ const appRoutes: Routes = [
     MatProgressBarModule,
     MatPaginatorModule,
     MatSnackBarModule,
+    MatSelectModule,
   ],
   entryComponents: [GlobalErrorHandlerModalComponent, CreateUpdateRetroModalComponent],
   providers: [
