@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as momentTimeZone from 'moment-timezone';
-import { Retroboard, Bucket, Note } from '../types';
+import { Retroboard, Bucket, Note, BucketTemplate } from '../types';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -93,6 +93,23 @@ export class RetroboardService {
       console.error(error);
       throw error;
     }
+  }
+
+  getBucketTemplates(): Observable<BucketTemplate[]> {
+    const uid = this.authService.getUserDetails().uid;
+    return this.db
+      .list<BucketTemplate>('/bucketTemplates', ref => ref.orderByChild('creatorId').equalTo(uid))
+      .snapshotChanges()
+      .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))));
+  }
+
+  async saveBucketTemplate(name: string, bucketNames: string[]) {
+    const uid = this.authService.getUserDetails().uid;
+    return this.db.list('/bucketTemplates').push({ name, bucketNames, creatorId: uid });
+  }
+
+  async deleteBucketTemplate(templateId: string) {
+    return this.db.object(`/bucketTemplates/${templateId}`).remove();
   }
 
   private sendRetrospectiveEvent(eventName: string) {

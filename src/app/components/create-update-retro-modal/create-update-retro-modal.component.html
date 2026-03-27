@@ -23,9 +23,37 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
       <mat-action-row fxLayout="column">
+        <mat-form-field *ngIf="!isUpdate && templates.length > 0">
+          <mat-label>Load a saved template</mat-label>
+          <mat-select [(ngModel)]="selectedTemplate" (ngModelChange)="applyTemplate($event)">
+            <mat-option *ngFor="let template of templates" [value]="template">
+              <span>{{ template.name }}</span>
+              <button
+                mat-icon-button
+                class="create-update-retro-modal__delete-template"
+                (click)="deleteTemplate(template, $event)"
+                title="Delete template"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <mat-form-field *ngFor="let bucket of buckets">
           <input matInput [(ngModel)]="bucket.name" />
         </mat-form-field>
+        <div *ngIf="!isUpdate" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" class="create-update-retro-modal__save-template">
+          <button *ngIf="!showSaveTemplate" mat-button (click)="showSaveTemplate = true">
+            <mat-icon>bookmark_border</mat-icon> Save as template
+          </button>
+          <ng-container *ngIf="showSaveTemplate">
+            <mat-form-field fxFlex>
+              <input matInput [(ngModel)]="templateName" placeholder="Template name" (keyup.enter)="saveTemplate()" />
+            </mat-form-field>
+            <button mat-button color="primary" (click)="saveTemplate()" [disabled]="!templateName.trim()">Save</button>
+            <button mat-button (click)="showSaveTemplate = false">Cancel</button>
+          </ng-container>
+        </div>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-card-content>
