@@ -30,7 +30,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   htmlExport: string;
   ngUnsubscribe: Subject<any> = new Subject();
   retroboardSubscription: Subscription;
-  userDetails: firebase.User;
+  userDetails: any;
   appUser: User;
   isFavorite$: Observable<boolean>;
 

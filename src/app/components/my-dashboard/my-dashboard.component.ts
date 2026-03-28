@@ -26,7 +26,7 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   pageSizeOptions = [5, 10, 25, 100];
   pageIndex = 0;
   displayName: string;
-  userDetails: firebase.User;
+  userDetails: any;
   favoritesTotal: number;
   favoritesPageSize = 5;
   favoritesPageSizeOptions = [5, 10, 25, 100];

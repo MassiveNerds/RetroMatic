@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
+import 'firebase/auth';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -13,8 +14,8 @@ import { Subscription } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  user$: Observable<firebase.User>;
-  userDetails: firebase.User = null;
+  user$: Observable<any>;
+  userDetails: any = null;
 
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
     this.user$ = afAuth.authState;
@@ -29,7 +30,7 @@ export class AuthService {
 
   async register({ email, password, displayName }: { email: string; password: string; displayName: string }) {
     this.sendAuthenticationEvent('register');
-    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    const { user } = await this.afAuth.createUserWithEmailAndPassword(email, password);
     await this.db.object<User>(`/users/${user.uid}`).set({
       displayName,
       md5hash: md5(email),
@@ -39,12 +40,8 @@ export class AuthService {
 
   async login({ email, password }: { email: string; password: string }) {
     this.sendAuthenticationEvent('login');
-    const { user } = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    const snapshot = await firebase
-      .database()
-      .ref('/users')
-      .child(user.uid)
-      .once('value');
+    const { user } = await this.afAuth.signInWithEmailAndPassword(email, password);
+    const snapshot = await this.db.database.ref('/users').child(user.uid).once('value');
     if (!snapshot.exists()) {
       const config: Config = {
         dictionaries: [starWars],
@@ -61,7 +58,7 @@ export class AuthService {
 
   async loginWithGoogle() {
     this.sendAuthenticationEvent('google');
-    const { user, additionalUserInfo } = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    const { user, additionalUserInfo } = await this.afAuth.signInWithPopup(new (firebase as any).auth.GoogleAuthProvider());
     if (additionalUserInfo.isNewUser) {
       await this.db.object<User>(`/users/${user.uid}`).set({
         displayName: user.displayName,
@@ -69,11 +66,7 @@ export class AuthService {
         favorites: [],
       });
     } else {
-      const snapshot = await firebase
-        .database()
-        .ref('/users')
-        .child(user.uid)
-        .once('value');
+      const snapshot = await this.db.database.ref('/users').child(user.uid).once('value');
       if (!snapshot.exists()) {
         await this.db.object<User>(`/users/${user.uid}`).set({
           displayName: user.displayName,
@@ -86,7 +79,7 @@ export class AuthService {
 
   async loginAsGuest() {
     this.sendAuthenticationEvent('guest');
-    const { user } = await this.afAuth.auth.signInAnonymously();
+    const { user } = await this.afAuth.signInAnonymously();
     const config: Config = {
       dictionaries: [starWars],
       length: 1,
@@ -112,21 +105,17 @@ export class AuthService {
   }
 
   async getAppUser() {
-    const snapshot = await firebase
-      .database()
-      .ref('/users')
-      .child(this.userDetails.uid)
-      .once('value');
+    const snapshot = await this.db.database.ref('/users').child(this.userDetails.uid).once('value');
     return snapshot.val();
   }
 
   async logout() {
-    await this.afAuth.auth.signOut();
+    await this.afAuth.signOut();
     this.router.navigate(['/login']);
   }
 
   resetPassword(email: string) {
-    return this.afAuth.auth.sendPasswordResetEmail(email);
+    return this.afAuth.sendPasswordResetEmail(email);
   }
 
   private sendAuthenticationEvent(eventName: string) {
