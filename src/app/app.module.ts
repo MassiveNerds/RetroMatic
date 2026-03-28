@@ -38,7 +38,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 
-import { ThemePickerComponent } from './components/theme-picker/theme-picker.component';
+import { ThemePickerModule } from './components/theme-picker/theme-picker.component';
 import { ThemeStorage } from './components/theme-picker/theme-storage/theme-storage';
 import { StyleManager } from './components/style-manager';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
@@ -88,7 +88,6 @@ const appRoutes: Routes = [
     MyDashboardComponent,
     GlobalErrorHandlerModalComponent,
     TheHeaderComponent,
-    ThemePickerComponent,
     CreateUpdateRetroModalComponent,
     TransitionGroupItemDirective,
     TransitionGroupComponent,
@@ -123,6 +122,7 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatSnackBarModule,
     MatSelectModule,
+    ThemePickerModule,
   ],
 providers: [
     AuthGuard,

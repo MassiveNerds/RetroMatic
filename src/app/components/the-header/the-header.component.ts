@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./the-header.component.scss'],
 })
 export class TheHeaderComponent {
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
 
   logout() {
     this.authService.logout();
