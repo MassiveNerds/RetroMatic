@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { GlobalErrorHandlerModalComponent } from './components/global-error-handler-modal/global-error-handler-modal.component';
 import { UIErrorHandler } from './components/global-error-handler-modal/ui-error-handler';
 import { AppComponent } from './app.component';
