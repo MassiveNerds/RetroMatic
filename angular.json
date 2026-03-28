@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "agile-retrospective:build"
+            "buildTarget": "agile-retrospective:build"
           },
           "configurations": {
             "prod": {
-              "browserTarget": "agile-retrospective:build:prod"
+              "buildTarget": "agile-retrospective:build:prod"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "agile-retrospective:build"
+            "buildTarget": "agile-retrospective:build"
           }
         },
         "test": {
@@ -117,5 +117,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
