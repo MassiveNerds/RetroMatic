@@ -36,6 +36,9 @@ testem.log
 /typings
 yarn-error.log
 
+# Claude Code
+.claude/settings.local.json
+
 # System Files
 firebase.ts
 environment.prod.ts
