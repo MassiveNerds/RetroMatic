@@ -1,14 +1,14 @@
 @use '@angular/material' as mat;
 
 @mixin retroboard-theme($theme) {
-  $color-config: mat.get-color-config($theme);
+  $color-config: mat.m2-get-color-config($theme);
   $background: map-get($color-config, background);
 
   .retroboard__note {
-    background: mat.get-color-from-palette($background, card);
+    background: mat.m2-get-color-from-palette($background, card);
   }
 
   .retroboard__action-bar {
-    background: mat.get-color-from-palette($background, background);
+    background: mat.m2-get-color-from-palette($background, background);
   }
 }
