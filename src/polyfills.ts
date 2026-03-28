@@ -38,8 +38,7 @@
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
 
 /** Evergreen browsers require these. **/
-import 'core-js/es6/reflect';
-import 'core-js/es7/reflect';
+// core-js reflect polyfills not needed with Angular 20 + TypeScript 5.8
 
 /**
  * Required to support Web Animations `@angular/animation`.
