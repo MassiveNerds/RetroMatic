@@ -20,7 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TheHeaderComponent } from './components/the-header/the-header.component';
 import { CreateUpdateRetroModalComponent } from './components/create-update-retro-modal/create-update-retro-modal.component';
 
-import { MatInputModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -124,8 +124,7 @@ const appRoutes: Routes = [
     MatSnackBarModule,
     MatSelectModule,
   ],
-  entryComponents: [GlobalErrorHandlerModalComponent, CreateUpdateRetroModalComponent],
-  providers: [
+providers: [
     AuthGuard,
     StyleManager,
     ThemeStorage,

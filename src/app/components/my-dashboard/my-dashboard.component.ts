@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { MatDialog, MatDialogRef, PageEvent } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
 import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard } from '../../types/Retroboard';

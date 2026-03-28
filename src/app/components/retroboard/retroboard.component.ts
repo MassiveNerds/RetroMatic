@@ -4,7 +4,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Subject } from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs/operators';
 import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
 import { ExportService } from '../../services/export.service';
