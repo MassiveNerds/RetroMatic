@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../types';
 import { Database, ref, list, objectVal, query, orderByChild, equalTo, get } from '@angular/fire/database';
-import { map, take } from 'rxjs/operators';
+import { filter, map, take } from 'rxjs/operators';
 
 @Component({
   standalone: false,
@@ -42,19 +42,23 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.getRetroboards();
-    this.userDetails = this.authService.getUserDetails();
-    this.userSubscription = objectVal<User>(ref(this.db, `/users/${this.userDetails.uid}`)).pipe(
+    this.userSubscription = this.authService.user$.pipe(
+        filter(user => user != null),
         take(1)
       )
-      .subscribe(user => {
-        if (!user) {
-          this.authService.logout();
-          return;
-        }
-        this.displayName = user.displayName;
+      .subscribe(firebaseUser => {
+        this.userDetails = firebaseUser;
+        this.getRetroboards();
+        this.getFavorites();
+        objectVal<User>(ref(this.db, `/users/${firebaseUser.uid}`)).pipe(take(1))
+          .subscribe(user => {
+            if (!user) {
+              this.authService.logout();
+              return;
+            }
+            this.displayName = user.displayName;
+          });
       });
-    this.getFavorites();
   }
 
   ngOnDestroy() {
