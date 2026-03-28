@@ -29,22 +29,22 @@
               },
               {
                 "input": "src/assets/pink-bluegrey.css",
-                "lazy": true,
+                "inject": false,
                 "bundleName": "pink-bluegrey"
               },
               {
                 "input": "src/assets/deeppurple-amber.css",
-                "lazy": true,
+                "inject": false,
                 "bundleName": "deeppurple-amber"
               },
               {
                 "input": "src/assets/indigo-pink.css",
-                "lazy": true,
+                "inject": false,
                 "bundleName": "indigo-pink"
               },
               {
                 "input": "src/assets/purple-green.css",
-                "lazy": true,
+                "inject": false,
                 "bundleName": "purple-green"
               }
             ],
@@ -106,7 +106,7 @@
           }
         }
       }
-    },
+    }
   },
   "defaultProject": "agile-retrospective",
   "schematics": {
