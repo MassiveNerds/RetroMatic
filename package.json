@@ -38,6 +38,9 @@
     "unique-names-generator": "^4.1.1",
     "zone.js": "^0.8.26"
   },
+  "overrides": {
+    "node-sass": "npm:sass@^1.98.0"
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.6.8",
     "@angular/cli": "^6.0.8",
