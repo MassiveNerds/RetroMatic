@@ -14,18 +14,18 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^15.2.10",
-    "@angular/cdk": "^15.2.9",
-    "@angular/common": "^15.2.10",
-    "@angular/compiler": "^15.2.10",
-    "@angular/core": "^15.2.10",
+    "@angular/animations": "^16.2.12",
+    "@angular/cdk": "^16.2.14",
+    "@angular/common": "^16.2.12",
+    "@angular/compiler": "^16.2.12",
+    "@angular/core": "^16.2.12",
     "@angular/fire": "^7.6.1",
-    "@angular/forms": "^15.2.10",
-    "@angular/material": "^15.2.9",
-    "@angular/platform-browser": "^15.2.10",
-    "@angular/platform-browser-dynamic": "^15.2.10",
-    "@angular/router": "^15.2.10",
-    "@ngbracket/ngx-layout": "^15.0.0",
+    "@angular/forms": "^16.2.12",
+    "@angular/material": "^16.2.14",
+    "@angular/platform-browser": "^16.2.12",
+    "@angular/platform-browser-dynamic": "^16.2.12",
+    "@angular/router": "^16.2.12",
+    "@ngbracket/ngx-layout": "^16.0.0",
     "core-js": "^2.5.7",
     "dotenv": "^4.0.0",
     "firebase": "^9.23.0",
@@ -37,17 +37,17 @@
     "stacktrace-js": "^2.0.0",
     "tslib": "^2.3.0",
     "unique-names-generator": "^4.1.1",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.13.3"
   },
   "overrides": {
     "node-sass": "npm:sass@^1.98.0",
     "@babel/runtime": "^7.26.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~15.2.11",
-    "@angular/cli": "^15.2.11",
-    "@angular/compiler-cli": "^15.2.10",
-    "@angular/language-service": "^15.2.10",
+    "@angular-devkit/build-angular": "~16.2.16",
+    "@angular/cli": "^16.2.16",
+    "@angular/compiler-cli": "^16.2.12",
+    "@angular/language-service": "^16.2.12",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "^6.0.114",
@@ -66,6 +66,6 @@
     "sass-loader": "^7.3.1",
     "ts-node": "^3.3.0",
     "tslint": "~5.3.2",
-    "typescript": "~4.9.5"
+    "typescript": "~5.1.6"
   }
 }
