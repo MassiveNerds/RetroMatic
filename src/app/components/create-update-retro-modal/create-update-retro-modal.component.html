@@ -26,6 +26,7 @@
         <mat-form-field *ngIf="!isUpdate && templates.length > 0">
           <mat-label>Load a saved template</mat-label>
           <mat-select [(ngModel)]="selectedTemplate" (ngModelChange)="applyTemplate($event)">
+            <mat-select-trigger>{{ selectedTemplate?.name }}</mat-select-trigger>
             <mat-option *ngFor="let template of templates" [value]="template">
               <span>{{ template.name }}</span>
               <button
