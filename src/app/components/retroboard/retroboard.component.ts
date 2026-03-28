@@ -13,6 +13,7 @@ import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard, Bucket, Note, User } from '../../types';
 
 @Component({
+  standalone: false,
   selector: 'app-retroboard',
   templateUrl: './retroboard.component.html',
   styleUrls: ['./retroboard.component.scss'],

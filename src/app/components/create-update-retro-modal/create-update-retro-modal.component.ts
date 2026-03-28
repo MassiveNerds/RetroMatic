@@ -7,6 +7,7 @@ import { Bucket, BucketTemplate } from '../../types';
 const DEFAULT_BUCKETS = [{ name: 'What went well?' }, { name: 'What can be improved?' }, { name: 'Action items' }];
 
 @Component({
+  standalone: false,
   selector: 'app-create-update-retro-modal',
   templateUrl: './create-update-retro-modal.component.html',
   styleUrls: ['./create-update-retro-modal.component.scss'],

@@ -2,6 +2,7 @@ import { Component, ContentChildren, Input, QueryList, AfterContentInit } from '
 import { TransitionGroupItemDirective } from '../../directives/transition-group-item.directive';
 
 @Component({
+  standalone: false,
   selector: 'app-transition-group',
   templateUrl: './transition-group.component.html',
   styleUrls: ['./transition-group.component.scss'],

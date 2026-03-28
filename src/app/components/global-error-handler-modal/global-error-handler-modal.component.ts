@@ -7,6 +7,7 @@ export interface DialogData {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-global-error-handler-modal',
   templateUrl: './global-error-handler-modal.component.html',
   styleUrls: ['./global-error-handler-modal.component.scss'],

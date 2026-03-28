@@ -11,6 +11,7 @@ import { Database, ref, list, objectVal, query, orderByChild, equalTo, get } fro
 import { map, take } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-my-dashboard',
   templateUrl: './my-dashboard.component.html',
   styleUrls: ['./my-dashboard.component.scss'],
