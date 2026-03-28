@@ -36,10 +36,6 @@ testem.log
 /typings
 yarn-error.log
 
-# e2e
-/e2e/*.js
-/e2e/*.map
-
 # System Files
 firebase.ts
 environment.prod.ts
