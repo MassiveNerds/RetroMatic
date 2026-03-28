@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Subject } from 'rxjs';

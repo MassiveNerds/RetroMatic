@@ -7,7 +7,7 @@ import { Retroboard } from '../../types/Retroboard';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../types';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { map, take } from 'rxjs/operators';
 
 @Component({

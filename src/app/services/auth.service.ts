@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { GoogleAuthProvider } from 'firebase/auth';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { User } from '../types';
 import md5 from 'md5';
 import { uniqueNamesGenerator, Config, starWars } from 'unique-names-generator';
@@ -58,7 +57,7 @@ export class AuthService {
 
   async loginWithGoogle() {
     this.sendAuthenticationEvent('google');
-    const { user, additionalUserInfo } = await this.afAuth.signInWithPopup(new (firebase as any).auth.GoogleAuthProvider());
+    const { user, additionalUserInfo } = await this.afAuth.signInWithPopup(new GoogleAuthProvider());
     if (additionalUserInfo.isNewUser) {
       await this.db.object<User>(`/users/${user.uid}`).set({
         displayName: user.displayName,
