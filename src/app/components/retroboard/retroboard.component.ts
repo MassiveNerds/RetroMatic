@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Database, ref, list, object, objectVal, query, orderByChild, equalTo, push, set, update, remove, get } from '@angular/fire/database';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -35,7 +35,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   isFavorite$: Observable<boolean>;
 
   constructor(
-    private db: AngularFireDatabase,
+    private db: Database,
     private route: ActivatedRoute,
     private authService: AuthService,
     private retroboardService: RetroboardService,
@@ -67,9 +67,9 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   private getRetroboard(id: string) {
     this.retroboardSubscription = this.retroboardService.getRetroboard(id).subscribe(retroboard => {
       this.retroboard = retroboard;
-      this.isFavorite$ = this.db
-        .object<boolean>(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`)
-        .valueChanges();
+      this.isFavorite$ = objectVal<boolean>(
+        ref(this.db, `/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`)
+      );
     });
   }
 
@@ -78,34 +78,22 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     this.userDetails = this.authService.getUserDetails();
     this.getRetroboard(retroboardId);
 
-    this.buckets$ = this.db
-      .list(`/buckets`, ref => ref.orderByChild('retroboardId').equalTo(retroboardId))
-      .snapshotChanges()
-      .pipe(
-        map(actions => {
-          return actions.map(a => ({
-            key: a.key,
-            ...(a.payload.val() as any),
-          }));
-        }),
-        map(buckets => {
-          return buckets.map((bucket: Bucket) => {
-            bucket.notes$ = this.db
-              .list<Note>(`/notes`, ref => ref.orderByChild('bucketId').equalTo(bucket.key))
-              .snapshotChanges()
-              .pipe(
-                map(actions =>
-                  actions.map(a => ({
-                    key: a.key,
-                    ...(a.payload.val() as any),
-                  }))
-                ),
-                map((notes: Note[]) => notes.sort(this.compareNotes))
-              );
-            return bucket;
-          });
-        })
-      );
+    this.buckets$ = list(
+      query(ref(this.db, '/buckets'), orderByChild('retroboardId'), equalTo(retroboardId))
+    ).pipe(
+      map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) }))),
+      map(buckets => {
+        return buckets.map((bucket: Bucket) => {
+          bucket.notes$ = list(
+            query(ref(this.db, '/notes'), orderByChild('bucketId'), equalTo(bucket.key))
+          ).pipe(
+            map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) }))),
+            map((notes: Note[]) => notes.sort(this.compareNotes))
+          );
+          return bucket;
+        });
+      })
+    );
 
     this.jsonData = {};
     this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(buckets => {
@@ -128,25 +116,24 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.next(null);
     this.ngUnsubscribe.complete();
     this.retroboardSubscription.unsubscribe();
   }
 
   async toggleFavorite() {
-    const dataSnapshot = await this.db
-      .object(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`)
-      .query.once('value');
+    const favRef = ref(this.db, `/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`);
+    const dataSnapshot = await get(favRef);
     if (dataSnapshot.exists()) {
-      await this.db.object(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`).set(!dataSnapshot.val());
+      await set(favRef, !dataSnapshot.val());
     } else {
-      await this.db.object(`/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`).set(true);
+      await set(favRef, true);
     }
   }
 
   async addNote(message: string) {
     this.appUser = await this.authService.getAppUser();
-    await this.db.list(`/notes`).push({
+    await push(ref(this.db, '/notes'), {
       creator: this.appUser.displayName,
       creatorId: this.userDetails.uid,
       retroboardId: this.retroboard.key,
@@ -159,7 +146,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   async updateNote(message: string) {
-    await this.db.object(`/notes/${this.activeNote.key}`).update({ message: message });
+    await update(ref(this.db, `/notes/${this.activeNote.key}`), { message: message });
     this.dialogRef.close();
   }
 
@@ -185,13 +172,10 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       0
     );
 
-    this.db
-      .object(`/notes/${this.activeNote.key}`)
-      .update({
-        votes: this.activeNote.votes,
-        voteCount: this.activeNote.voteCount,
-      })
-      .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
+    update(ref(this.db, `/notes/${this.activeNote.key}`), {
+      votes: this.activeNote.votes,
+      voteCount: this.activeNote.voteCount,
+    }).then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
   downvote(bucket: Bucket, note: Note) {
@@ -216,21 +200,15 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
       0
     );
 
-    this.db
-      .object(`/notes/${this.activeNote.key}`)
-      .update({
-        votes: this.activeNote.votes,
-        voteCount: this.activeNote.voteCount,
-      })
-      .then(() => (this.dialogRef ? this.dialogRef.close() : ''));
+    update(ref(this.db, `/notes/${this.activeNote.key}`), {
+      votes: this.activeNote.votes,
+      voteCount: this.activeNote.voteCount,
+    }).then(() => (this.dialogRef ? this.dialogRef.close() : ''));
   }
 
   deleteNote() {
     delete this.jsonData[this.activeBucket.key][this.activeNote.key];
-    this.db
-      .object(`/notes/${this.activeNote.key}`)
-      .remove()
-      .then(() => this.dialogRef.close());
+    remove(ref(this.db, `/notes/${this.activeNote.key}`)).then(() => this.dialogRef.close());
   }
 
   hasVoted(votes: { [userId: string]: boolean }, voted: boolean) {

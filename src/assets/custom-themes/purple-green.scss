@@ -1,10 +1,11 @@
-@import '../../app-theme';
-@import '../../highlightjs/material-dark';
+@use '@angular/material' as mat;
+@use '../../app-theme' as *;
+@use '../../highlightjs/material-dark' as hljs;
 
 // Define the dark theme.
-$primary: mat-palette($mat-purple);
-$accent: mat-palette($mat-green, A200, A100, A400);
+$primary: mat.define-palette(mat.$purple-palette);
+$accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
 
-$theme: mat-dark-theme($primary, $accent);
-@include angular-material-theme($theme);
+$theme: mat.define-dark-theme((color: (primary: $primary, accent: $accent)));
+@include mat.all-component-themes($theme);
 @include retromatic-app-theme($theme);

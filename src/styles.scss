@@ -1,7 +1,8 @@
-@import './app-theme';
+@use '@angular/material' as mat;
+@use './app-theme' as appTheme;
 
 // Include material core styles.
-@include mat-core();
+@include mat.core();
 
-@include angular-material-theme($theme);
-@include retromatic-app-theme($theme);
+@include mat.all-component-themes(appTheme.$theme);
+@include appTheme.retromatic-app-theme(appTheme.$theme);

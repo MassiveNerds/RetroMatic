@@ -6,9 +6,9 @@ import { UIErrorHandler } from './components/global-error-handler-modal/ui-error
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { RetroBoardComponent } from './components/retroboard/retroboard.component';
 import { LoginComponent } from './components/login/login.component';
@@ -96,9 +96,6 @@ const appRoutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
-    AngularFireAuthModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(
@@ -124,10 +121,13 @@ const appRoutes: Routes = [
     MatSelectModule,
     ThemePickerModule,
   ],
-providers: [
+  providers: [
     AuthGuard,
     StyleManager,
     ThemeStorage,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideDatabase(() => getDatabase()),
+    provideAuth(() => getAuth()),
     {
       provide: ErrorHandler,
       useClass: UIErrorHandler,

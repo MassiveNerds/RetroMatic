@@ -7,7 +7,7 @@ import { Retroboard } from '../../types/Retroboard';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../types';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Database, ref, list, objectVal, query, orderByChild, equalTo, get } from '@angular/fire/database';
 import { map, take } from 'rxjs/operators';
 
 @Component({
@@ -36,16 +36,14 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   constructor(
     public dialog: MatDialog,
     private retroboardService: RetroboardService,
-    private db: AngularFireDatabase,
+    private db: Database,
     private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.getRetroboards();
     this.userDetails = this.authService.getUserDetails();
-    this.userSubscription = this.db
-      .object<User>(`/users/${this.userDetails.uid}`)
-      .valueChanges().pipe(
+    this.userSubscription = objectVal<User>(ref(this.db, `/users/${this.userDetails.uid}`)).pipe(
         take(1)
       )
       .subscribe(user => {
@@ -77,13 +75,12 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
   }
 
   async getFavorites() {
-    const dataSnapshot = await this.db.list(`/users/${this.userDetails.uid}/favorites`).query.once('value');
+    const dataSnapshot = await get(ref(this.db, `/users/${this.userDetails.uid}/favorites`));
     const favoritesIndex: { [key: string]: boolean } = dataSnapshot.val() || {};
     const favorites = Object.keys(favoritesIndex).filter(key => favoritesIndex[key]);
-    this.favoritesSubscription = this.db
-      .list<Retroboard>(`/retroboards`)
-      .snapshotChanges()
-      .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))))
+    this.favoritesSubscription = list(ref(this.db, '/retroboards')).pipe(
+        map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) })))
+      )
       .subscribe(retroboards => {
         const favoriteRetroboards = retroboards.filter(retroboard => favorites.includes(retroboard.key));
         this.favoritesTotal = favoriteRetroboards.length;
