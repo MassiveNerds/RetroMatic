@@ -47,7 +47,9 @@ export class MyDashboardComponent implements OnInit, OnDestroy {
         take(1)
       )
       .subscribe(firebaseUser => {
-        this.userDetails = firebaseUser;
+        // Store only plain primitives — the raw Firebase User object has internal
+        // circular references that cause Angular's change detector to stack overflow.
+        this.userDetails = { uid: firebaseUser.uid, email: firebaseUser.email };
         this.getRetroboards();
         this.getFavorites();
         objectVal<User>(ref(this.db, `/users/${firebaseUser.uid}`)).pipe(take(1))

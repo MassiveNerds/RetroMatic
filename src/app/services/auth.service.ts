@@ -28,7 +28,9 @@ export class AuthService {
   constructor(private auth: Auth, private db: Database, private router: Router) {
     this.user$ = authState(this.auth);
     this.user$.subscribe(user => {
-      this.userDetails = user || null;
+      // Store only plain primitives — the raw Firebase User object has internal
+      // circular references that cause Angular's change detector to stack overflow.
+      this.userDetails = user ? { uid: user.uid, email: user.email, displayName: user.displayName } : null;
     });
   }
 
