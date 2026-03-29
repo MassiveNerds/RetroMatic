@@ -1,27 +1,120 @@
 .login-page {
-  height: calc(100vh - 64px);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100vh;
 
-  &__card {
-    width: clamp(280px, 40vw, 420px);
-  }
-
-  &__card-content {
+  &__left {
+    flex: 0 0 40%;
+    background: linear-gradient(135deg, #2d1b69 0%, #13132a 100%);
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
-}
 
-.error-text {
-  color: tomato;
-}
+  &__brand {
+    color: #a78bfa;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
 
-.login__reset-password-button {
-  font-weight: 400;
-}
+  &__tagline {
+    color: #7c6aaa;
+    font-size: 15px;
+    line-height: 1.6;
+  }
 
-.login__lower-options {
-  text-align: center;
+  &__right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    background: var(--mat-sys-background);
+  }
+
+  &__form {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__form-title {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__error {
+    color: #f87171;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  &__google-btn {
+    width: 100%;
+    background: #ffffff;
+    color: #1e293b;
+    font-weight: 600;
+  }
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 12px;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--mat-sys-surface-variant);
+    }
+  }
+
+  &__field {
+    width: 100%;
+  }
+
+  &__submit-btn {
+    width: 100%;
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 13px;
+  }
+
+  &__link-sep {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__link-btn {
+    font-size: 13px;
+    padding: 0 4px;
+  }
+
+  &__guest {
+    text-align: center;
+    border-top: 1px solid var(--mat-sys-surface-variant);
+    padding-top: 12px;
+
+    button {
+      width: 100%;
+    }
+  }
 }
