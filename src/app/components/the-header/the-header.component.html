@@ -3,7 +3,9 @@
   <span class="the-header__spacer"></span>
   <span class="the-header__desktop-nav">
     <button *ngIf="authService.isLoggedIn()" mat-button [routerLink]="['/home']">My Dashboard</button>
-    <app-theme-picker></app-theme-picker>
+    <button mat-icon-button (click)="themeService.toggle()" [title]="themeService.isDark ? 'Switch to light mode' : 'Switch to dark mode'" aria-label="Toggle colour scheme">
+      <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
     <a mat-button href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
       <img class="the-header__github-logo" src="../../assets/github-circle-white-transparent.svg" alt="github" />
       GitHub
@@ -11,6 +13,9 @@
     <button *ngIf="authService.isLoggedIn()" mat-button (click)="logout()">Log out</button>
   </span>
   <span class="the-header__mobile-nav">
+    <button mat-icon-button (click)="themeService.toggle()" aria-label="Toggle colour scheme">
+      <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
     <button mat-icon-button [matMenuTriggerFor]="appMenu">
       <mat-icon>more_vert</mat-icon>
     </button>

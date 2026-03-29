@@ -1,8 +1,76 @@
 @use '@angular/material' as mat;
-@use './app-theme' as appTheme;
 
-// Include material core styles.
 @include mat.core();
 
-@include mat.all-component-themes(appTheme.$theme);
-@include appTheme.retromatic-app-theme(appTheme.$theme);
+// Dark theme (default) — violet seed
+$rm-dark: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$violet-palette,
+  ),
+));
+
+// Light theme — same seed, different type
+$rm-light: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+  ),
+));
+
+// Apply dark theme globally
+html {
+  @include mat.all-component-themes($rm-dark);
+
+  // Override M3 surface tokens with our custom dark palette
+  --mat-sys-background: #13132a;
+  --mat-sys-surface: #1e1e38;
+  --mat-sys-surface-variant: #2d2d44;
+  --mat-sys-on-surface: #e2e8f0;
+  --mat-sys-on-surface-variant: #94a3b8;
+}
+
+// Switch to light theme with .light class on <html>
+html.light {
+  @include mat.all-component-colors($rm-light);
+
+  --mat-sys-background: #f8fafc;
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-variant: #f1f5f9;
+  --mat-sys-on-surface: #1e293b;
+  --mat-sys-on-surface-variant: #64748b;
+}
+
+// Global base styles
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-surface);
+}
+
+// Primary header (retro title bar)
+.primary-header {
+  background-color: var(--mat-sys-surface);
+  height: 64px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--mat-sys-surface-variant);
+
+  h1 {
+    flex: 1;
+    font-weight: 500;
+    font-size: 20px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+// Dialog container
+.custom-dialog-container .mat-mdc-dialog-container {
+  padding: 0;
+}

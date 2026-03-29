@@ -23,29 +23,6 @@
             "styles": [
               {
                 "input": "src/styles.scss"
-              },
-              {
-                "input": "src/highlightjs/material-light.scss"
-              },
-              {
-                "input": "src/assets/pink-bluegrey.css",
-                "inject": false,
-                "bundleName": "pink-bluegrey"
-              },
-              {
-                "input": "src/assets/deeppurple-amber.css",
-                "inject": false,
-                "bundleName": "deeppurple-amber"
-              },
-              {
-                "input": "src/assets/indigo-pink.css",
-                "inject": false,
-                "bundleName": "indigo-pink"
-              },
-              {
-                "input": "src/assets/purple-green.css",
-                "inject": false,
-                "bundleName": "purple-green"
               }
             ],
             "scripts": []
