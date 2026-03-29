@@ -1,5 +1,6 @@
 .my-dashboard {
   overflow: hidden;
+
   .card-title {
     text-transform: uppercase;
     font-weight: 500;
@@ -7,14 +8,36 @@
     color: hsl(0, 0%, 45%);
     margin: 0;
   }
+
   .my-dashboard__loading-retros {
     min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .my-dashboard__content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: flex-start;
+  }
+
+  .my-dashboard__card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spacer { flex: 1; }
+
+  .my-dashboard__nav-list {
+    display: flex;
+    flex-direction: column;
   }
 }
-.mat-card-header-text {
-  justify-content: center;
-  align-items: center;
-}
+
 .my-dashboard__favorites,
 .my-dashboard__retrospectives {
   margin: 20px 0;

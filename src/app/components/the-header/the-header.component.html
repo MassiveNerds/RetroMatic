@@ -1,7 +1,7 @@
 <mat-toolbar class="the-header" color="primary">
-  <span [ngStyle.lt-md]="{ 'font-size.px': 40 }" class="title">RetroMatic</span>
-  <span fxFlex class="spacer"></span>
-  <span fxHide.lt-md>
+  <span class="title">RetroMatic</span>
+  <span class="spacer"></span>
+  <span class="the-header__desktop-nav">
     <button *ngIf="authService.isLoggedIn()" mat-button [routerLink]="['/home']">My Dashboard</button>
     <app-theme-picker></app-theme-picker>
     <a mat-button href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
@@ -10,15 +10,13 @@
     </a>
     <button *ngIf="authService.isLoggedIn()" mat-button (click)="logout()">Log out</button>
   </span>
-  <span fxHide.gt-sm>
+  <span class="the-header__mobile-nav">
     <button mat-icon-button [matMenuTriggerFor]="appMenu">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #appMenu="matMenu">
       <button *ngIf="authService.isLoggedIn()" mat-menu-item [routerLink]="['/home']">My Dashboard</button>
-      <a mat-menu-item href="https://github.com/wordythebyrd/RetroMatic" target="_blank" aria-label="GitHub Repository">
-        GitHub
-      </a>
+      <a mat-menu-item href="https://github.com/wordythebyrd/RetroMatic" target="_blank">GitHub</a>
       <button *ngIf="authService.isLoggedIn()" mat-menu-item (click)="logout()">Log out</button>
     </mat-menu>
   </span>

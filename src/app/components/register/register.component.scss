@@ -1,5 +1,17 @@
 .register-page {
   height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__card {
+    width: clamp(280px, 40vw, 420px);
+  }
+
+  &__card-content {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .error-text {

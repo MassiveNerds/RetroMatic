@@ -1,20 +1,10 @@
 <form
   class="login-page topography-svg-bg"
-  fxLayout="row"
-  fxLayoutGap="20px"
-  fxLayoutAlign="center center"
   [formGroup]="loginForm"
   (ngSubmit)="login()"
 >
-  <mat-card
-    class="mat-elevation-z6"
-    fxFlex.gt-lg="1 1 20%"
-    fxFlex.lg="1 1 30%"
-    fxFlex.md="1 1 40%"
-    fxFlex.sm="1 1 70%"
-    fxFlex.lt-sm="1 1 90%"
-  >
-    <mat-card-content fxLayout="column">
+  <mat-card class="login-page__card mat-elevation-z6">
+    <mat-card-content class="login-page__card-content">
       <p *ngIf="error" class="error-text mat-body-1"><strong>Oh snap!</strong> {{ error.message }}</p>
       <mat-form-field>
         <input #email type="email" matInput placeholder="Email address" formControlName="emailFormControl" />

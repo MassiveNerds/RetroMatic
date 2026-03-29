@@ -2,8 +2,8 @@
   <div class="primary-header">
     <h1>{{ retroboard?.name }}</h1>
   </div>
-  <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="5px">
-    <mat-card fxFlex="33%" *ngFor="let bucket of buckets$ | async">
+  <div class="retroboard__columns">
+    <mat-card *ngFor="let bucket of buckets$ | async">
       <mat-card-header>
         <mat-card-title class="retroboard__bucket-title">{{ bucket.name }}</mat-card-title>
       </mat-card-header>
@@ -15,7 +15,7 @@
               class="retroboard__note-item"
               *ngFor="let note of bucket.notes$ | async; trackBy: trackByFn"
             >
-              <div fxFlex fxLayout="column">
+              <div class="retroboard__note-item-inner">
                 <button
                   [ngClass]="{ 'mat-accent': hasVoted(note.votes, true) }"
                   mat-icon-button
@@ -40,8 +40,7 @@
                 [matBadge]="note.voteCount"
                 [matBadgeHidden]="!note.voteCount || note.voteCount === 0"
                 mat-button
-                fxFlex="100"
-                class="retroboard__note mat-elevation-z2"
+                class="retroboard__note mat-elevation-z2 retroboard__note--full"
                 (click)="openModal(edittemplate, bucket, note)"
               >
                 <span class="retroboard__note-button-text">{{ note.message }}</span>
@@ -50,16 +49,15 @@
             <mat-list-item>
               <button
                 mat-button
-                fxFlex
+                class="add-new-button add-new-button--full"
                 title="Add entry to {{ bucket.name }}"
                 aria-label="Add entry"
-                class="add-new-button"
                 [class.success]="bucket.type === 'success'"
                 [class.danger]="bucket.type === 'danger'"
                 [class.info]="bucket.type === 'info'"
                 (click)="openModal(addtemplate, bucket)"
               >
-                <mat-icon aria-hidden="true ">add</mat-icon>
+                <mat-icon aria-hidden="true">add</mat-icon>
               </button>
             </mat-list-item>
           </app-transition-group>
@@ -68,7 +66,7 @@
     </mat-card>
   </div>
   <mat-toolbar class="retroboard__action-bar">
-    <div fxFlex></div>
+    <div class="retroboard__action-bar-spacer"></div>
     <button *ngIf="isFavorite$ | async; else notFavorite" title="Remove from favorites" aria-label="Remove from favorites" mat-stroked-button color="accent" (click)="toggleFavorite()">
       <mat-icon>favorite</mat-icon>
       Favorite
@@ -85,8 +83,7 @@
     </button>
     <button
       [disabled]="retroboard?.creatorId !== userDetails?.uid"
-      mat-raised-button
-      color="accent"
+      mat-raised-button color="accent"
       (click)="deleteRetro(deleteConfirmDialog)"
     >
       <mat-icon>delete</mat-icon>
@@ -94,8 +91,7 @@
     </button>
     <button
       [disabled]="retroboard?.creatorId !== userDetails?.uid"
-      mat-raised-button
-      color="accent"
+      mat-raised-button color="accent"
       (click)="openRetroboardDetailsModal()"
     >
       <mat-icon>edit</mat-icon>
@@ -106,7 +102,7 @@
 
 <ng-template #addtemplate>
   <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-card-header>
       <mat-card-title
         >Add entry to
         <strong>{{ activeBucket.name }}</strong>
@@ -116,7 +112,7 @@
       </button>
     </mat-card-header>
     <mat-card-content>
-      <mat-form-field fxFlex>
+      <mat-form-field>
         <textarea
           (keydown.shift.enter)="addNote(addmessage.value); (false)"
           matInput
@@ -137,7 +133,7 @@
 
 <ng-template #edittemplate>
   <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-card-header>
       <mat-card-title
         >Update entry to
         <strong>{{ activeBucket.name }}</strong>
@@ -147,7 +143,7 @@
       </button>
     </mat-card-header>
     <mat-card-content>
-      <mat-form-field fxFlex>
+      <mat-form-field>
         <textarea
           [readonly]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
           (keydown.shift.enter)="updateNote(editmessage.value); (false)"
@@ -159,20 +155,18 @@
         ></textarea>
       </mat-form-field>
     </mat-card-content>
-    <mat-card-actions class="edit-actions" fxLayout="row wrap" align="end">
+    <mat-card-actions class="edit-actions" align="end">
       <button
         [disabled]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
-        fxFlex.xs="50%"
         mat-button
         color="warn"
         (click)="deleteNote()"
       >
         Delete
       </button>
-      <button fxFlex.xs="50%" mat-button mat-dialog-close>Cancel</button>
+      <button mat-button mat-dialog-close>Cancel</button>
       <button
         [disabled]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
-        fxFlex.xs="50%"
         mat-raised-button
         color="primary"
         (click)="updateNote(editmessage.value)"
@@ -196,7 +190,7 @@
 
 <ng-template #exporttemplate>
   <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-card-header>
       <h2 mat-dialog-title>Export HTML</h2>
       <button mat-icon-button mat-dialog-close>
         <mat-icon aria-label="Close">close</mat-icon>

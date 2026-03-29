@@ -1,15 +1,27 @@
 .the-header {
-  z-index: 2;
-
   .title {
-    font-family: Lobster, sans-serif;
-    font-size: 60px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 20px;
   }
-}
-
-.the-header__github-logo {
-  height: 26px;
-  margin: 0 4px 3px 0;
-  vertical-align: middle;
+  .spacer {
+    flex: 1;
+  }
+  .the-header__github-logo {
+    height: 20px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .the-header__mobile-nav {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .the-header__desktop-nav {
+      display: none;
+    }
+    .the-header__mobile-nav {
+      display: block;
+    }
+    .title {
+      font-size: 40px;
+    }
+  }
 }

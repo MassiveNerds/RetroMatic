@@ -2,7 +2,7 @@
   <mat-card-title class="create-update-retro-modal__title">
     {{ isUpdate ? 'update retrospective' : 'create new retrospective' }}
   </mat-card-title>
-  <mat-card-content fxLayout="column">
+  <mat-card-content class="modal-form-content">
     <mat-form-field [hideRequiredMarker]="true">
       <input
         [(ngModel)]="retroboardName"
@@ -22,7 +22,7 @@
           Customize buckets
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-action-row fxLayout="column">
+      <mat-action-row class="modal-form-content">
         <mat-form-field *ngIf="!isUpdate && templates.length > 0">
           <mat-label>Load a saved template</mat-label>
           <mat-select [(ngModel)]="selectedTemplate" (ngModelChange)="applyTemplate($event)">
@@ -43,12 +43,12 @@
         <mat-form-field *ngFor="let bucket of buckets">
           <input matInput [(ngModel)]="bucket.name" />
         </mat-form-field>
-        <div *ngIf="!isUpdate" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" class="create-update-retro-modal__save-template">
+        <div *ngIf="!isUpdate" class="create-update-retro-modal__save-template create-update-retro-modal__save-template--row">
           <button *ngIf="!showSaveTemplate" mat-button (click)="showSaveTemplate = true">
             <mat-icon>bookmark_border</mat-icon> Save as template
           </button>
           <ng-container *ngIf="showSaveTemplate">
-            <mat-form-field fxFlex>
+            <mat-form-field class="create-update-retro-modal__template-name-field">
               <input matInput [(ngModel)]="templateName" placeholder="Template name" (keyup.enter)="saveTemplate()" />
             </mat-form-field>
             <button mat-button color="primary" (click)="saveTemplate()" [disabled]="!templateName.trim()">Save</button>

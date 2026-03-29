@@ -9,6 +9,23 @@
   margin-top: 4px;
 }
 
+.create-update-retro-modal__save-template--row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-update-retro-modal__template-name-field {
+  flex: 1;
+}
+
+.modal-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .create-update-retro-modal__delete-template {
   width: 24px;
   height: 24px;

@@ -54,3 +54,32 @@
     }
   }
 }
+
+.retroboard__columns {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+
+  mat-card {
+    flex: 1 1 33%;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.retroboard__note-item-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.retroboard__note--full,
+.add-new-button--full {
+  flex: 1;
+  width: 100%;
+}
+
+.retroboard__action-bar-spacer {
+  flex: 1;
+}
