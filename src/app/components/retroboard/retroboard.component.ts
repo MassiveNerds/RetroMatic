@@ -10,6 +10,7 @@ import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/cr
 import { ExportService } from '../../services/export.service';
 import { AuthService } from '../../services/auth.service';
 import { RetroboardService } from '../../services/retroboard.service';
+import { RetroStateService } from '../../services/retro-state.service';
 import { Retroboard, Bucket, Note, User } from '../../types';
 
 @Component({
@@ -40,6 +41,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private retroboardService: RetroboardService,
+    private retroStateService: RetroStateService,
     private dialog: MatDialog,
     private router: Router,
     private exportService: ExportService
@@ -68,6 +70,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   private getRetroboard(id: string) {
     this.retroboardSubscription = this.retroboardService.getRetroboard(id).subscribe(retroboard => {
       this.retroboard = retroboard;
+      this.retroStateService.setRetroboard(retroboard);
       this.isFavorite$ = objectVal<boolean>(
         ref(this.db, `/users/${this.userDetails.uid}/favorites/${this.retroboard.key}`)
       );
@@ -120,6 +123,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next(null);
     this.ngUnsubscribe.complete();
     this.retroboardSubscription.unsubscribe();
+    this.retroStateService.setRetroboard(null);
   }
 
   async toggleFavorite() {
@@ -226,7 +230,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(template);
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.retroboardService.deleteRetroboard(this.retroboard).then(() => this.router.navigate(['/home']));
+        this.retroboardService.deleteRetroboard(this.retroboard).then(() => this.router.navigate(['/app']));
       }
     });
   }
