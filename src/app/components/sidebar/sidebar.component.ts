@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { RetroboardService } from '../../services/retroboard.service';
 import { Retroboard } from '../../types';
 import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
+import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
 
 @Component({
   standalone: false,
@@ -107,7 +108,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   openExport() {
-    // Stub — full wiring in Task 8
+    if (!this.currentRetroboard) return;
+    this.dialog.open(ExportDialogComponent, {
+      panelClass: 'custom-dialog-container',
+      data: { html: '<p>Open the retro first to export.</p>' },
+    });
   }
 
   openEdit() {

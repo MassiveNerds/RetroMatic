@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs/operators';
 import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
+import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
 import { ExportService } from '../../services/export.service';
 import { AuthService } from '../../services/auth.service';
 import { RetroboardService } from '../../services/retroboard.service';
@@ -245,9 +246,12 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  openExportModal(_template?: TemplateRef<any>) {
-    // Export dialog moved to ExportDialogComponent (Task 8)
-    console.log('openExportModal: stub — wired in Task 8');
+  openExportModal() {
+    const html = this.exportService.export(this.jsonData);
+    this.dialog.open(ExportDialogComponent, {
+      panelClass: 'custom-dialog-container',
+      data: { html },
+    });
   }
 
   getUpvotes(votes: { [uid: string]: boolean }): number {

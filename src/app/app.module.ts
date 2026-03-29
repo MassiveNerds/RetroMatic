@@ -46,6 +46,7 @@ import { TransitionGroupItemDirective } from './directives/transition-group-item
 import { TransitionGroupComponent } from './components/transition-group/transition-group.component';
 import { AppShellComponent } from './components/app-shell/app-shell.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ExportDialogComponent } from './components/export-dialog/export-dialog.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -85,6 +86,7 @@ const appRoutes: Routes = [
     TransitionGroupComponent,
     AppShellComponent,
     SidebarComponent,
+    ExportDialogComponent,
   ],
   imports: [
     BrowserModule,
