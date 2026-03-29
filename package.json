@@ -6,11 +6,9 @@
     "ng": "ng",
     "config": "node ./set-env.js",
     "start": "ng serve",
-    "build-themes": "bash ./tools/build-themes.sh",
-    "build": "npm run config -- --environment=prod && npm run build-themes && ng build --configuration=production",
+    "build": "npm run config -- --environment=prod && ng build --configuration=production",
     "test": "ng test",
-    "lint": "prettier --write src/**/*.{ts,js,css,scss,html}",
-    "postinstall": "bash ./tools/build-themes.sh"
+    "lint": "prettier --write src/**/*.{ts,js,css,scss,html}"
   },
   "private": true,
   "dependencies": {

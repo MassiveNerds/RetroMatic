@@ -14,10 +14,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Use Node.js 14
+      - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '20'
 
       - name: Configure git
         run: |
@@ -25,10 +25,7 @@ jobs:
           git config --global user.name "GitHub Actions"
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps --ignore-scripts
-
-      - name: Rebuild node-sass
-        run: npm rebuild node-sass
+        run: npm install --legacy-peer-deps
 
       - name: Build
         env:
