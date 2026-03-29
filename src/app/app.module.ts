@@ -38,9 +38,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { ThemePickerModule } from './components/theme-picker/theme-picker.component';
-import { ThemeStorage } from './components/theme-picker/theme-storage/theme-storage';
-import { StyleManager } from './components/style-manager';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { TransitionGroupItemDirective } from './directives/transition-group-item.directive';
 import { TransitionGroupComponent } from './components/transition-group/transition-group.component';
@@ -115,12 +112,9 @@ const appRoutes: Routes = [
     MatSnackBarModule,
     MatSelectModule,
     MatDividerModule,
-    ThemePickerModule,
   ],
   providers: [
     AuthGuard,
-    StyleManager,
-    ThemeStorage,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),
     provideAuth(() => getAuth()),
