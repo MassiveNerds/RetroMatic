@@ -1,6 +1,6 @@
 <mat-toolbar class="the-header" color="primary">
   <span class="title">RetroMatic</span>
-  <span class="spacer"></span>
+  <span class="the-header__spacer"></span>
   <span class="the-header__desktop-nav">
     <button *ngIf="authService.isLoggedIn()" mat-button [routerLink]="['/home']">My Dashboard</button>
     <app-theme-picker></app-theme-picker>

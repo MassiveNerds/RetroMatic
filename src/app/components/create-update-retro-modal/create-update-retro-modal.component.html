@@ -2,7 +2,7 @@
   <mat-card-title class="create-update-retro-modal__title">
     {{ isUpdate ? 'update retrospective' : 'create new retrospective' }}
   </mat-card-title>
-  <mat-card-content class="modal-form-content">
+  <mat-card-content class="create-update-retro-modal__form-content">
     <mat-form-field [hideRequiredMarker]="true">
       <input
         [(ngModel)]="retroboardName"
@@ -22,7 +22,7 @@
           Customize buckets
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-action-row class="modal-form-content">
+      <mat-action-row class="create-update-retro-modal__form-content">
         <mat-form-field *ngIf="!isUpdate && templates.length > 0">
           <mat-label>Load a saved template</mat-label>
           <mat-select [(ngModel)]="selectedTemplate" (ngModelChange)="applyTemplate($event)">
