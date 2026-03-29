@@ -36,6 +36,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { ThemePickerModule } from './components/theme-picker/theme-picker.component';
 import { ThemeStorage } from './components/theme-picker/theme-storage/theme-storage';
@@ -111,6 +112,7 @@ const appRoutes: Routes = [
     MatPaginatorModule,
     MatSnackBarModule,
     MatSelectModule,
+    MatDividerModule,
     ThemePickerModule,
   ],
   providers: [
