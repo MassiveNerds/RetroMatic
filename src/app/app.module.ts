@@ -43,36 +43,26 @@ import { StyleManager } from './components/style-manager';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { TransitionGroupItemDirective } from './directives/transition-group-item.directive';
 import { TransitionGroupComponent } from './components/transition-group/transition-group.component';
+import { AppShellComponent } from './components/app-shell/app-shell.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 const appRoutes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'resetpassword', component: ResetPasswordComponent },
   {
-    path: 'retroboard/:id',
+    path: 'app',
+    component: AppShellComponent,
     canActivate: [AuthGuard],
-    component: RetroBoardComponent,
+    children: [
+      { path: 'retro/:id', component: RetroBoardComponent },
+      { path: '', component: MyDashboardComponent },
+    ],
   },
-  {
-    path: 'home',
-    canActivate: [AuthGuard],
-    component: MyDashboardComponent,
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
-  {
-    path: 'resetpassword',
-    component: ResetPasswordComponent,
-  },
-  {
-    path: '',
-    redirectTo: '/home',
-    canActivate: [AuthGuard],
-    pathMatch: 'full',
-  },
+  // Legacy redirects
+  { path: 'home', redirectTo: '/app', pathMatch: 'full' },
+  { path: 'retroboard/:id', redirectTo: '/app/retro/:id', pathMatch: 'full' },
+  { path: '', redirectTo: '/app', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
 
@@ -90,6 +80,8 @@ const appRoutes: Routes = [
     CreateUpdateRetroModalComponent,
     TransitionGroupItemDirective,
     TransitionGroupComponent,
+    AppShellComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,20 @@
+<div class="app-shell" [class.app-shell--guest]="!authService.isLoggedIn()">
+  <ng-container *ngIf="authService.isLoggedIn(); else guestLayout">
+    <!-- Authenticated layout: sidebar + content -->
+    <app-sidebar
+      [collapsed]="sidebarCollapsed"
+      [currentRetroboard]="currentRetroboard"
+      (toggleCollapse)="toggleSidebar()"
+    ></app-sidebar>
+    <main class="app-shell__content" [class.app-shell__content--collapsed]="sidebarCollapsed">
+      <router-outlet></router-outlet>
+    </main>
+  </ng-container>
+
+  <ng-template #guestLayout>
+    <!-- Guest layout: full-width content (TheHeaderComponent above handles branding) -->
+    <main class="app-shell__content app-shell__content--full">
+      <router-outlet></router-outlet>
+    </main>
+  </ng-template>
+</div>
