@@ -61,6 +61,8 @@ const appRoutes: Routes = [
   },
   // Legacy redirects
   { path: 'home', redirectTo: '/app', pathMatch: 'full' },
+  // Note: Angular redirectTo does not forward route params — :id is lost on redirect.
+  // Legacy /retroboard/:id links will land on /app/retro/:id without the id.
   { path: 'retroboard/:id', redirectTo: '/app/retro/:id', pathMatch: 'full' },
   { path: '', redirectTo: '/app', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
