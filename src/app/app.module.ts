@@ -14,7 +14,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from './guards/auth.guard';
-import { MyDashboardComponent } from './components/my-dashboard/my-dashboard.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TheHeaderComponent } from './components/the-header/the-header.component';
 import { CreateUpdateRetroModalComponent } from './components/create-update-retro-modal/create-update-retro-modal.component';
@@ -57,7 +57,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'retro/:id', component: RetroBoardComponent },
-      { path: '', component: MyDashboardComponent },
+      { path: '', component: WelcomeComponent },
     ],
   },
   // Legacy redirects
@@ -77,7 +77,7 @@ const appRoutes: Routes = [
     RegisterComponent,
     ResetPasswordComponent,
     PageNotFoundComponent,
-    MyDashboardComponent,
+    WelcomeComponent,
     GlobalErrorHandlerModalComponent,
     TheHeaderComponent,
     CreateUpdateRetroModalComponent,
