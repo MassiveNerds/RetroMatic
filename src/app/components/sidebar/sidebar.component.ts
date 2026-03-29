@@ -79,7 +79,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .subscribe(retros => {
         this.retroboards = [...retros].sort(
           (a, b) => new Date(b.dateCreated || 0).getTime() - new Date(a.dateCreated || 0).getTime()
-        ).slice(0, 10);
+        );
       });
   }
 
@@ -94,7 +94,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(all => {
-        this.favorites = all.filter(r => favKeys.includes(r.key)).slice(0, 5);
+        this.favorites = all.filter(r => favKeys.includes(r.key));
       });
   }
 

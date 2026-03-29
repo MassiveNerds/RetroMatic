@@ -1,12 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
 .sidebar {
   width: 200px;
-  min-height: 100%;
+  flex: 1;
+  min-height: 0;
   background-color: var(--mat-sys-surface);
   border-right: 1px solid var(--mat-sys-surface-variant);
   display: flex;
   flex-direction: column;
   padding: 12px 8px;
-  flex-shrink: 0;
   transition: width 0.2s ease;
   overflow: hidden;
 
@@ -31,6 +37,23 @@
     color: var(--mat-sys-on-surface-variant);
     padding: 8px 8px 4px;
     margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  &__scrollable {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  &__favorites-scrollable {
+    flex-shrink: 0;
+    max-height: 192px; // ~5 items at ~40px each
+    overflow-y: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
   }
 
   &__nav-list {
@@ -71,6 +94,7 @@
   &__actions {
     margin-top: 16px;
     padding-top: 8px;
+    flex-shrink: 0;
 
     mat-divider {
       margin-bottom: 8px;

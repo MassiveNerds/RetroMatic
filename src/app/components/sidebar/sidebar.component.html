@@ -6,30 +6,34 @@
   </div>
 
   <ng-container *ngIf="!collapsed">
-    <div class="sidebar__section-label">My Retros</div>
-    <mat-nav-list class="sidebar__nav-list">
-      <a mat-list-item
-        *ngFor="let retro of retroboards"
-        (click)="navigateTo(retro.key)"
-        [class.sidebar__nav-item--active]="retro.key === currentRetroboard?.key"
-        class="sidebar__nav-item">
-        <span matListItemTitle class="sidebar__nav-item-text">{{ retro.name }}</span>
-      </a>
-    </mat-nav-list>
-    <button mat-button class="sidebar__new-retro-btn" (click)="openCreateModal()">
-      <mat-icon>add</mat-icon> New Retro
-    </button>
+    <div class="sidebar__scrollable">
+      <div class="sidebar__section-label">My Retros</div>
+      <mat-nav-list class="sidebar__nav-list">
+        <a mat-list-item
+          *ngFor="let retro of retroboards"
+          (click)="navigateTo(retro.key)"
+          [class.sidebar__nav-item--active]="retro.key === currentRetroboard?.key"
+          class="sidebar__nav-item">
+          <span matListItemTitle class="sidebar__nav-item-text">{{ retro.name }}</span>
+        </a>
+      </mat-nav-list>
+      <button mat-button class="sidebar__new-retro-btn" (click)="openCreateModal()">
+        <mat-icon>add</mat-icon> New Retro
+      </button>
+    </div>
 
-    <div class="sidebar__section-label" *ngIf="favorites.length">Favorites</div>
-    <mat-nav-list class="sidebar__nav-list" *ngIf="favorites.length">
-      <a mat-list-item
-        *ngFor="let fav of favorites"
-        (click)="navigateTo(fav.key)"
-        class="sidebar__nav-item">
-        <mat-icon matListItemIcon class="sidebar__fav-icon">favorite</mat-icon>
-        <span matListItemTitle class="sidebar__nav-item-text">{{ fav.name }}</span>
-      </a>
-    </mat-nav-list>
+    <div class="sidebar__favorites-scrollable" *ngIf="favorites.length">
+      <div class="sidebar__section-label">Favorites</div>
+      <mat-nav-list class="sidebar__nav-list">
+        <a mat-list-item
+          *ngFor="let fav of favorites"
+          (click)="navigateTo(fav.key)"
+          class="sidebar__nav-item">
+          <mat-icon matListItemIcon class="sidebar__fav-icon">favorite</mat-icon>
+          <span matListItemTitle class="sidebar__nav-item-text">{{ fav.name }}</span>
+        </a>
+      </mat-nav-list>
+    </div>
 
     <div class="sidebar__actions" *ngIf="hasRetroOpen">
       <mat-divider></mat-divider>
