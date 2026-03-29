@@ -1,85 +1,126 @@
-.retroboard__note-item {
-  height: auto !important;
-  #noteButton {
-    white-space: normal;
-    line-height: normal;
-    text-align: left;
-    border-radius: 10px;
-    padding: 15px 15px 15px 15px;
+.retroboard {
+  padding: 16px;
+  height: 100%;
+  overflow: auto;
+
+  &__columns {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
   }
-  margin-bottom: 15px; 
-}
 
-.add-new-button {
-  border-radius: 10px;
-  border: 2px dashed #aaa;
-  opacity: 0.5;
-  text-align: center;
-  margin-left: 39px;
-}
+  &__column {
+    flex: 1 1 0;
+    min-width: 0;
+    background-color: var(--mat-sys-surface);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-.edit-actions > button {
-  margin: 0;
+  &__column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  &__column-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  // Bucket type colours
+  &__column-header--success &__column-name { color: #a78bfa; }
+  &__column-header--danger  &__column-name { color: #f87171; }
+  &__column-header--info    &__column-name { color: #60a5fa; }
+
+  &__add-btn {
+    font-size: 11px;
+    padding: 2px 8px;
+    min-width: 0;
+    border-radius: 5px;
+    line-height: 24px;
+
+    &--success { color: #a78bfa; background: rgba(167, 139, 250, 0.1); }
+    &--danger  { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+    &--info    { color: #60a5fa; background: rgba(96,  165, 250, 0.1); }
+  }
+
+  &__notes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__note-card {
+    background-color: var(--mat-sys-surface-variant);
+    border-radius: 8px;
+    padding: 10px 12px 6px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__note-text {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__vote-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 5px;
+  }
+
+  &__vote-btn {
+    font-size: 11px;
+    padding: 2px 8px;
+    min-width: 0;
+    border-radius: 4px;
+    color: var(--mat-sys-on-surface-variant);
+    line-height: 22px;
+
+    // Active upvote — colour matches bucket type
+    &--up-active--success { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
+    &--up-active--danger  { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    &--up-active--info    { background: rgba(96,  165, 250, 0.2); color: #60a5fa; }
+
+    // Active downvote
+    &--down-active { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+  }
+
+  &__edit-actions {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 #html-container {
-  border: 1px solid #ccc;
+  border: 1px solid var(--mat-sys-surface-variant);
   border-radius: 4px;
   overflow: auto;
   height: 250px;
   font-size: 13px;
 }
 
-.retroboard__bucket-title {
-  text-transform: uppercase;
-  font-weight: 500;
-  font-size: 14px;
-  color: hsl(0, 0%, 45%);
-  margin: 0;
-}
-
-.retroboard__note-button-text {
-  white-space: pre-wrap;
-}
-
 .retro__notes-move {
   transition: transform 1s;
-}
-
-.retroboard__action-bar {
-  button {
-    margin-right: 8px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-}
-
-.retroboard__columns {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-
-  mat-card {
-    flex: 1 1 33%;
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-}
-
-.retroboard__note-item-inner {
-  display: flex;
-  flex-direction: column;
-}
-
-.retroboard__note--full,
-.add-new-button--full {
-  flex: 1;
-  width: 100%;
-}
-
-.retroboard__action-bar-spacer {
-  flex: 1;
 }

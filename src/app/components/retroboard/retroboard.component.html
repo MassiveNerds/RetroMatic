@@ -1,182 +1,102 @@
-<div class="page-container mat-typography">
-  <div class="primary-header">
-    <h1>{{ retroboard?.name }}</h1>
-  </div>
+<div class="retroboard mat-typography">
   <div class="retroboard__columns">
-    <mat-card *ngFor="let bucket of buckets$ | async">
-      <mat-card-header>
-        <mat-card-title class="retroboard__bucket-title">{{ bucket.name }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-list>
-          <app-transition-group class="retro__notes">
-            <mat-list-item
-              appTransitionGroupItem
-              class="retroboard__note-item"
-              *ngFor="let note of bucket.notes$ | async; trackBy: trackByFn"
-            >
-              <div class="retroboard__note-item-inner">
-                <button
-                  [ngClass]="{ 'mat-accent': hasVoted(note.votes, true) }"
-                  mat-icon-button
-                  title="Vote Up"
-                  aria-label="Vote Up"
-                  (click)="upvote(bucket, note)"
-                >
-                  <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
-                </button>
-                <button
-                  [ngClass]="{ 'mat-warn': hasVoted(note.votes, false) }"
-                  mat-icon-button
-                  title="Vote Down"
-                  aria-label="Vote Down"
-                  (click)="downvote(bucket, note)"
-                >
-                  <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
-                </button>
-              </div>
-              <button
-                id="noteButton"
-                [matBadge]="note.voteCount"
-                [matBadgeHidden]="!note.voteCount || note.voteCount === 0"
-                mat-button
-                class="retroboard__note mat-elevation-z2 retroboard__note--full"
-                (click)="openModal(edittemplate, bucket, note)"
-              >
-                <span class="retroboard__note-button-text">{{ note.message }}</span>
-              </button>
-            </mat-list-item>
-            <mat-list-item>
-              <button
-                mat-button
-                class="add-new-button add-new-button--full"
-                title="Add entry to {{ bucket.name }}"
-                aria-label="Add entry"
-                [class.success]="bucket.type === 'success'"
-                [class.danger]="bucket.type === 'danger'"
-                [class.info]="bucket.type === 'info'"
-                (click)="openModal(addtemplate, bucket)"
-              >
-                <mat-icon aria-hidden="true">add</mat-icon>
-              </button>
-            </mat-list-item>
-          </app-transition-group>
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
+    <div class="retroboard__column" *ngFor="let bucket of buckets$ | async">
+      <div class="retroboard__column-header" [ngClass]="'retroboard__column-header--' + bucket.type">
+        <span class="retroboard__column-name">{{ bucket.name }}</span>
+        <button
+          mat-button
+          class="retroboard__add-btn"
+          [ngClass]="'retroboard__add-btn--' + bucket.type"
+          (click)="openModal(addtemplate, bucket)"
+          title="Add entry to {{ bucket.name }}"
+          aria-label="Add entry">
+          + Add
+        </button>
+      </div>
+
+      <app-transition-group class="retroboard__notes">
+        <div
+          appTransitionGroupItem
+          class="retroboard__note-card mat-elevation-z1"
+          *ngFor="let note of bucket.notes$ | async; trackBy: trackByFn"
+          (click)="openModal(edittemplate, bucket, note)">
+          <p class="retroboard__note-text">{{ note.message }}</p>
+          <div class="retroboard__vote-row" (click)="$event.stopPropagation()">
+            <button
+              mat-button
+              class="retroboard__vote-btn"
+              [ngClass]="hasVoted(note.votes, true) ? 'retroboard__vote-btn--up-active--' + bucket.type : ''"
+              title="Vote Up"
+              aria-label="Vote Up"
+              (click)="upvote(bucket, note)">
+              ▲ {{ getUpvotes(note.votes) }}
+            </button>
+            <button
+              mat-button
+              class="retroboard__vote-btn"
+              [ngClass]="hasVoted(note.votes, false) ? 'retroboard__vote-btn--down-active' : ''"
+              title="Vote Down"
+              aria-label="Vote Down"
+              (click)="downvote(bucket, note)">
+              ▼ {{ getDownvotes(note.votes) }}
+            </button>
+          </div>
+        </div>
+      </app-transition-group>
+    </div>
   </div>
-  <mat-toolbar class="retroboard__action-bar">
-    <div class="retroboard__action-bar-spacer"></div>
-    <button *ngIf="isFavorite$ | async; else notFavorite" title="Remove from favorites" aria-label="Remove from favorites" mat-stroked-button color="accent" (click)="toggleFavorite()">
-      <mat-icon>favorite</mat-icon>
-      Favorite
-    </button>
-    <ng-template #notFavorite>
-      <button mat-stroked-button title="Add to favorites" aria-label="Add to favorites" color="accent" (click)="toggleFavorite()">
-        <mat-icon>favorite_border</mat-icon>
-        Favorite
-      </button>
-    </ng-template>
-    <button mat-raised-button color="accent" (click)="openExportModal(exporttemplate)">
-      <mat-icon>save_alt</mat-icon>
-      Export
-    </button>
-    <button
-      [disabled]="retroboard?.creatorId !== userDetails?.uid"
-      mat-raised-button color="accent"
-      (click)="deleteRetro(deleteConfirmDialog)"
-    >
-      <mat-icon>delete</mat-icon>
-      Delete
-    </button>
-    <button
-      [disabled]="retroboard?.creatorId !== userDetails?.uid"
-      mat-raised-button color="accent"
-      (click)="openRetroboardDetailsModal()"
-    >
-      <mat-icon>edit</mat-icon>
-      Edit
-    </button>
-  </mat-toolbar>
 </div>
 
+<!-- Add note dialog -->
 <ng-template #addtemplate>
   <mat-card>
-    <mat-card-header>
-      <mat-card-title
-        >Add entry to
-        <strong>{{ activeBucket.name }}</strong>
-      </mat-card-title>
-      <button mat-icon-button mat-dialog-close>
-        <mat-icon aria-label="Close">close</mat-icon>
-      </button>
+    <mat-card-header style="display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;">
+      <mat-card-title>Add entry to <strong>{{ activeBucket.name }}</strong></mat-card-title>
+      <button mat-icon-button mat-dialog-close><mat-icon aria-label="Close">close</mat-icon></button>
     </mat-card-header>
     <mat-card-content>
-      <mat-form-field>
+      <mat-form-field style="width:100%">
         <textarea
           (keydown.shift.enter)="addNote(addmessage.value); (false)"
-          matInput
-          #addmessage
-          cdkFocusInitial
-          cdkTextareaAutosize
-        ></textarea>
+          matInput #addmessage cdkFocusInitial cdkTextareaAutosize></textarea>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary" (click)="addNote(addmessage.value)">
-        Add
-      </button>
+      <button mat-raised-button color="primary" (click)="addNote(addmessage.value)">Add</button>
     </mat-card-actions>
   </mat-card>
 </ng-template>
 
+<!-- Edit note dialog -->
 <ng-template #edittemplate>
   <mat-card>
-    <mat-card-header>
-      <mat-card-title
-        >Update entry to
-        <strong>{{ activeBucket.name }}</strong>
-      </mat-card-title>
-      <button mat-icon-button mat-dialog-close>
-        <mat-icon aria-label="Close">close</mat-icon>
-      </button>
+    <mat-card-header style="display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;">
+      <mat-card-title>Edit entry in <strong>{{ activeBucket.name }}</strong></mat-card-title>
+      <button mat-icon-button mat-dialog-close><mat-icon aria-label="Close">close</mat-icon></button>
     </mat-card-header>
     <mat-card-content>
-      <mat-form-field>
+      <mat-form-field style="width:100%">
         <textarea
           [readonly]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
           (keydown.shift.enter)="updateNote(editmessage.value); (false)"
-          matInput
-          #editmessage
-          cdkTextareaAutosize
-          cdkFocusInitial
-          [value]="activeNote.message"
-        ></textarea>
+          matInput #editmessage cdkTextareaAutosize cdkFocusInitial
+          [value]="activeNote.message"></textarea>
       </mat-form-field>
     </mat-card-content>
-    <mat-card-actions class="edit-actions" align="end">
+    <mat-card-actions class="retroboard__edit-actions" align="end">
       <button
         [disabled]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
-        mat-button
-        color="warn"
-        (click)="deleteNote()"
-      >
-        Delete
-      </button>
+        mat-button color="warn" (click)="deleteNote()">Delete</button>
       <button mat-button mat-dialog-close>Cancel</button>
       <button
         [disabled]="activeNote?.creatorId !== userDetails?.uid && retroboard?.creatorId !== userDetails?.uid"
-        mat-raised-button
-        color="primary"
-        (click)="updateNote(editmessage.value)"
-      >
-        Update
-      </button>
+        mat-raised-button color="primary" (click)="updateNote(editmessage.value)">Update</button>
     </mat-card-actions>
   </mat-card>
 </ng-template>
 
+<!-- Delete retro confirmation dialog -->
 <ng-template #deleteConfirmDialog>
   <h2 mat-dialog-title>Delete "{{ retroboard?.name }}"</h2>
   <mat-dialog-content>Are you sure?</mat-dialog-content>
@@ -186,24 +106,4 @@
       Delete
     </button>
   </mat-dialog-actions>
-</ng-template>
-
-<ng-template #exporttemplate>
-  <mat-card>
-    <mat-card-header>
-      <h2 mat-dialog-title>Export HTML</h2>
-      <button mat-icon-button mat-dialog-close>
-        <mat-icon aria-label="Close">close</mat-icon>
-      </button>
-    </mat-card-header>
-    <mat-card-content>
-      <div id="html-container" [innerHTML]="htmlExport"></div>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-button mat-dialog-close color="primary">Close</button>
-      <button mat-raised-button color="primary" (click)="copyText()">
-        Copy to Clipboard
-      </button>
-    </mat-card-actions>
-  </mat-card>
 </ng-template>

@@ -245,15 +245,19 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  openExportModal(template: TemplateRef<any>) {
-    (<any>window).gtag('event', 'export', {
-      event_category: 'retrospective',
-      event_label: 'origin',
-    });
-    this.htmlExport = this.exportService.export(this.jsonData);
-    this.dialogRef = this.dialog.open(template, {
-      panelClass: 'custom-dialog-container',
-    });
+  openExportModal(_template?: TemplateRef<any>) {
+    // Export dialog moved to ExportDialogComponent (Task 8)
+    console.log('openExportModal: stub — wired in Task 8');
+  }
+
+  getUpvotes(votes: { [uid: string]: boolean }): number {
+    if (!votes) return 0;
+    return Object.values(votes).filter(v => v === true).length;
+  }
+
+  getDownvotes(votes: { [uid: string]: boolean }): number {
+    if (!votes) return 0;
+    return Object.values(votes).filter(v => v === false).length;
   }
 
   copyText() {
