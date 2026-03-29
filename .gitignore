@@ -45,3 +45,4 @@ environment.prod.ts
 .DS_Store
 Thumbs.db
 .env
+.superpowers/
