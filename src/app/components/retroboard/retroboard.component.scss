@@ -1,7 +1,6 @@
 .retroboard {
   padding: 16px;
-  height: 100%;
-  overflow: auto;
+  min-height: 100%;
 
   &__columns {
     display: flex;

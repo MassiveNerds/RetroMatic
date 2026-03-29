@@ -1,6 +1,14 @@
 .the-header {
+  // Override Material toolbar background to match sidebar surface
+  --mat-toolbar-container-background-color: var(--mat-sys-surface);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-surface);
+  border-bottom: 1px solid var(--mat-sys-surface-variant);
+
   .title {
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #a78bfa;
   }
   .the-header__spacer {
     flex: 1;

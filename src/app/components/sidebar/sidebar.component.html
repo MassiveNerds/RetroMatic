@@ -1,6 +1,5 @@
 <nav class="sidebar" [class.sidebar--collapsed]="collapsed">
   <div class="sidebar__header">
-    <span class="sidebar__logo" *ngIf="!collapsed">RetroMatic</span>
     <button mat-icon-button class="sidebar__toggle" (click)="toggleCollapse.emit()" aria-label="Toggle sidebar">
       <mat-icon>{{ collapsed ? 'menu' : 'menu_open' }}</mat-icon>
     </button>
