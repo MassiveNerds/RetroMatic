@@ -32,6 +32,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   dialogRef: MatDialogRef<any>;
   htmlExport: string;
   ngUnsubscribe: Subject<any> = new Subject();
+  routeChange$: Subject<void> = new Subject();
   retroboardSubscription: Subscription;
   userDetails: any;
   appUser: User;
@@ -79,41 +80,56 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const retroboardId = this.route.snapshot.paramMap.get('id');
     this.userDetails = this.authService.getUserDetails();
-    this.getRetroboard(retroboardId);
 
-    this.buckets$ = list(
-      query(ref(this.db, '/buckets'), orderByChild('retroboardId'), equalTo(retroboardId))
-    ).pipe(
-      map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) }))),
-      map(buckets => {
-        return buckets.map((bucket: Bucket) => {
-          bucket.notes$ = list(
-            query(ref(this.db, '/notes'), orderByChild('bucketId'), equalTo(bucket.key))
-          ).pipe(
-            map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) }))),
-            map((notes: Note[]) => notes.sort(this.compareNotes))
-          );
-          return bucket;
-        });
-      })
-    );
+    this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.routeChange$.next();
+      if (this.retroboardSubscription) {
+        this.retroboardSubscription.unsubscribe();
+      }
 
-    this.jsonData = {};
-    this.buckets$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(buckets => {
-      this.buckets = buckets;
-      buckets.forEach(bucket => {
-        bucket.notes$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(notes => {
-          notes.forEach(note => {
-            if (!this.jsonData[bucket.key]) {
-              this.jsonData[bucket.key] = {};
-            }
-            this.jsonData[bucket.key][note.key] = {
-              bucketName: bucket.name,
-              message: note.message,
-              votes: note.voteCount || 0,
-            };
+      const retroboardId = params.get('id');
+      this.getRetroboard(retroboardId);
+
+      this.buckets$ = list(
+        query(ref(this.db, '/buckets'), orderByChild('retroboardId'), equalTo(retroboardId))
+      ).pipe(
+        map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) }))),
+        map(buckets => {
+          return buckets.map((bucket: Bucket) => {
+            bucket.notes$ = list(
+              query(ref(this.db, '/notes'), orderByChild('bucketId'), equalTo(bucket.key))
+            ).pipe(
+              map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) }))),
+              map((notes: Note[]) => notes.sort(this.compareNotes))
+            );
+            return bucket;
+          });
+        })
+      );
+
+      this.jsonData = {};
+      this.buckets$.pipe(
+        takeUntil(this.ngUnsubscribe),
+        takeUntil(this.routeChange$)
+      ).subscribe(buckets => {
+        this.buckets = buckets;
+        buckets.forEach(bucket => {
+          bucket.notes$.pipe(
+            takeUntil(this.ngUnsubscribe),
+            takeUntil(this.routeChange$)
+          ).subscribe(notes => {
+            notes.forEach(note => {
+              if (!this.jsonData[bucket.key]) {
+                this.jsonData[bucket.key] = {};
+              }
+              this.jsonData[bucket.key][note.key] = {
+                bucketName: bucket.name,
+                message: note.message,
+                votes: note.voteCount || 0,
+              };
+            });
+            this.retroStateService.setExportData(this.jsonData);
           });
         });
       });
@@ -121,10 +137,15 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.routeChange$.next();
+    this.routeChange$.complete();
     this.ngUnsubscribe.next(null);
     this.ngUnsubscribe.complete();
-    this.retroboardSubscription.unsubscribe();
+    if (this.retroboardSubscription) {
+      this.retroboardSubscription.unsubscribe();
+    }
     this.retroStateService.setRetroboard(null);
+    this.retroStateService.setExportData(null);
   }
 
   async toggleFavorite() {
@@ -181,7 +202,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     update(ref(this.db, `/notes/${this.activeNote.key}`), {
       votes: this.activeNote.votes,
       voteCount: this.activeNote.voteCount,
-    }).then(() => (this.dialogRef ? this.dialogRef.close() : ''));
+    });
   }
 
   downvote(bucket: Bucket, note: Note) {
@@ -209,7 +230,7 @@ export class RetroBoardComponent implements OnInit, OnDestroy {
     update(ref(this.db, `/notes/${this.activeNote.key}`), {
       votes: this.activeNote.votes,
       voteCount: this.activeNote.voteCount,
-    }).then(() => (this.dialogRef ? this.dialogRef.close() : ''));
+    });
   }
 
   deleteNote() {

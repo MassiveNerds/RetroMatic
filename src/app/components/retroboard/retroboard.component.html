@@ -25,7 +25,7 @@
             <button
               mat-button
               class="retroboard__vote-btn"
-              [ngClass]="hasVoted(note.votes, true) ? 'retroboard__vote-btn--up-active--' + bucket.type : ''"
+              [ngClass]="hasVoted(note.votes, true) ? 'retroboard__vote-btn--up-active' : ''"
               title="Vote Up"
               aria-label="Vote Up"
               (click)="upvote(bucket, note)">

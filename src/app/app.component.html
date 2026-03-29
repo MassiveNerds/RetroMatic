@@ -1,5 +1,5 @@
 <div class="app-container">
-  <app-the-header class="the-header mat-elevation-z6"></app-the-header>
+  <app-the-header *ngIf="showHeader" class="the-header mat-elevation-z6"></app-the-header>
   <div class="app-container__content">
     <router-outlet></router-outlet>
   </div>

@@ -1,11 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Database, ref, list, get, set } from '@angular/fire/database';
+import { Database, ref, list, get, set, query, orderByChild, equalTo } from '@angular/fire/database';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { RetroboardService } from '../../services/retroboard.service';
+import { RetroStateService } from '../../services/retro-state.service';
+import { ExportService } from '../../services/export.service';
 import { Retroboard } from '../../types';
 import { CreateUpdateRetroModalComponent } from '../create-update-retro-modal/create-update-retro-modal.component';
 import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
@@ -32,6 +34,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     private retroboardService: RetroboardService,
+    private retroStateService: RetroStateService,
+    private exportService: ExportService,
     private db: Database,
     private dialog: MatDialog,
     private router: Router,
@@ -62,6 +66,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   get hasRetroOpen(): boolean {
     return this.currentRetroboard !== null;
+  }
+
+  get isCurrentFavorite(): boolean {
+    if (!this.currentRetroboard) return false;
+    return this.favorites.some(f => f.key === this.currentRetroboard.key);
   }
 
   loadRetroboards() {
@@ -109,17 +118,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   openExport() {
     if (!this.currentRetroboard) return;
+    const data = this.retroStateService.exportData;
+    const html = data
+      ? this.exportService.export(data)
+      : '<p>No notes to export yet.</p>';
     this.dialog.open(ExportDialogComponent, {
       panelClass: 'custom-dialog-container',
-      data: { html: '<p>Open the retro first to export.</p>' },
+      data: { html },
     });
   }
 
-  openEdit() {
+  async openEdit() {
     if (!this.currentRetroboard) return;
+    const snapshot = await get(
+      query(ref(this.db, '/buckets'), orderByChild('retroboardId'), equalTo(this.currentRetroboard.key))
+    );
+    const buckets: any[] = [];
+    snapshot.forEach(child => {
+      buckets.push({ key: child.key, ...child.val() });
+    });
     this.dialog.open(CreateUpdateRetroModalComponent, {
       panelClass: 'custom-dialog-container',
-      data: { retroboard: this.currentRetroboard },
+      data: { retroboard: this.currentRetroboard, buckets },
     });
   }
 

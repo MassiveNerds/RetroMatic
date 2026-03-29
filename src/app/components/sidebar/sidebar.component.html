@@ -35,7 +35,8 @@
     <div class="sidebar__actions" *ngIf="hasRetroOpen">
       <mat-divider></mat-divider>
       <button mat-button class="sidebar__action-btn" (click)="toggleFavorite()">
-        <mat-icon>favorite_border</mat-icon> Favorite
+        <mat-icon>{{ isCurrentFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+        {{ isCurrentFavorite ? 'Unfavorite' : 'Favorite' }}
       </button>
       <button mat-button class="sidebar__action-btn" (click)="openExport()">
         <mat-icon>save_alt</mat-icon> Export
@@ -54,7 +55,9 @@
   <ng-container *ngIf="collapsed">
     <button mat-icon-button (click)="openCreateModal()" title="New Retro"><mat-icon>add</mat-icon></button>
     <ng-container *ngIf="hasRetroOpen">
-      <button mat-icon-button (click)="toggleFavorite()" title="Favorite"><mat-icon>favorite_border</mat-icon></button>
+      <button mat-icon-button (click)="toggleFavorite()" [title]="isCurrentFavorite ? 'Unfavorite' : 'Favorite'">
+        <mat-icon>{{ isCurrentFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </button>
       <button mat-icon-button (click)="openEdit()" [disabled]="!isOwner" title="Edit"><mat-icon>edit</mat-icon></button>
     </ng-container>
   </ng-container>

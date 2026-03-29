@@ -74,3 +74,6 @@ body {
 .custom-dialog-container .mat-mdc-dialog-container {
   padding: 0;
 }
+.custom-dialog-container .mdc-dialog__surface {
+  overflow: hidden;
+}

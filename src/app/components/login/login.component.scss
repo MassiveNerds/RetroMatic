@@ -1,6 +1,6 @@
 .login-page {
   display: flex;
-  height: 100vh;
+  height: 100%;
 
   &__left {
     flex: 0 0 40%;
@@ -65,6 +65,7 @@
     background: #ffffff;
     color: #1e293b;
     font-weight: 600;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   }
 
   &__divider {

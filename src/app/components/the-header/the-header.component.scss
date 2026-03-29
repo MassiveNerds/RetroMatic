@@ -10,6 +10,13 @@
     margin-right: 4px;
     vertical-align: middle;
   }
+  :host-context(html.light) .the-header__github-logo {
+    filter: invert(1);
+  }
+  .the-header__desktop-nav {
+    display: flex;
+    align-items: center;
+  }
   .the-header__mobile-nav {
     display: none;
   }

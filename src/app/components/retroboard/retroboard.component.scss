@@ -98,10 +98,8 @@
     color: var(--mat-sys-on-surface-variant);
     line-height: 22px;
 
-    // Active upvote — colour matches bucket type
-    &--up-active--success { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
-    &--up-active--danger  { background: rgba(248, 113, 113, 0.2); color: #f87171; }
-    &--up-active--info    { background: rgba(96,  165, 250, 0.2); color: #60a5fa; }
+    // Active upvote — violet accent (primary)
+    &--up-active { background: rgba(167, 139, 250, 0.2); color: #a78bfa !important; }
 
     // Active downvote
     &--down-active { background: rgba(248, 113, 113, 0.15); color: #f87171; }
