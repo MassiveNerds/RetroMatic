@@ -12,7 +12,7 @@ for FILE in $FILES
 do
   FILENAME=${FILE#$INPUT_PATH}
   BASENAME=${FILENAME%.scss}
-  ./node_modules/.bin/sass $FILE $DEST_PATH/$BASENAME.css --no-source-map
+  ./node_modules/.bin/sass $FILE $DEST_PATH/$BASENAME.css --no-source-map --load-path=node_modules
 done
 
 echo Finished building CSS.

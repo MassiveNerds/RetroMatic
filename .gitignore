@@ -7,6 +7,9 @@
 /src/assets/*.css
 /tools/data
 
+# Angular cache
+/.angular/cache
+
 # dependencies
 /node_modules
 
@@ -45,3 +48,4 @@ environment.prod.ts
 .DS_Store
 Thumbs.db
 .env
+.superpowers/

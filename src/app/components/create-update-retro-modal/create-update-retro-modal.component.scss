@@ -1,12 +1,31 @@
 .create-update-retro-modal__title {
+  display: block;
   text-transform: uppercase;
   font-weight: 500;
   font-size: 14px;
   color: hsl(0, 0%, 45%);
+  padding: 20px 20px 0 !important;
 }
 
 .create-update-retro-modal__save-template {
   margin-top: 4px;
+}
+
+.create-update-retro-modal__save-template--row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-update-retro-modal__template-name-field {
+  flex: 1;
+}
+
+.create-update-retro-modal__form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .create-update-retro-modal__delete-template {

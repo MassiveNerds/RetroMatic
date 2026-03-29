@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
-import { Observable } from 'rxjs/Observable';
+import {
+  Auth,
+  authState,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signInAnonymously,
+  signOut,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+} from '@angular/fire/auth';
+import { Database, ref, set, get } from '@angular/fire/database';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../types';
 import md5 from 'md5';
 import { uniqueNamesGenerator, Config, starWars } from 'unique-names-generator';
@@ -13,24 +22,22 @@ import { Subscription } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  user$: Observable<firebase.User>;
-  userDetails: firebase.User = null;
+  user$: Observable<any>;
+  userDetails: any = null;
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
-    this.user$ = afAuth.authState;
+  constructor(private auth: Auth, private db: Database, private router: Router) {
+    this.user$ = authState(this.auth);
     this.user$.subscribe(user => {
-      if (user) {
-        this.userDetails = user;
-      } else {
-        this.userDetails = null;
-      }
+      // Store only plain primitives — the raw Firebase User object has internal
+      // circular references that cause Angular's change detector to stack overflow.
+      this.userDetails = user ? { uid: user.uid, email: user.email, displayName: user.displayName } : null;
     });
   }
 
   async register({ email, password, displayName }: { email: string; password: string; displayName: string }) {
     this.sendAuthenticationEvent('register');
-    const { user } = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-    await this.db.object<User>(`/users/${user.uid}`).set({
+    const { user } = await createUserWithEmailAndPassword(this.auth, email, password);
+    await set(ref(this.db, `/users/${user.uid}`), {
       displayName,
       md5hash: md5(email),
       favorites: [],
@@ -39,19 +46,15 @@ export class AuthService {
 
   async login({ email, password }: { email: string; password: string }) {
     this.sendAuthenticationEvent('login');
-    const { user } = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    const snapshot = await firebase
-      .database()
-      .ref('/users')
-      .child(user.uid)
-      .once('value');
+    const { user } = await signInWithEmailAndPassword(this.auth, email, password);
+    const snapshot = await get(ref(this.db, `/users/${user.uid}`));
     if (!snapshot.exists()) {
       const config: Config = {
         dictionaries: [starWars],
         length: 1,
       };
       const characterName: string = uniqueNamesGenerator(config);
-      await this.db.object<User>(`/users/${user.uid}`).set({
+      await set(ref(this.db, `/users/${user.uid}`), {
         displayName: characterName,
         md5hash: md5(email),
         favorites: [],
@@ -61,21 +64,19 @@ export class AuthService {
 
   async loginWithGoogle() {
     this.sendAuthenticationEvent('google');
-    const { user, additionalUserInfo } = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    if (additionalUserInfo.isNewUser) {
-      await this.db.object<User>(`/users/${user.uid}`).set({
+    const result = await signInWithPopup(this.auth, new GoogleAuthProvider());
+    const user = result.user;
+    const additionalUserInfo = (result as any).additionalUserInfo;
+    if (additionalUserInfo?.isNewUser) {
+      await set(ref(this.db, `/users/${user.uid}`), {
         displayName: user.displayName,
         md5hash: md5(user.email),
         favorites: [],
       });
     } else {
-      const snapshot = await firebase
-        .database()
-        .ref('/users')
-        .child(user.uid)
-        .once('value');
+      const snapshot = await get(ref(this.db, `/users/${user.uid}`));
       if (!snapshot.exists()) {
-        await this.db.object<User>(`/users/${user.uid}`).set({
+        await set(ref(this.db, `/users/${user.uid}`), {
           displayName: user.displayName,
           md5hash: md5(user.email),
           favorites: [],
@@ -86,13 +87,13 @@ export class AuthService {
 
   async loginAsGuest() {
     this.sendAuthenticationEvent('guest');
-    const { user } = await this.afAuth.auth.signInAnonymously();
+    const { user } = await signInAnonymously(this.auth);
     const config: Config = {
       dictionaries: [starWars],
       length: 1,
     };
     const characterName: string = uniqueNamesGenerator(config);
-    await this.db.object<User>(`/users/${user.uid}`).set({
+    await set(ref(this.db, `/users/${user.uid}`), {
       displayName: characterName,
       md5hash: '',
       favorites: [],
@@ -112,21 +113,17 @@ export class AuthService {
   }
 
   async getAppUser() {
-    const snapshot = await firebase
-      .database()
-      .ref('/users')
-      .child(this.userDetails.uid)
-      .once('value');
+    const snapshot = await get(ref(this.db, `/users/${this.userDetails.uid}`));
     return snapshot.val();
   }
 
   async logout() {
-    await this.afAuth.auth.signOut();
+    await signOut(this.auth);
     this.router.navigate(['/login']);
   }
 
   resetPassword(email: string) {
-    return this.afAuth.auth.sendPasswordResetEmail(email);
+    return sendPasswordResetEmail(this.auth, email);
   }
 
   private sendAuthenticationEvent(eventName: string) {

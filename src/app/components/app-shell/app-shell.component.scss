@@ -1,0 +1,15 @@
+.app-shell {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+
+  &__content {
+    flex: 1;
+    overflow: auto;
+    transition: margin-left 0.2s ease;
+
+    &--full {
+      width: 100%;
+    }
+  }
+}

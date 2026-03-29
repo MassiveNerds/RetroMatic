@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RetroboardService } from '../../services/retroboard.service';
 import { Router } from '@angular/router';
 import { Bucket, BucketTemplate } from '../../types';
@@ -7,6 +7,7 @@ import { Bucket, BucketTemplate } from '../../types';
 const DEFAULT_BUCKETS = [{ name: 'What went well?' }, { name: 'What can be improved?' }, { name: 'Action items' }];
 
 @Component({
+  standalone: false,
   selector: 'app-create-update-retro-modal',
   templateUrl: './create-update-retro-modal.component.html',
   styleUrls: ['./create-update-retro-modal.component.scss'],

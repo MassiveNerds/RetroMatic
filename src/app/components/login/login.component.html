@@ -1,59 +1,53 @@
-<form
-  class="login-page topography-svg-bg"
-  fxLayout="row"
-  fxLayoutGap="20px"
-  fxLayoutAlign="center center"
-  [formGroup]="loginForm"
-  (ngSubmit)="login()"
->
-  <mat-card
-    class="mat-elevation-z6"
-    fxFlex.gt-lg="1 1 20%"
-    fxFlex.lg="1 1 30%"
-    fxFlex.md="1 1 40%"
-    fxFlex.sm="1 1 70%"
-    fxFlex.lt-sm="1 1 90%"
-  >
-    <mat-card-content fxLayout="column">
-      <p *ngIf="error" class="error-text mat-body-1"><strong>Oh snap!</strong> {{ error.message }}</p>
-      <mat-form-field>
-        <input #email type="email" matInput placeholder="Email address" formControlName="emailFormControl" />
-        <mat-error
-          *ngIf="
-            loginForm.controls['emailFormControl'].hasError('email') &&
-            !loginForm.controls['emailFormControl'].hasError('required')
-          "
-        >
+<div class="login-page">
+  <div class="login-page__left" aria-hidden="true">
+    <span class="login-page__brand">RetroMatic</span>
+    <span class="login-page__tagline">Better retrospectives, together.</span>
+  </div>
+
+  <div class="login-page__right">
+    <form class="login-page__form" [formGroup]="loginForm" (ngSubmit)="login()">
+      <h2 class="login-page__form-title">Sign in</h2>
+
+      <p *ngIf="error" class="login-page__error"><strong>Oh snap!</strong> {{ error.message }}</p>
+
+      <button type="button" mat-raised-button class="login-page__google-btn" (click)="loginWithGoogle($event)" aria-label="Sign in with Google">
+        Continue with Google
+      </button>
+
+      <div class="login-page__divider"><span>or</span></div>
+
+      <mat-form-field appearance="outline" class="login-page__field">
+        <mat-label>Email address</mat-label>
+        <input type="email" matInput formControlName="emailFormControl" />
+        <mat-error *ngIf="loginForm.controls['emailFormControl'].hasError('email') && !loginForm.controls['emailFormControl'].hasError('required')">
           Please enter a valid email address
         </mat-error>
         <mat-error *ngIf="loginForm.controls['emailFormControl'].hasError('required')">
           Email is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      <mat-form-field>
-        <input #password type="password" matInput placeholder="Password" formControlName="passwordFormControl" />
+
+      <mat-form-field appearance="outline" class="login-page__field">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="passwordFormControl" />
         <mat-error *ngIf="loginForm.controls['passwordFormControl'].hasError('required')">
           Password is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button class="login__reset-password-button" mat-button color="primary" (click)="goToResetPassword()">
-        Reset password
+
+      <button mat-raised-button color="primary" type="submit" class="login-page__submit-btn">
+        Sign in
       </button>
-      <button mat-raised-button color="accent" (click)="loginWithGoogle($event)" aria-label="Sign in with Google">
-        Sign in with Google
-      </button>
-      <button mat-raised-button color="primary" type="submit">Sign in</button>
-    </mat-card-actions>
-    <mat-card-actions class="login__lower-options" align="center">
-      <p class="mat-body">
-        Don't have an account? <button mat-button color="primary" (click)="goToRegister()">Sign up</button>
-      </p>
-      <p class="mat-body">
-        Just joining a retrospective?
-        <button mat-button color="primary" (click)="loginAsGuest($event)">Continue as guest</button>
-      </p>
-    </mat-card-actions>
-  </mat-card>
-</form>
+
+      <div class="login-page__links">
+        <button type="button" mat-button color="primary" class="login-page__link-btn" (click)="goToResetPassword()">Reset password</button>
+        <span class="login-page__link-sep">·</span>
+        <button type="button" mat-button color="primary" class="login-page__link-btn" (click)="goToRegister()">Sign up</button>
+      </div>
+
+      <div class="login-page__guest">
+        <button type="button" mat-stroked-button (click)="loginAsGuest($event)">Continue as guest</button>
+      </div>
+    </form>
+  </div>
+</div>

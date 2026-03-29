@@ -1,0 +1,63 @@
+<nav class="sidebar" [class.sidebar--collapsed]="collapsed">
+  <div class="sidebar__header">
+    <button mat-icon-button class="sidebar__toggle" (click)="toggleCollapse.emit()" aria-label="Toggle sidebar">
+      <mat-icon>{{ collapsed ? 'menu' : 'menu_open' }}</mat-icon>
+    </button>
+  </div>
+
+  <ng-container *ngIf="!collapsed">
+    <div class="sidebar__section-label">My Retros</div>
+    <mat-nav-list class="sidebar__nav-list">
+      <a mat-list-item
+        *ngFor="let retro of retroboards"
+        (click)="navigateTo(retro.key)"
+        [class.sidebar__nav-item--active]="retro.key === currentRetroboard?.key"
+        class="sidebar__nav-item">
+        <span matListItemTitle class="sidebar__nav-item-text">{{ retro.name }}</span>
+      </a>
+    </mat-nav-list>
+    <button mat-button class="sidebar__new-retro-btn" (click)="openCreateModal()">
+      <mat-icon>add</mat-icon> New Retro
+    </button>
+
+    <div class="sidebar__section-label" *ngIf="favorites.length">Favorites</div>
+    <mat-nav-list class="sidebar__nav-list" *ngIf="favorites.length">
+      <a mat-list-item
+        *ngFor="let fav of favorites"
+        (click)="navigateTo(fav.key)"
+        class="sidebar__nav-item">
+        <mat-icon matListItemIcon class="sidebar__fav-icon">favorite</mat-icon>
+        <span matListItemTitle class="sidebar__nav-item-text">{{ fav.name }}</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="sidebar__actions" *ngIf="hasRetroOpen">
+      <mat-divider></mat-divider>
+      <button mat-button class="sidebar__action-btn" (click)="toggleFavorite()">
+        <mat-icon>{{ isCurrentFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+        {{ isCurrentFavorite ? 'Unfavorite' : 'Favorite' }}
+      </button>
+      <button mat-button class="sidebar__action-btn" (click)="openExport()">
+        <mat-icon>save_alt</mat-icon> Export
+      </button>
+      <button mat-button class="sidebar__action-btn" (click)="openEdit()" [disabled]="!isOwner">
+        <mat-icon>edit</mat-icon> Edit
+      </button>
+      <button mat-button class="sidebar__action-btn sidebar__action-btn--danger"
+        [disabled]="!isOwner"
+        (click)="openDelete()">
+        <mat-icon>delete</mat-icon> Delete
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="collapsed">
+    <button mat-icon-button (click)="openCreateModal()" title="New Retro"><mat-icon>add</mat-icon></button>
+    <ng-container *ngIf="hasRetroOpen">
+      <button mat-icon-button (click)="toggleFavorite()" [title]="isCurrentFavorite ? 'Unfavorite' : 'Favorite'">
+        <mat-icon>{{ isCurrentFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </button>
+      <button mat-icon-button (click)="openEdit()" [disabled]="!isOwner" title="Edit"><mat-icon>edit</mat-icon></button>
+    </ng-container>
+  </ng-container>
+</nav>

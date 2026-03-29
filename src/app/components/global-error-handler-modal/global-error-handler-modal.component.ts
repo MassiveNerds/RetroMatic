@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface DialogData {
   title: string;
@@ -7,6 +7,7 @@ export interface DialogData {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-global-error-handler-modal',
   templateUrl: './global-error-handler-modal.component.html',
   styleUrls: ['./global-error-handler-modal.component.scss'],

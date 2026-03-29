@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { Database, ref, list, object, query, orderByChild, equalTo, push, set, remove, update, get } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -11,57 +11,43 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class RetroboardService {
-  constructor(private db: AngularFireDatabase, private authService: AuthService) {}
+  constructor(private db: Database, private authService: AuthService) {}
 
   getRetroboards(): Observable<Retroboard[]> {
     const uid = this.authService.getUserDetails().uid;
-    return this.db
-      .list<Retroboard>(`/retroboards`, ref => ref.orderByChild('creatorId').equalTo(uid))
-      .snapshotChanges()
-      .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))));
+    return list(query(ref(this.db, '/retroboards'), orderByChild('creatorId'), equalTo(uid))).pipe(
+      map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) })))
+    );
   }
 
   getRetroboard(id: string): Observable<Retroboard> {
-    return this.db
-      .object<Retroboard>(`/retroboards/${id}`)
-      .snapshotChanges()
-      .pipe(
-        map(snapshot => {
-          return { key: snapshot.key, ...snapshot.payload.val() };
-        })
-      );
+    return object(ref(this.db, `/retroboards/${id}`)).pipe(
+      map(change => ({ key: change.snapshot.key, ...(change.snapshot.val() as any) }))
+    );
   }
 
   async updateRetroboard(id: string, options: { name: string; buckets: Partial<Bucket>[] }) {
     this.sendRetrospectiveEvent('update');
-    this.db.object(`/retroboards/${id}`).update({ name: options.name });
+    await update(ref(this.db, `/retroboards/${id}`), { name: options.name });
 
     if (options.buckets) {
-      options.buckets.forEach(bucket => {
-        this.db.object(`/buckets/${bucket.key}`).update({ name: bucket.name });
-      });
+      for (const bucket of options.buckets) {
+        await update(ref(this.db, `/buckets/${bucket.key}`), { name: bucket.name });
+      }
     }
   }
 
   async deleteRetroboard(retroboard: Retroboard) {
     this.sendRetrospectiveEvent('delete');
-    this.db
-      .list<Note>('/notes', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
-      .snapshotChanges()
-      .subscribe(snapshots => {
-        snapshots.forEach(async snapshot => {
-          await this.db.object<Note>(`/notes/${snapshot.key}`).remove();
-        });
-      });
-    this.db
-      .list<Bucket>('/buckets', ref => ref.orderByChild('retroboardId').equalTo(retroboard.key))
-      .snapshotChanges()
-      .subscribe(snapshots => {
-        snapshots.forEach(async snapshot => {
-          await this.db.object<Bucket>(`/buckets/${snapshot.key}`).remove();
-        });
-      });
-    await this.db.object<Retroboard>(`/retroboards/${retroboard.key}`).remove();
+    const notesSnapshot = await get(query(ref(this.db, '/notes'), orderByChild('retroboardId'), equalTo(retroboard.key)));
+    notesSnapshot.forEach(child => {
+      remove(ref(this.db, `/notes/${child.key}`));
+    });
+    const bucketsSnapshot = await get(query(ref(this.db, '/buckets'), orderByChild('retroboardId'), equalTo(retroboard.key)));
+    bucketsSnapshot.forEach(child => {
+      remove(ref(this.db, `/buckets/${child.key}`));
+    });
+    await remove(ref(this.db, `/retroboards/${retroboard.key}`));
   }
 
   async createRetroboard(name: string, bucketNames: string[] = []) {
@@ -70,7 +56,7 @@ export class RetroboardService {
       const userDetails = this.authService.getUserDetails();
       const appUser = await this.authService.getAppUser();
       const retroboardName = name && name.length > 0 ? name : moment().format('dddd, MMMM Do YYYY');
-      const result = await this.db.list<Retroboard>(`/retroboards`).push({
+      const result = await push(ref(this.db, '/retroboards'), {
         creator: appUser.displayName,
         creatorId: userDetails.uid,
         noteCount: 0,
@@ -79,15 +65,14 @@ export class RetroboardService {
         timeZone: momentTimeZone.tz.guess(),
       });
       const retroboardId = result.key;
-      const buckets: AngularFireList<Bucket> = this.db.list(`/buckets`);
-      bucketNames.forEach(bucketName => {
-        buckets.push({
+      for (const bucketName of bucketNames) {
+        await push(ref(this.db, '/buckets'), {
           name: bucketName,
           retroboardId,
           creator: appUser.displayName,
           creatorId: userDetails.uid,
         });
-      });
+      }
       return retroboardId;
     } catch (error) {
       console.error(error);
@@ -97,19 +82,18 @@ export class RetroboardService {
 
   getBucketTemplates(): Observable<BucketTemplate[]> {
     const uid = this.authService.getUserDetails().uid;
-    return this.db
-      .list<BucketTemplate>('/bucketTemplates', ref => ref.orderByChild('creatorId').equalTo(uid))
-      .snapshotChanges()
-      .pipe(map(actions => actions.map(a => ({ key: a.key, ...a.payload.val() }))));
+    return list(query(ref(this.db, '/bucketTemplates'), orderByChild('creatorId'), equalTo(uid))).pipe(
+      map(changes => changes.map(c => ({ key: c.snapshot.key, ...(c.snapshot.val() as any) })))
+    );
   }
 
   async saveBucketTemplate(name: string, bucketNames: string[]) {
     const uid = this.authService.getUserDetails().uid;
-    return this.db.list('/bucketTemplates').push({ name, bucketNames, creatorId: uid });
+    return push(ref(this.db, '/bucketTemplates'), { name, bucketNames, creatorId: uid });
   }
 
   async deleteBucketTemplate(templateId: string) {
-    return this.db.object(`/bucketTemplates/${templateId}`).remove();
+    return remove(ref(this.db, `/bucketTemplates/${templateId}`));
   }
 
   private sendRetrospectiveEvent(eventName: string) {
